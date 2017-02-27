@@ -1,0 +1,29 @@
+{
+  "name": "bs-jest",
+  "version": "0.0.1",
+  "description": "BuckleScript bindings to the Jest testing framework",
+  "scripts": {
+    "start": "bsb -make-world -w",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BuckleTypes/bs-jest.git"
+  },
+  "keywords": [
+    "jest",
+    "bucklescript",
+    "test"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BuckleTypes/bs-jest/issues"
+  },
+  "homepage": "https://github.com/BuckleTypes/bs-jest#readme",
+  "devDependencies": {
+    "bs-platform": "bloomberg/bucklescript"
+  },
+  "dependencies": {
+    "jest": "^19.0.2"
+  }
+}
