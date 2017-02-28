@@ -5,5 +5,6 @@
   }, {
     "dir": "__tests__",
     "type": "dev"
-  }]
+  }],
+  "bs-dependencies": ["bs-promise"]
 }

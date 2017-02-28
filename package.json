@@ -4,7 +4,8 @@
   "description": "BuckleScript bindings to the Jest testing framework",
   "scripts": {
     "start": "bsb -make-world -w",
-    "test": "jest"
+    "build": "bsb -make-world",
+    "test": "npm run build && jest"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
     "bs-platform": "bloomberg/bucklescript"
   },
   "dependencies": {
-    "jest": "^19.0.2"
+    "jest": "^19.0.2",
+    "bs-promise": "^0.3.0"
   }
 }
