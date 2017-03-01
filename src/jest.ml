@@ -2,6 +2,8 @@ module Promise = Bs_promise
 type ('a, 'e) promise = ('a, 'e) Promise.t
 
 type 'a simple_case =
+| Ok
+| Fail of string
 | Be of 'a * 'a
 | Equal of 'a * 'a
 | CloseTo of 'a * 'a * int option
@@ -20,8 +22,13 @@ type 'a case = 'a simple_case mod_
   
 module LLExpect = struct
   external expect : 'a -> < .. > Js.t = "" [@@bs.val]
+  external fail : string -> unit = "" [@@bs.val]
 
   let exec: 'a case -> unit = function
+  | Just Ok -> ()
+  | Not Ok -> fail "not ok"
+  | Just Fail message -> fail message
+  | Not Fail _ -> ()
   | Just Be (a, b) -> (expect a) ## toBe b
   | Not Be (a, b) -> (expect a) ## not ## toBe b
   | Just Equal (a, b) -> (expect a) ## toEqual b
@@ -330,7 +337,8 @@ module Jest = struct
   external resetModules : unit -> unit = "jest.resetModules" [@@bs.val]
   external runAllTicks : unit -> unit = "jest.runAllTicks" [@@bs.val]
   external runAllTimers : unit -> unit = "jest.runAllTimers" [@@bs.val]
-  external runTimersToTime : unit -> unit = "jest.runTimersToTime" [@@bs.val]
+  external runAllImmediates : unit -> unit = "jest.runAllImmediates" [@@bs.val]
+  external runTimersToTime : int -> unit = "jest.runTimersToTime" [@@bs.val]
   external runOnlyPendingTimers : unit -> unit = "jest.runOnlyPendingTimers" [@@bs.val]
   external setMock : string -> < .. > Js.t -> unit = "jest.setMock" [@@bs.val]
   external unmock : string -> unit = "jest.unmock" [@@bs.val]
