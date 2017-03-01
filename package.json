@@ -5,7 +5,10 @@
   "scripts": {
     "start": "bsb -make-world -w",
     "build": "bsb -make-world",
-    "test": "npm run build && jest"
+    "test": "npm run build && jest",
+    "watch:bsb": "bsb -make-world -w",
+    "watch:jest": "jest --watchAll",
+    "watch:screen": "screen -c .screenrc"
   },
   "repository": {
     "type": "git",
@@ -16,6 +19,7 @@
     "bucklescript",
     "test"
   ],
+  "author": "glennsl",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/BuckleTypes/bs-jest/issues"
