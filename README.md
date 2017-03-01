@@ -2,6 +2,13 @@
 
 Very very very *experimental* and *WIP*
 
+## Status
+
+* [Global](https://facebook.github.io/jest/docs/api.html#content): Fully implemented and tested, apart from `require.*`
+* [Expect](https://facebook.github.io/jest/docs/expect.html#content): Parts of it implemented in many different ways. Testing out different API designs.
+* [Mock Functions](https://facebook.github.io/jest/docs/mock-function-api.html#content): WTF seems like an apt description. Needs work, to say the least.
+* [The Jest Object](https://facebook.github.io/jest/docs/jest-object.html#content): Fake timers are fully implemented and tested. Mock functions are mostly implemented, but experimental and largely untested.
+
 ## Contribute
 ```sh
 git clone https://github.com/BuckleTypes/bs-jest.git
