@@ -287,12 +287,12 @@ module Mock = struct
     external fn : ('fn, _, _) fn -> 'fn = "%identity"
     external mock : (_, 'args, 'ret) fn -> ('args, 'ret) mock = "" [@@bs.get]
     external calls : ('args, _) mock -> 'args array = "" [@@bs.get]
-    let calls self = Array.copy (calls self) (* Awesome, the bloody things are mutated so we need to copy *)
+    let calls self = Js.Array.copy (calls self) (* Awesome, the bloody things are mutated so we need to copy *)
     let calls self = calls self |> Array.map [%bs.raw {|
       function (args) { return args.length === 1 ? args[0] : args }
     |}] (* there's no such thing as aa 1-ary tuple, so we need to unbox single-element arrays *)
     external instances : (_, 'ret') mock -> 'ret array = "" [@@bs.get] (* TODO: semms this only records "instances" created by `new` *)
-    let instances self = Array.copy (instances self) (* Awesome, the bloody things are mutated so we need to copy *)
+    let instances self = Js.Array.copy (instances self) (* Awesome, the bloody things are mutated so we need to copy *)
     (* "... contains type variables cannot be generalized"
     let calls : 'args fn -> 'args = [%bs.raw {|
       function (fn) { fn.mock.calls; }()
@@ -302,6 +302,7 @@ module Mock = struct
     |}]
     *)
     
+    (** Beware: this actually replaces `mock`, not just `mock.instances` and `mock.calls` *)
     external mockClear : unit = "" [@@bs.send.pipe: _ fn]
     external mockReset : unit = "" [@@bs.send.pipe: _ fn]
     external mockImplementation : 'fn -> 'self = "" [@@bs.send.pipe: ('fn, _, _) fn as 'self]
@@ -315,9 +316,9 @@ module Jest = struct
   external clearAllTimers : unit -> unit = "jest.clearAllTimers" [@@bs.val]
   external disableAutomock : unit -> unit = "jest.disableAutomock" [@@bs.val]
   external enableAutomock : unit -> unit = "jest.enableAutomock" [@@bs.val]
-  external inferred_fn : unit -> ('a -> 'b Js.undefined, 'a, 'b Js.undefined) Mock.fn = "jest.fn" [@@bs.val] (* not sure how useful this really is *)
+  external inferred_fn : unit -> ('a -> 'b Js.undefined [@bs], 'a, 'b Js.undefined) Mock.fn = "jest.fn" [@@bs.val] (* not sure how useful this really is *)
   external fn : ('a -> 'b) -> ('a -> 'b, 'a, 'b) Mock.fn = "jest.fn" [@@bs.val]
-  external fn2 : ('a -> 'b -> 'c) -> ('a -> 'b -> 'c, 'a * 'b, 'c) Mock.fn = "jest.fn" [@@bs.val]
+  external fn2 : ('a -> 'b -> 'c [@bs]) -> (('a -> 'b -> 'c [@bs]), 'a * 'b, 'c) Mock.fn = "jest.fn" [@@bs.val]
   (* TODO
   external fn3 : ('a -> 'b -> 'c -> 'd) -> ('a * 'b * 'c) Mock.fn = "jest.fn" [@@bs.val]
   external fn4 : ('a -> 'b -> 'c -> 'd -> 'e) -> ('a * 'b * 'c * 'd) Mock.fn = "jest.fn" [@@bs.val]
@@ -327,8 +328,8 @@ module Jest = struct
   (* external isMockFunction : Mock.fn -> Js.boolean = "jest.isMockFunction" [@@bs.val] *) (* pointless with types? *)
   external mock : string -> unit = "jest.mock" [@@bs.val]
   external mockWithFactory : string -> (unit -> 'a) ->unit = "jest.mock" [@@bs.val]
-  (* TODO If this is merely defined, babel-plugin-jest-hoist fails with "The second argument of `jest.mock` must be a function." Silly thing.
   external mockVirtual : string -> (unit -> 'a) -> < .. > Js.t -> unit = "jest.mock" [@@bs.val]
+  (* TODO If this is merely defined, babel-plugin-jest-hoist fails with "The second argument of `jest.mock` must be a function." Silly thing.
   let mockVirtual : string -> (unit -> 'a) -> unit =
     fun moduleName factory -> mockVirtual moduleName factory [%bs.obj { _virtual = Js.true_ }]
   *)

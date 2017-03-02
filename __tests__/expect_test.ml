@@ -15,7 +15,6 @@ let _ =
   
   Expect2.(
     (* pro: separate words
-     * pro: simpler implementation of modifiers like `not`
      * con: oddly placed extra parens
      * con: several noisy symbols
      * con: can only support `to*` functions
@@ -30,7 +29,6 @@ let _ =
 
   Expect3.(
     (* pro: no weird symbols
-     * pro: simpler implementation of modifiers like `not`
      * con: extra parens
      * con: chaining requires nested parens
      * con: doesn't support narrowing of types
@@ -86,7 +84,7 @@ let _ =
     (* pro: simple
      * pro: no extra parens
      * meh: no chaining, just lots and lots of overloads
-     * con: too easy to mix up actual and exepected
+     * con: doesn't clearly differentiate actual and exepected
      * con: less "fluently" readable
      * con: inconsistent with cli form (`expect(array).toContain(value)``)
      *)
@@ -155,7 +153,7 @@ let _ =
     (* pro: simple
      * pro: no extra parens (if variants are modeled more nicely)
      * meh: no chaining, just lots and lots of variants
-     * con: too easy to mix up actual and exepected
+     * con: doesn't clearly differentiate actual and exepected (and any other args for that amtter)
      * con: less "fluently" readable
      * con: inconsistent with cli form (`expect(array).toContain(value)``)
      *)
