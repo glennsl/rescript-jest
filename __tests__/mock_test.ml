@@ -7,7 +7,7 @@ external call : ('a -> 'b [@bs]) -> 'c -> 'a -> 'b = "" [@@bs.send]
 let call self arg = call self () arg
 external callThis : ('a -> 'b [@bs]) -> 'c -> 'a -> 'b = "call" [@@bs.send]
 external call2 : ('a -> 'b -> 'c [@bs]) -> (_ [@bs.as 0]) -> 'a -> 'b -> 'c = "call" [@@bs.send]
-  
+
 let _ = 
 
 describe "inferred_fn" (fun _ ->

@@ -238,20 +238,22 @@ module Variant1 = struct
   type 'a t = 'a case (* completely unnecessary, just for "documentation" *)
 end
 
-external test : string -> (unit -> unit) -> unit = "" [@@bs.val]
+let returnUndefined callback a = callback a; Js.Undefined.empty
+
+external test : string -> (unit -> unit Js.undefined) -> unit = "" [@@bs.val]
 let test : string -> (unit -> 'a case) -> unit = fun name callback ->
-  test name (fun () -> LLExpect.exec (callback ()))
-external testOnly : string -> (unit -> unit) -> unit = "test.only" [@@bs.val]
+  test name (returnUndefined (fun () -> LLExpect.exec (callback ())))
+external testOnly : string -> (unit -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
 let testOnly : string -> (unit -> 'a case) -> unit = fun name callback ->
-  testOnly name (fun () -> LLExpect.exec (callback ()))
+  testOnly name (returnUndefined (fun () -> LLExpect.exec (callback ())))
 external testSkip : string -> (unit -> 'a case) -> unit = "test.skip" [@@bs.val]
     
-external testAsync : string -> ((unit -> unit) -> unit) -> unit = "test" [@@bs.val]
+external testAsync : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "test" [@@bs.val]
 let testAsync : string -> (('a case -> unit) -> unit) -> unit = fun name callback ->
-  testAsync name (fun done_ -> callback (fun case -> LLExpect.exec case; done_ ()))
-external testAsyncOnly : string -> ((unit -> unit) -> unit) -> unit = "test.only" [@@bs.val]
+  testAsync name (returnUndefined (fun done_ -> callback (fun case -> LLExpect.exec case; done_ ())))
+external testAsyncOnly : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
 let testAsyncOnly : string -> (('a case -> unit) -> unit) -> unit = fun name callback ->
-  testAsyncOnly name (fun done_ -> callback (fun case -> LLExpect.exec case; done_ ()))
+  testAsyncOnly name (returnUndefined (fun done_ -> callback (fun case -> LLExpect.exec case; done_ ())))
 external testAsyncSkip : string -> (('a case -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
 
 external testPromise : string -> (unit -> ('a, 'e) promise) -> unit = "test" [@@bs.val]
