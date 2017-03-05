@@ -169,6 +169,18 @@ let _ =
       Assert.contain [| "a"; "b"; "c" |] ~toContain:"b"
     )
   );
+
+  Assert4.( (* assert that kind of looks like expect! woohoo! *)
+    (* pro: simple
+     * pro: very local and non-verbose opens
+     * meh: no chaining, just lots and lots of overloads
+     * con: noisy symbol
+     *)
+    test "the assert" (fun _ -> Assert.(1 + 2 |> toBe 3));
+    test "not the assert" (fun _ -> Assert.(1 + 2 |> toNotBe 4));
+    test "close to the asert" (fun _ -> Assert.(1. +. 2. |> toBeSoCloseTo 3. ~digits:9));
+    test "contains the assert" (fun _ -> Assert.([| "a"; "b"; "c" |] |> toContain "b"))
+  );
   
   (* Variant1.( *)
     (* pro: simple

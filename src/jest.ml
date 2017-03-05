@@ -318,6 +318,21 @@ module Assert3 = struct
   end
 end
 
+module Assert4 = struct
+  module Assert = struct
+    let toBe b a = Just (Be (a, b))
+    let toNotBe b a = Not (Be (a, b))
+    let toEqual b a = Just (Equal (a, b))
+    let toNotEqual b a = Not (Equal (a, b))
+    let toCloseTo b a = Just (CloseTo (a, b, None))
+    let toNotCloseTo b a = Not (CloseTo (a, b, None))
+    let toBeSoCloseTo b a ~digits = Just (CloseTo (a, b, Some digits))
+    let toNotBeSoCloseTo b a ~digits = Not (CloseTo (a, b, Some digits))
+    let toContain v a = Just (ArrayContains (a, v))
+    let toNotContain v a = Not (ArrayContains (a, v))
+  end
+end
+
 module Variant1 = struct
   type 'a t = 'a case (* completely unnecessary, just for "documentation" *)
 end
