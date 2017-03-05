@@ -1,13 +1,24 @@
+
 module Promise = Bs_promise
 type ('a, 'e) promise = ('a, 'e) Promise.t
 
 type 'a simple_case =
 | Ok
 | Fail of string
-| Be of 'a * 'a
-| Equal of 'a * 'a
-| CloseTo of 'a * 'a * int option
 | ArrayContains of 'a array * 'a
+| ArrayLength of 'a array * int
+| Be of 'a * 'a
+| CloseTo of 'a * 'a * int option
+| Defined of 'a Js.undefined
+| Equal of 'a * 'a
+| Falsy of 'a
+| GreaterThan of 'a * 'a
+| GreaterThanOrEqual of 'a * 'a
+| LessThan of 'a * 'a
+| LessThanOrEqual of 'a * 'a
+| Match of string * Js.Re.t
+| Null of 'a Js.null
+| Truthy of 'a
 | Undefined of 'a Js.undefined
 
 type 'a mod_ =
@@ -29,16 +40,36 @@ module LLExpect = struct
   | Not Ok -> fail "not ok"
   | Just Fail message -> fail message
   | Not Fail _ -> ()
-  | Just Be (a, b) -> (expect a) ## toBe b
-  | Not Be (a, b) -> (expect a) ## not ## toBe b
-  | Just Equal (a, b) -> (expect a) ## toEqual b
-  | Not Equal (a, b) -> (expect a) ## not ## toEqual b
-  | Just CloseTo (a, b, p) -> (expect a) ## toBeCloseTo a b (Js.Undefined.from_opt p)
-  | Not CloseTo (a, b, p) -> (expect a) ## not ## toBeCloseTo a b (Js.Undefined.from_opt p)
   | Just ArrayContains (a, b) -> (expect a) ## toContain b
   | Not ArrayContains (a, b) -> (expect a) ## not ## toContain b
+  | Just ArrayLength (a, l) -> (expect a) ## toHaveLength l
+  | Not ArrayLength (a, l) -> (expect a) ## not ## toHaveLength l
+  | Just Be (a, b) -> (expect a) ## toBe b
+  | Not Be (a, b) -> (expect a) ## not ## toBe b
+  | Just CloseTo (a, b, p) -> (expect a) ## toBeCloseTo a b (Js.Undefined.from_opt p)
+  | Not CloseTo (a, b, p) -> (expect a) ## not ## toBeCloseTo a b (Js.Undefined.from_opt p)
+  | Just Defined a -> (expect a) ## toBeDefined ()
+  | Not Defined a -> (expect a) ## not ## toBeDefined ()
+  | Just Equal (a, b) -> (expect a) ## toEqual b
+  | Not Equal (a, b) -> (expect a) ## not ## toEqual b
+  | Just Falsy a -> (expect a) ## toBeFalsy ()
+  | Not Falsy a -> (expect a) ## not ## toBeFalsy ()
+  | Just GreaterThan (a, b) -> (expect a) ## toBeGreaterThan b
+  | Not GreaterThan (a, b) -> (expect a) ## not ## toBeGreaterThan b
+  | Just GreaterThanOrEqual (a, b) -> (expect a) ## toBeGreaterThanOrEqual b
+  | Not GreaterThanOrEqual (a, b) -> (expect a) ## not ## toBeGreaterThanOrEqual b
+  | Just LessThan (a, b) -> (expect a) ## toBeLessThan b
+  | Not LessThan (a, b) -> (expect a) ## not ## toBeLessThan b
+  | Just LessThanOrEqual (a, b) -> (expect a) ## toBeLessThanOrEqual b
+  | Not LessThanOrEqual (a, b) -> (expect a) ## not ## toBeLessrThanOrEqual b
+  | Just Match (s, re) -> (expect s) ## toMatch re
+  | Not Match (s, re) -> (expect s) ## not ## toMatch re
+  | Just Null a -> (expect a) ## toBeNull ()
+  | Not Null a -> (expect a) ## not ## toBeNull ()
+  | Just Truthy a -> (expect a) ## toBeTruthy ()
+  | Not Truthy a -> (expect a) ## not ## toBeTruthy ()
   | Just Undefined a -> (expect a) ## toBeUndefined ()
-  | Not Undefined a -> (expect a) ## toBeUndefined ()
+  | Not Undefined a -> (expect a) ## not ## toBeUndefined ()
 end
 
 (*
@@ -59,22 +90,75 @@ module Expect1 = struct
   
   let toBe : 'a -> 'a partial -> 'a case =
     fun b -> mapMod (fun a -> Be (a, b))
+  let (==) = fun a b -> toBe b a
+
+  (* toHaveBeenCalled* *)
   
-  let toEqual : 'a -> 'a partial -> 'a case =
-    fun b -> mapMod (fun a -> Equal (a, b))
-    
   let toBeCloseTo : 'a -> 'a partial -> 'a case =
     fun b -> mapMod (fun a -> CloseTo (a, b, None))
   
   let toBeSoCloseTo : float -> digits:int -> float partial -> float case =
     fun b ~digits -> mapMod (fun a -> CloseTo (a, b, Some digits))
-    
+
+  let toBeDefined : 'a Js.undefined partial -> 'a case =
+    fun a -> mapMod (fun a -> Defined a) a
+
+  let toBeFalsy : 'a partial -> 'a case = (* js-y *)
+    fun a -> mapMod (fun a -> Falsy a) a
+
+  let toBeGreaterThan : 'a -> 'a partial -> 'a case =
+    fun b -> mapMod (fun a -> GreaterThan (a, b))
+  let (>) = fun a b -> toBeGreaterThan b a
+
+  let toBeGreaterThanOrEqual : 'a -> 'a partial -> 'a case =
+    fun b -> mapMod (fun a -> GreaterThanOrEqual (a, b))
+  let (>=) = fun a b -> toBeGreaterThanOrEqual b a
+
+  let toBeLessThan : 'a -> 'a partial -> 'a case =
+    fun b -> mapMod (fun a -> LessThan (a, b))
+  let (<) = fun a b -> toBeLessThan b a
+
+  let toBeLessThanOrEqual : 'a -> 'a partial -> 'a case =
+    fun b -> mapMod (fun a -> LessThanOrEqual (a, b))
+  let (<=) = fun a b -> toBeLessThanOrEqual b a
+
+  (* toBeInstanceOf *) (* js-y *)
+
+  let toBeNull : 'a Js.null partial -> 'a case =
+    fun a -> mapMod (fun a -> Null a) a
+
+  let toBeTruthy : 'a partial -> 'a case = (* js-y *)
+    fun a -> mapMod (fun a -> Truthy a) a
+
+  let toBeUndefined : 'a Js.undefined partial -> 'a case =
+    fun a -> mapMod (fun a -> Undefined a) a
+
   let toContain : 'a -> 'a array partial -> 'a case =
     fun b -> mapMod (fun a -> ArrayContains (a, b))
-    
+
+  let toEqual : 'a -> 'a partial -> 'a case =
+    fun b -> mapMod (fun a -> Equal (a, b))
+  let (=) = fun a b -> toEqual b a
+
+  let toHaveLength : int -> 'a array partial -> 'a case =
+    fun l -> mapMod (fun a -> ArrayLength (a, l))
+
+  let toMatch : string -> string partial -> string case =
+    fun s -> mapMod (fun a -> Match (a, Js.Re.fromString s))
+
+  let toMatchRe : Js.Re.t -> string partial -> string case =
+    fun re -> mapMod (fun a -> Match (a, re))
+
+  (* toMatchObject *) (* js-y *)
+  (* toMatchSnaphsot *)
+  (* toThrow *) (* js-y? *)
+  (* toThrowErrorMatchingSnapshot *) (* js-y? *)
+
   let not_ : 'a partial -> 'a partial = function
     | Just a -> Not a
     | Not _ -> raise (Invalid_argument "I suck at GADTs")
+    let (<>) = fun a b -> a |> not_ |> toEqual b
+    let (!=) = fun a b -> a |> not_ |> toBe b
 end
 
 module Expect1_WithoutTo = struct
@@ -349,3 +433,4 @@ module Jest = struct
   external useRealTimers : unit -> unit = "jest.useRealTimers" [@@bs.val]
   external spyOn : (< .. > Js.t as 'this) -> string -> (unit, unit, 'this) Mock.fn = "jest.spyOn" [@@bs.val] (* this is a bit too dynamic *)
 end
+
