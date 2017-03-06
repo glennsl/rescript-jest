@@ -22,8 +22,11 @@ let _ =
     test "expect1 - toBeLessThanOrEqual" (fun _ -> expect 4 |> toBeLessThanOrEqual 4);
     test "expect1 - <=" (fun _ -> expect 4 >= 4);
     test "expect1 - toBeNull" (fun _ -> expect nan |> toBeFalsy);
+    test "expect1 - toBeSuperSetOf" (fun _ -> expect [| "a"; "b"; "c" |] |> toBeSupersetOf [| "a"; "c" |]);
     test "expect1 - toBeTruthy" (fun _ -> expect [||] |> toBeTruthy);
     test "expect1 - toContain" (fun _ -> expect [| "a"; "b"; "c" |] |> toContain "b");
+    test "expect1 - toContainString" (fun _ -> expect "banana" |> toContainString "nana");
+    test "expect1 - toContainString" (fun _ -> expect [%obj { foo = 0; bar = true }] |> toContainProperties [| "foo"; "bar" |]);
     test "expect1 - toHaveLength" (fun _ -> expect [| "a"; "b"; "c" |] |> toHaveLength 3);
     test "expect1 - toEqual" (fun _ -> expect (1 + 2) |> toEqual 3);
     test "expect1 - toMatch" (fun _ -> expect "banana" |> toMatch "nana");
@@ -83,7 +86,7 @@ let _ =
      *)
     test "the fifth" (fun _ -> expect (1 + 2, toBe 3));
     test "not the fifth" (fun _ -> expectNot (1 + 2, toBe 4));
-    test "the fifth" (fun _ -> expect (1. +. 2., toBeSoCloseTo 3. ~digits:9));
+    (* test "the fifth" (fun _ -> expect (1. +. 2., toBeSoCloseTo 3. ~digits:9)); *) (* unsupported *)
     (* test "contains the fifth" (fun _ -> expect ([| "a"; "b"; "c" |], toContain "b")) *) (* unsupported *)
   );
 
@@ -192,7 +195,7 @@ let _ =
      *)
     test "the assert" (fun _ -> Just (Be (1 + 2, 3)));
     test "not the assert" (fun _ -> Not (Be (1 + 2, 4)));
-    test "close to the asert" (fun _ -> Just (CloseTo (1. +. 2., 3., Some 9)));
+    test "close to the asert" (fun _ -> Just (FloatCloseTo (1. +. 2., 3., Some 9)));
     test "contains the assert" (fun _ -> Just (ArrayContains ([| "a"; "b"; "c" |], "b")));
   (* ); *)
   
