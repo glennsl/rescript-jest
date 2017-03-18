@@ -301,12 +301,12 @@ module ExpectJS = struct
     | Not a -> LLExpect.(expect a) ## not ## toMatchObject b; Just Ok
 end
 
-module Mock = struct
+module MockJs = struct
     type ('fn, 'args, 'ret) fn
     type ('args, 'ret) mock
     
     (* TODO: "... contains type variables cannot be generalized"
-    (** Equiavelnt to calling new mock() *)
+    (** Equiavlent to calling new mock() *)
     let make : ('fn, _, _) fn -> 'fn = [%bs.raw {|
       function(self) {
         return new (Function.prototype.bind.apply(self, arguments));
@@ -346,16 +346,16 @@ module Jest = struct
   external clearAllTimers : unit -> unit = "jest.clearAllTimers" [@@bs.val]
   external disableAutomock : unit -> unit = "jest.disableAutomock" [@@bs.val]
   external enableAutomock : unit -> unit = "jest.enableAutomock" [@@bs.val]
-  external inferred_fn : unit -> ('a -> 'b Js.undefined [@bs], 'a, 'b Js.undefined) Mock.fn = "jest.fn" [@@bs.val] (* not sure how useful this really is *)
-  external fn : ('a -> 'b) -> ('a -> 'b, 'a, 'b) Mock.fn = "jest.fn" [@@bs.val]
-  external fn2 : ('a -> 'b -> 'c [@bs]) -> (('a -> 'b -> 'c [@bs]), 'a * 'b, 'c) Mock.fn = "jest.fn" [@@bs.val]
+  external inferred_fn : unit -> ('a -> 'b Js.undefined [@bs], 'a, 'b Js.undefined) MockJs.fn = "jest.fn" [@@bs.val] (* not sure how useful this really is *)
+  external fn : ('a -> 'b) -> ('a -> 'b, 'a, 'b) MockJs.fn = "jest.fn" [@@bs.val]
+  external fn2 : ('a -> 'b -> 'c [@bs]) -> (('a -> 'b -> 'c [@bs]), 'a * 'b, 'c) MockJs.fn = "jest.fn" [@@bs.val]
   (* TODO
-  external fn3 : ('a -> 'b -> 'c -> 'd) -> ('a * 'b * 'c) Mock.fn = "jest.fn" [@@bs.val]
-  external fn4 : ('a -> 'b -> 'c -> 'd -> 'e) -> ('a * 'b * 'c * 'd) Mock.fn = "jest.fn" [@@bs.val]
-  external fn5 : ('a -> 'b -> 'c -> 'd -> 'e -> 'f) -> ('a * 'a * 'c * 'd * 'e) Mock.fn = "jest.fn" [@@bs.val]
-  external fn6 : ('a -> 'b -> 'c -> 'd -> 'e -> 'f -> 'g) -> ('a * 'b * 'c * 'd * 'e * 'f) Mock.fn = "jest.fn" [@@bs.val]
+  external fn3 : ('a -> 'b -> 'c -> 'd) -> ('a * 'b * 'c) MockJs.fn = "jest.fn" [@@bs.val]
+  external fn4 : ('a -> 'b -> 'c -> 'd -> 'e) -> ('a * 'b * 'c * 'd) MockJs.fn = "jest.fn" [@@bs.val]
+  external fn5 : ('a -> 'b -> 'c -> 'd -> 'e -> 'f) -> ('a * 'a * 'c * 'd * 'e) MockJs.fn = "jest.fn" [@@bs.val]
+  external fn6 : ('a -> 'b -> 'c -> 'd -> 'e -> 'f -> 'g) -> ('a * 'b * 'c * 'd * 'e * 'f) MockJs.fn = "jest.fn" [@@bs.val]
   *)
-  (* external isMockFunction : Mock.fn -> Js.boolean = "jest.isMockFunction" [@@bs.val] *) (* pointless with types? *)
+  (* external isMockFunction : MockJs.fn -> Js.boolean = "jest.isMockFunction" [@@bs.val] *) (* pointless with types? *)
   external mock : string -> unit = "jest.mock" [@@bs.val]
   external mockWithFactory : string -> (unit -> 'a) ->unit = "jest.mock" [@@bs.val]
   external mockVirtual : string -> (unit -> 'a) -> < .. > Js.t -> unit = "jest.mock" [@@bs.val]
@@ -375,6 +375,6 @@ module Jest = struct
   external unmock : string -> unit = "jest.unmock" [@@bs.val]
   external useFakeTimers : unit -> unit = "jest.useFakeTimers" [@@bs.val]
   external useRealTimers : unit -> unit = "jest.useRealTimers" [@@bs.val]
-  external spyOn : (< .. > Js.t as 'this) -> string -> (unit, unit, 'this) Mock.fn = "jest.spyOn" [@@bs.val] (* this is a bit too dynamic *)
+  external spyOn : (< .. > Js.t as 'this) -> string -> (unit, unit, 'this) MockJs.fn = "jest.spyOn" [@@bs.val] (* this is a bit too dynamic *)
 end
 
