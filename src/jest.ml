@@ -150,7 +150,9 @@ module Expect = struct
   
   let toBe : 'a -> 'a partial -> 'a matchSpec =
     fun b -> mapMod (fun a -> Be (a, b))
+
   let (==) = fun a b -> toBe b a
+  (** experimetnal, causes compiler warning if used *)
 
   (* toHaveBeenCalled* *)
   
@@ -160,42 +162,33 @@ module Expect = struct
   let toBeSoCloseTo : float -> digits:int -> float partial -> float matchSpec =
     fun b ~digits -> mapMod (fun a -> FloatCloseTo (a, b, Some digits))
 
-  let toBeDefined : 'a Js.undefined partial -> 'a matchSpec =
-    fun a -> mapMod (fun a -> Defined a) a
-
-  let toBeFalsy : 'a partial -> 'a matchSpec = (* js-y *)
-    fun a -> mapMod (fun a -> Falsy a) a
-
   let toBeGreaterThan : 'a -> 'a partial -> 'a matchSpec =
     fun b -> mapMod (fun a -> GreaterThan (a, b))
+
   let (>) = fun a b -> toBeGreaterThan b a
+  (** experimetnal, causes compiler warning if used *)
 
   let toBeGreaterThanOrEqual : 'a -> 'a partial -> 'a matchSpec =
     fun b -> mapMod (fun a -> GreaterThanOrEqual (a, b))
+
   let (>=) = fun a b -> toBeGreaterThanOrEqual b a
+  (** experimetnal, causes compiler warning if used *)
 
   let toBeLessThan : 'a -> 'a partial -> 'a matchSpec =
     fun b -> mapMod (fun a -> LessThan (a, b))
+
   let (<) = fun a b -> toBeLessThan b a
+  (** experimetnal, causes compiler warning if used *)
 
   let toBeLessThanOrEqual : 'a -> 'a partial -> 'a matchSpec =
     fun b -> mapMod (fun a -> LessThanOrEqual (a, b))
+
   let (<=) = fun a b -> toBeLessThanOrEqual b a
-
-  (* toBeInstanceOf *) (* js-y *)
-
-  let toBeNull : 'a Js.null partial -> 'a matchSpec =
-    fun a -> mapMod (fun a -> Null a) a
+  (** experimetnal, causes compiler warning if used *)
 
   (** replaces expect.arrayContaining *)
   let toBeSupersetOf : 'a array -> 'a array partial -> 'a matchSpec =
     fun b -> mapMod (fun a -> ArraySuperset (a, b))
-
-  let toBeTruthy : 'a partial -> 'a matchSpec = (* js-y *)
-    fun a -> mapMod (fun a -> Truthy a) a
-
-  let toBeUndefined : 'a Js.undefined partial -> 'a matchSpec =
-    fun a -> mapMod (fun a -> Undefined a) a
 
   let toContain : 'a -> 'a array partial -> 'a matchSpec =
     fun b -> mapMod (fun a -> ArrayContains (a, b))
@@ -204,13 +197,11 @@ module Expect = struct
   let toContainString : string -> string partial -> 'a matchSpec =
     fun b -> mapMod (fun a -> StringContains (a, b))
 
-  (** replaces expect.stringContaining *)
-  let toContainProperties : string array -> 'a Js.t partial -> 'a matchSpec = (* js-y *)
-    fun props -> mapMod (fun a -> ObjectContains (a, props))
-
   let toEqual : 'a -> 'a partial -> 'a matchSpec =
     fun b -> mapMod (fun a -> Equal (a, b))
+
   let (=) = fun a b -> toEqual b a
+  (** experimetnal, causes compiler warning if used *)
 
   let toHaveLength : int -> 'a array partial -> 'a matchSpec =
     fun l -> mapMod (fun a -> ArrayLength (a, l))
@@ -221,7 +212,6 @@ module Expect = struct
   let toMatchRe : Js.Re.t -> string partial -> string matchSpec =
     fun re -> mapMod (fun a -> StringMatch (a, re))
 
-  (* toMatchObject *) (* js-y *)
   (* toMatchSnaphsot *)
   (* toThrow *) (* js-y? *)
   (* toThrowErrorMatchingSnapshot *) (* js-y? *)
@@ -229,8 +219,38 @@ module Expect = struct
   let not_ : 'a partial -> 'a partial = function
     | Just a -> Not a
     | Not _ -> raise (Invalid_argument "I suck at GADTs")
-    let (<>) = fun a b -> a |> not_ |> toEqual b
-    let (!=) = fun a b -> a |> not_ |> toBe b
+
+  let (<>) = fun a b -> a |> not_ |> toEqual b
+  (** experimetnal, causes compiler warning if used *)
+  let (!=) = fun a b -> a |> not_ |> toBe b
+  (** experimetnal, causes compiler warning if used *)
+end
+
+module ExpectJS = struct
+  include Expect
+
+  let toBeDefined : 'a Js.undefined partial -> 'a matchSpec =
+    fun a -> mapMod (fun a -> Defined a) a
+
+  let toBeFalsy : 'a partial -> 'a matchSpec =
+    fun a -> mapMod (fun a -> Falsy a) a
+
+  (* toBeInstanceOf *)
+
+  let toBeNull : 'a Js.null partial -> 'a matchSpec =
+    fun a -> mapMod (fun a -> Null a) a
+
+  let toBeTruthy : 'a partial -> 'a matchSpec =
+    fun a -> mapMod (fun a -> Truthy a) a
+
+  let toBeUndefined : 'a Js.undefined partial -> 'a matchSpec =
+    fun a -> mapMod (fun a -> Undefined a) a
+
+  (** replaces expect.objectContaining *)
+  let toContainProperties : string array -> 'a Js.t partial -> 'a matchSpec =
+    fun props -> mapMod (fun a -> ObjectContains (a, props))
+
+  (* toMatchObject *) (* js-y *)
 end
 
 module Mock = struct
