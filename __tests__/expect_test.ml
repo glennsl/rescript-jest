@@ -61,8 +61,8 @@ describe "Expect" (fun _ ->
     expect (1 + 2) != 4);
 );
 
-describe "ExpectJS" (fun _ -> 
-  let open ExpectJS in
+describe "ExpectJs" (fun _ -> 
+  let open ExpectJs in
 
   test "toBe" (fun _ ->
     expect (1 + 2) |> toBe 3);

@@ -1,13 +1,14 @@
 # bs-jest - [BuckleScript](https://github.com/bloomberg/bucklescript) bindings for [Jest](https://github.com/facebook/jest) [![Build Status](https://travis-ci.org/BuckleTypes/bs-jest.svg?branch=master)](https://travis-ci.org/BuckleTypes/bs-jest)
 
-Very very very **experimental** and **WIP**
+Very very **experimental** (yep, that's one less "very" than before!) and **WIP**
 
 ## Status
 
 * [Global](https://facebook.github.io/jest/docs/api.html#content): Fully implemented and tested, apart from `require.*`
-* [Expect](https://facebook.github.io/jest/docs/expect.html#content): Parts of it implemented in many different ways. Testing out different API designs, see [#3](https://github.com/BuckleTypes/bs-jest/issues/3). "Static" `expect` functions will mostly need to be implemented as matcher overloads. `expect.extend` will probably be dropped in favor of some less dynamic solution.
-* [Mock Functions](https://facebook.github.io/jest/docs/mock-function-api.html#content): Experimental and unsafe implementation, very much in flux.
-* [The Jest Object](https://facebook.github.io/jest/docs/jest-object.html#content): Fake timers are fully implemented and tested. Mock functions are mostly implemented, but experimental and largely untested.
+* [Expect](https://facebook.github.io/jest/docs/expect.html#content): Mostly implemented. Functionality that makes sense only for JS interop have been moved to `ExpectJS`. Some functionality does not make sense in a typed language, or is not possible to implement sensibly in ML.
+* [Mock Functions](https://facebook.github.io/jest/docs/mock-function-api.html#content): Experimental and unsafe implementation, very much in flux. The Jest bindings will most likely be relegated to the `MockJs` module as it's very quirky to use with native code. A separate native from-scratch implementation might suddenly appear as `Mock`.
+* [The Jest Object](https://facebook.github.io/jest/docs/jest-object.html#content): Fake timers are fully implemented and tested. Mock functionality has been moved to `JestJs`. It's mostly implemented, but experimental and largely untested.
+* [Snapshotting] Completely untested. Expect functions exist, but there's currently no way to implement custom snapshot serializers.
 
 ## Usage
 

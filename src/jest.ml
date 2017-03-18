@@ -270,7 +270,7 @@ module Expect = struct
   (** experimetnal, causes compiler warning if used *)
 end
 
-module ExpectJS = struct
+module ExpectJs = struct
   include Expect
 
   let toBeDefined : 'a Js.undefined partial -> 'a matchSpec =
