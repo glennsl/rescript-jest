@@ -34,6 +34,7 @@ let mapMod f = function
 
 type 'a matchSpec = 'a simpleMatchSpec matchModifier
   
+(* internal *)
 module LLExpect : sig
   val exec : 'a matchSpec -> unit
 end = struct
@@ -95,6 +96,42 @@ end = struct
   | Not Undefined a -> (expect a) ## not ## toBeUndefined ()
 end
 
+
+let returnUndefined callback a = callback a; Js.Undefined.empty
+
+external test : string -> (unit -> unit Js.undefined) -> unit = "" [@@bs.val]
+let test : string -> (unit -> 'a matchSpec) -> unit = fun name callback ->
+  test name (returnUndefined (fun () -> LLExpect.exec (callback ())))
+external testOnly : string -> (unit -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
+let testOnly : string -> (unit -> 'a matchSpec) -> unit = fun name callback ->
+  testOnly name (returnUndefined (fun () -> LLExpect.exec (callback ())))
+external testSkip : string -> (unit -> 'a matchSpec) -> unit = "test.skip" [@@bs.val]
+    
+external testAsync : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "test" [@@bs.val]
+let testAsync : string -> (('a matchSpec -> unit) -> unit) -> unit = fun name callback ->
+  testAsync name (returnUndefined (fun done_ -> callback (fun case -> LLExpect.exec case; done_ ())))
+external testAsyncOnly : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
+let testAsyncOnly : string -> (('a matchSpec -> unit) -> unit) -> unit = fun name callback ->
+  testAsyncOnly name (returnUndefined (fun done_ -> callback (fun case -> LLExpect.exec case; done_ ())))
+external testAsyncSkip : string -> (('a matchSpec -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
+
+external testPromise : string -> (unit -> ('a, 'e) promise) -> unit = "test" [@@bs.val]
+let testPromise : string -> (unit -> ('a matchSpec, 'e) promise) -> unit = fun name callback ->
+  testPromise name (fun () -> callback () |> Promise.then_ LLExpect.exec)
+external testPromiseOnly : string -> (unit -> ('a, 'e) promise) -> unit = "test.only" [@@bs.val]
+let testPromiseOnly : string -> (unit -> ('a matchSpec, 'e) promise) -> unit = fun name callback ->
+  testPromiseOnly name (fun () -> callback () |> Promise.then_ LLExpect.exec)
+external testPromiseSkip : string -> (unit -> ('a matchSpec, 'e) promise) -> unit = "test.skip" [@@bs.val]
+
+external describe : string -> (unit -> unit) -> unit = "" [@@bs.val]
+external describeOnly : string -> (unit -> unit) -> unit = "describe.only" [@@bs.val]
+external describeSkip : string -> (unit -> unit) -> unit = "describe.skip" [@@bs.val]
+
+external beforeAll : (unit -> unit) -> unit = "" [@@bs.val]
+external beforeEach : (unit -> unit) -> unit = "" [@@bs.val]
+external afterAll : (unit -> unit) -> unit = "" [@@bs.val]
+external afterEach : (unit -> unit) -> unit = "" [@@bs.val]
+
 (*
  * Not implemented:
  * - expect.anything - pointless when there's `option`, `Js.null` etc.
@@ -106,7 +143,7 @@ end
  * - expect.stringMatching - implement as overloads of `toEqual`, `toBeCalledWith`, `objectContaining` and `toMatchObject`
  *)
 
-module Expect1 = struct
+module Expect = struct
   type 'a partial = 'a matchModifier
   
   let expect : 'a -> 'a partial = fun a -> Just a
@@ -195,219 +232,6 @@ module Expect1 = struct
     let (<>) = fun a b -> a |> not_ |> toEqual b
     let (!=) = fun a b -> a |> not_ |> toBe b
 end
-
-module Expect1_WithoutTo = struct
-  include Expect1
-  
-  let be = toBe
-  let equal = toEqual
-  let beCloseTo = toBeCloseTo
-  let beSoCloseTo = toBeSoCloseTo
-  let contain = toContain
-  
-  let toBe = ()
-  let toEqual = ()
-  let toBeCloseTo = ()
-  let toBeSoCloseTo = ()
-  let toContain = ()
-end
-
-module Expect2 = struct
-  include Expect1_WithoutTo
-  
-  let expect : 'a -> to_:('a partial -> 'a matchSpec) -> 'a matchSpec =
-    fun a ~to_ -> Just a |> to_
-    
-  let not_ : ('a partial -> 'a matchSpec) -> 'a partial -> 'a matchSpec = fun f p ->
-    match f p with
-    | Just a -> Not a
-    | Not _ -> raise (Invalid_argument "I suck at GADTs")
-end
-
-module Expect3 = struct
-  include Expect1
-  
-  let expect : 'a -> ('a partial -> 'a matchSpec) -> 'a matchSpec =
-    fun a to_ -> Just a |> to_
-    
-  let not_ : ('a partial -> 'a matchSpec) -> 'a partial -> 'a matchSpec = fun f p ->
-    match f p with
-    | Just a -> Not a
-    | Not _ -> raise (Invalid_argument "I suck at GADTs")
-end
-
-module Expect4 = struct
-  include Expect1_WithoutTo
-end
-
-module Expect5 = struct
-  type 'a partial =
-  | Be of 'a
-  | Equal of 'a
-  (* | CloseTo of 'a * int option *)
-  (* | ArrayContains of 'a *)
-  
-  let expect : ('a * 'a partial) -> 'a matchSpec =
-    fun (a, partial) ->
-      match partial with
-      | Be b -> Just (Be (a, b))
-      | Equal b -> Just (Equal (a, b))
-      (* | CloseTo (b, p) -> Just (FloatCloseTo (a, b, p)) *)
-      (* | ArrayContains b -> Just (ArrayContains (a, b)) *)
-      
-  let expectNot : ('a * 'a partial) -> 'a matchSpec = fun (a, p) ->
-    match p with
-    | Be b -> Not (Be (a, b))
-    | Equal b -> Not (Equal (a, b))
-    (* | CloseTo (b, p) -> Not (FloatCloseTo (a, b, p)) *)
-    (* | ArrayContains b -> Not (ArrayContains (a, b)) *)
-      
-  let toBe : 'a -> 'a partial = fun b -> Be b
-  let toEqual : 'a -> 'a partial = fun b -> Equal b
-  (*)
-  let toBeCloseTo : (float as 'a) -> 'a partial = fun b -> CloseTo (b, None)
-  let toBeSoCloseTo : (float as 'a) -> digits:int -> 'a partial = fun b ~digits -> CloseTo (b, Some digits)
-  *)
-  (* let toContain : 'a -> 'a partial = fun b -> ArrayContains b *)
-end
-
-module Expect6 = struct
-  let expect (a: 'a) =
-    object
-      method toBe (b: 'a) = Just (Be (a, b))
-      method toEqual (b: 'a) = Just (Equal (a, b))
-      method not =
-        object
-          method toBe (b: 'a) = Not (Be (a, b))
-          method toEqual (b: 'a) = Not (Equal (a, b))
-        end
-    end
-    
-  let expectFloat (a: float as 'a) =
-    object
-      method toBe (b: 'a) = Just (Be (a, b))
-      method toEqual (b: 'a) = Just (Equal (a, b))
-      method toBeCloseTo (b: 'a) = Just (FloatCloseTo (a, b, None))
-      method toBeSoCloseTo (b: 'a) ~digits:(digits:int) = Just (FloatCloseTo (a, b, Some digits))
-      method not =
-        object
-          method toBe (b: 'a) = Not (Be (a, b))
-          method toEqual (b: 'a) = Not (Equal (a, b))
-          method toBeCloseTo (b: 'a) = Not (FloatCloseTo (a, b, None))
-          method toBeSoCloseTo (b: 'a) ~digits:(digits:int) = Not (FloatCloseTo (a, b, Some digits))
-        end
-    end
-    
-  let expectArray (a: 'v array as 'a) =
-    object
-      method toBe (b: 'a) = Just (Be (a, b))
-      method toEqual (b: 'a) = Just (Equal (a, b))
-      method toContain (b: 'v) = Just (ArrayContains (a, b))
-      method not =
-        object
-          method toBe (b: 'a) = Not (Be (a, b))
-          method toEqual (b: 'a) = Not (Equal (a, b))
-          method toContain (b: 'v) = Not (ArrayContains (a, b))
-        end
-    end
-end
-
-module Assert1 = struct
-  let assertBe a b = Just (Be (a, b))
-  let assertNotBe a b = Not (Be (a, b))
-  let assertEqual a b = Just (Equal (a, b))
-  let assertNotEqual a b = Not (Equal (a, b))
-  let assertCloseTo a b = Just (FloatCloseTo (a, b, None))
-  let assertNotCloseTo a b = Not (FloatCloseTo (a, b, None))
-  let assertSoCloseTo a b ~digits = Just (FloatCloseTo (a, b, Some digits))
-  let assertNotSoCloseTo a b ~digits = Not (FloatCloseTo (a, b, Some digits))
-  let assertContain a v = Just (ArrayContains (a, v))
-  let assertNotContain a v = Not (ArrayContains (a, v))
-end
-
-module Assert2 = struct
-  module Assert = struct
-    let be ~actual:a ~expected:b = Just (Be (a, b))
-    let notBe ~actual:a ~expected:b = Not (Be (a, b))
-    let equal ~actual:a ~expected:b = Just (Equal (a, b))
-    let notEqual ~actual:a ~expected:b = Not (Equal (a, b))
-    let closeTo ~actual:a ~expected:b = Just (FloatCloseTo (a, b, None))
-    let notCloseTo ~actual:a ~expected:b = Not (FloatCloseTo (a, b, None))
-    let soCloseTo ~actual:a ~expected:b ~digits = Just (FloatCloseTo (a, b, Some digits))
-    let notSoCloseTo ~actual:a ~expected:b ~digits = Not (FloatCloseTo (a, b, Some digits))
-    let contain ~actual:a ~element:v = Just (ArrayContains (a, v))
-    let notContain ~actual:a ~element:v = Not (ArrayContains (a, v))
-  end
-end
-
-module Assert3 = struct
-  module Assert = struct
-    let be a ~toBe:b = Just (Be (a, b))
-    let notBe a ~toNotBe:b = Not (Be (a, b))
-    let equal a ~toEqual:b = Just (Equal (a, b))
-    let notEqual a ~toNotEqual:b = Not (Equal (a, b))
-    let closeTo a ~toBeCloseTo:b = Just (FloatCloseTo (a, b, None))
-    let notCloseTo a ~toNotBeCloseTo:b = Not (FloatCloseTo (a, b, None))
-    let soCloseTo a ~toBeSoCloseTo:b ~digits = Just (FloatCloseTo (a, b, Some digits))
-    let notSoCloseTo a ~toNotBeSoCloseTo:b ~digits = Not (FloatCloseTo (a, b, Some digits))
-    let contain a ~toContain:v = Just (ArrayContains (a, v))
-    let notContain a ~toNotContain:v = Not (ArrayContains (a, v))
-  end
-end
-
-module Assert4 = struct
-  module Assert = struct
-    let toBe b a = Just (Be (a, b))
-    let toNotBe b a = Not (Be (a, b))
-    let toEqual b a = Just (Equal (a, b))
-    let toNotEqual b a = Not (Equal (a, b))
-    let toCloseTo b a = Just (FloatCloseTo (a, b, None))
-    let toNotCloseTo b a = Not (FloatCloseTo (a, b, None))
-    let toBeSoCloseTo b a ~digits = Just (FloatCloseTo (a, b, Some digits))
-    let toNotBeSoCloseTo b a ~digits = Not (FloatCloseTo (a, b, Some digits))
-    let toContain v a = Just (ArrayContains (a, v))
-    let toNotContain v a = Not (ArrayContains (a, v))
-  end
-end
-
-module Variant1 = struct
-  type 'a t = 'a matchSpec (* completely unnecessary, just for "documentation" *)
-end
-
-let returnUndefined callback a = callback a; Js.Undefined.empty
-
-external test : string -> (unit -> unit Js.undefined) -> unit = "" [@@bs.val]
-let test : string -> (unit -> 'a matchSpec) -> unit = fun name callback ->
-  test name (returnUndefined (fun () -> LLExpect.exec (callback ())))
-external testOnly : string -> (unit -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
-let testOnly : string -> (unit -> 'a matchSpec) -> unit = fun name callback ->
-  testOnly name (returnUndefined (fun () -> LLExpect.exec (callback ())))
-external testSkip : string -> (unit -> 'a matchSpec) -> unit = "test.skip" [@@bs.val]
-    
-external testAsync : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "test" [@@bs.val]
-let testAsync : string -> (('a matchSpec -> unit) -> unit) -> unit = fun name callback ->
-  testAsync name (returnUndefined (fun done_ -> callback (fun case -> LLExpect.exec case; done_ ())))
-external testAsyncOnly : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
-let testAsyncOnly : string -> (('a matchSpec -> unit) -> unit) -> unit = fun name callback ->
-  testAsyncOnly name (returnUndefined (fun done_ -> callback (fun case -> LLExpect.exec case; done_ ())))
-external testAsyncSkip : string -> (('a matchSpec -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
-
-external testPromise : string -> (unit -> ('a, 'e) promise) -> unit = "test" [@@bs.val]
-let testPromise : string -> (unit -> ('a matchSpec, 'e) promise) -> unit = fun name callback ->
-  testPromise name (fun () -> callback () |> Promise.then_ LLExpect.exec)
-external testPromiseOnly : string -> (unit -> ('a, 'e) promise) -> unit = "test.only" [@@bs.val]
-let testPromiseOnly : string -> (unit -> ('a matchSpec, 'e) promise) -> unit = fun name callback ->
-  testPromiseOnly name (fun () -> callback () |> Promise.then_ LLExpect.exec)
-external testPromiseSkip : string -> (unit -> ('a matchSpec, 'e) promise) -> unit = "test.skip" [@@bs.val]
-
-external describe : string -> (unit -> unit) -> unit = "" [@@bs.val]
-external describeOnly : string -> (unit -> unit) -> unit = "describe.only" [@@bs.val]
-external describeSkip : string -> (unit -> unit) -> unit = "describe.skip" [@@bs.val]
-
-external beforeAll : (unit -> unit) -> unit = "" [@@bs.val]
-external beforeEach : (unit -> unit) -> unit = "" [@@bs.val]
-external afterAll : (unit -> unit) -> unit = "" [@@bs.val]
-external afterEach : (unit -> unit) -> unit = "" [@@bs.val]
 
 module Mock = struct
     type ('fn, 'args, 'ret) fn
