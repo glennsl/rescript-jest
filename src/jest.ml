@@ -302,50 +302,66 @@ module ExpectJS = struct
 end
 
 module MockJs = struct
-    type ('fn, 'args, 'ret) fn
-    type ('args, 'ret) mock
-    
-    (* TODO: "... contains type variables cannot be generalized"
-    (** Equiavlent to calling new mock() *)
-    let make : ('fn, _, _) fn -> 'fn = [%bs.raw {|
-      function(self) {
-        return new (Function.prototype.bind.apply(self, arguments));
-      }
-    |}]
-    *)
-    
-    external fn : ('fn, _, _) fn -> 'fn = "%identity"
-    external mock : (_, 'args, 'ret) fn -> ('args, 'ret) mock = "" [@@bs.get]
-    external calls : ('args, _) mock -> 'args array = "" [@@bs.get]
-    let calls self = Js.Array.copy (calls self) (* Awesome, the bloody things are mutated so we need to copy *)
-    let calls self = calls self |> Array.map [%bs.raw {|
-      function (args) { return args.length === 1 ? args[0] : args }
-    |}] (* there's no such thing as aa 1-ary tuple, so we need to unbox single-element arrays *)
-    external instances : (_, 'ret') mock -> 'ret array = "" [@@bs.get] (* TODO: semms this only records "instances" created by `new` *)
-    let instances self = Js.Array.copy (instances self) (* Awesome, the bloody things are mutated so we need to copy *)
-    (* "... contains type variables cannot be generalized"
-    let calls : 'args fn -> 'args = [%bs.raw {|
-      function (fn) { fn.mock.calls; }()
-    |}]
-    let instances : _ fn -> 'a = [%bs.raw {|
-      function (fn) { fn.mock.instances; }()
-    |}]
-    *)
-    
-    (** Beware: this actually replaces `mock`, not just `mock.instances` and `mock.calls` *)
-    external mockClear : unit = "" [@@bs.send.pipe: _ fn]
-    external mockReset : unit = "" [@@bs.send.pipe: _ fn]
-    external mockImplementation : 'fn -> 'self = "" [@@bs.send.pipe: ('fn, _, _) fn as 'self]
-    external mockImplementationOnce : 'fn -> 'self = "" [@@bs.send.pipe: ('fn, _, _) fn as 'self]
-    external mockReturnThis : unit = "" [@@bs.send.pipe: (_, _, 'ret) fn] (* not type safe, we don't know what `this` actually is *)
-    external mockReturnValue : 'ret -> 'self = "" [@@bs.send.pipe: (_, _, 'ret) fn as 'self]
-    external mockReturnValueOnce : 'ret -> 'self = "" [@@bs.send.pipe: (_, _, 'ret) fn as 'self]
+  (** experimental *)
+
+  type ('fn, 'args, 'ret) fn
+  type ('args, 'ret) mock
+  
+  (* TODO: "... contains type variables cannot be generalized"
+  (** Equiavlent to calling new mock() *)
+  let make : ('fn, _, _) fn -> 'fn = [%bs.raw {|
+    function(self) {
+      return new (Function.prototype.bind.apply(self, arguments));
+    }
+  |}]
+  *)
+  
+  external fn : ('fn, _, _) fn -> 'fn = "%identity"
+  external mock : (_, 'args, 'ret) fn -> ('args, 'ret) mock = "" [@@bs.get]
+  external calls : ('args, _) mock -> 'args array = "" [@@bs.get]
+  let calls self = Js.Array.copy (calls self) (* Awesome, the bloody things are mutated so we need to copy *)
+  let calls self = calls self |> Array.map [%bs.raw {|
+    function (args) { return args.length === 1 ? args[0] : args }
+  |}] (* there's no such thing as aa 1-ary tuple, so we need to unbox single-element arrays *)
+  external instances : (_, 'ret') mock -> 'ret array = "" [@@bs.get] (* TODO: semms this only records "instances" created by `new` *)
+  let instances self = Js.Array.copy (instances self) (* Awesome, the bloody things are mutated so we need to copy *)
+  (* "... contains type variables cannot be generalized"
+  let calls : 'args fn -> 'args = [%bs.raw {|
+    function (fn) { fn.mock.calls; }()
+  |}]
+  let instances : _ fn -> 'a = [%bs.raw {|
+    function (fn) { fn.mock.instances; }()
+  |}]
+  *)
+  
+  (** Beware: this actually replaces `mock`, not just `mock.instances` and `mock.calls` *)
+  external mockClear : unit = "" [@@bs.send.pipe: _ fn]
+  external mockReset : unit = "" [@@bs.send.pipe: _ fn]
+  external mockImplementation : 'fn -> 'self = "" [@@bs.send.pipe: ('fn, _, _) fn as 'self]
+  external mockImplementationOnce : 'fn -> 'self = "" [@@bs.send.pipe: ('fn, _, _) fn as 'self]
+  external mockReturnThis : unit = "" [@@bs.send.pipe: (_, _, 'ret) fn] (* not type safe, we don't know what `this` actually is *)
+  external mockReturnValue : 'ret -> 'self = "" [@@bs.send.pipe: (_, _, 'ret) fn as 'self]
+  external mockReturnValueOnce : 'ret -> 'self = "" [@@bs.send.pipe: (_, _, 'ret) fn as 'self]
 end
 
 module Jest = struct
   external clearAllTimers : unit -> unit = "jest.clearAllTimers" [@@bs.val]
+  external runAllTicks : unit -> unit = "jest.runAllTicks" [@@bs.val]
+  external runAllTimers : unit -> unit = "jest.runAllTimers" [@@bs.val]
+  external runAllImmediates : unit -> unit = "jest.runAllImmediates" [@@bs.val]
+  external runTimersToTime : int -> unit = "jest.runTimersToTime" [@@bs.val]
+  external runOnlyPendingTimers : unit -> unit = "jest.runOnlyPendingTimers" [@@bs.val]
+  external useFakeTimers : unit -> unit = "jest.useFakeTimers" [@@bs.val]
+  external useRealTimers : unit -> unit = "jest.useRealTimers" [@@bs.val]
+end
+
+module JestJs = struct
+  (** experimental *)
+
   external disableAutomock : unit -> unit = "jest.disableAutomock" [@@bs.val]
   external enableAutomock : unit -> unit = "jest.enableAutomock" [@@bs.val]
+  (* genMockFromModule *)
+  external resetModules : unit -> unit = "jest.resetModules" [@@bs.val]
   external inferred_fn : unit -> ('a -> 'b Js.undefined [@bs], 'a, 'b Js.undefined) MockJs.fn = "jest.fn" [@@bs.val] (* not sure how useful this really is *)
   external fn : ('a -> 'b) -> ('a -> 'b, 'a, 'b) MockJs.fn = "jest.fn" [@@bs.val]
   external fn2 : ('a -> 'b -> 'c [@bs]) -> (('a -> 'b -> 'c [@bs]), 'a * 'b, 'c) MockJs.fn = "jest.fn" [@@bs.val]
@@ -365,16 +381,7 @@ module Jest = struct
   *)
   external clearAllMocks : unit -> unit = "jest.clearAllMocks" [@@bs.val]
   external resetAllMocks : unit -> unit = "jest.resetAllMocks" [@@bs.val]
-  external resetModules : unit -> unit = "jest.resetModules" [@@bs.val]
-  external runAllTicks : unit -> unit = "jest.runAllTicks" [@@bs.val]
-  external runAllTimers : unit -> unit = "jest.runAllTimers" [@@bs.val]
-  external runAllImmediates : unit -> unit = "jest.runAllImmediates" [@@bs.val]
-  external runTimersToTime : int -> unit = "jest.runTimersToTime" [@@bs.val]
-  external runOnlyPendingTimers : unit -> unit = "jest.runOnlyPendingTimers" [@@bs.val]
   external setMock : string -> < .. > Js.t -> unit = "jest.setMock" [@@bs.val]
   external unmock : string -> unit = "jest.unmock" [@@bs.val]
-  external useFakeTimers : unit -> unit = "jest.useFakeTimers" [@@bs.val]
-  external useRealTimers : unit -> unit = "jest.useRealTimers" [@@bs.val]
   external spyOn : (< .. > Js.t as 'this) -> string -> (unit, unit, 'this) MockJs.fn = "jest.spyOn" [@@bs.val] (* this is a bit too dynamic *)
 end
-

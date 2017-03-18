@@ -79,21 +79,3 @@ describe "Fake Timers" (fun _ ->
     setImmediate (fun () -> done_ (Just Ok));
   );
 );
-
-describe "Mocks" (fun _ ->
-  (* Not implemented yet: *)
-  
-  (* disableAutomock *)
-  (* enableAutomock *)
-  (* mock *)
-  (* mockWithFactory *)
-  (* mockVirtual *)
-  (* clearAllMocks *)
-  (* resetAllMocks *)
-  (* setMock *)
-  (* unmock *)
-  (* fn* *)
-  (* spyOn *)
-  
-  ()
-);
