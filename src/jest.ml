@@ -17,10 +17,18 @@ type 'a simpleMatchSpec =
 | GreaterThanOrEqual of 'a * 'a
 | LessThan of 'a * 'a
 | LessThanOrEqual of 'a * 'a
+| MatchSnapshot of 'a
+| MatchSnapshotName of 'a * string
 | Null of 'a Js.null
 | ObjectContains of 'a Js.t * string array
+(*| ObjectMatch of < .. > Js.t * < .. > Js.t*) (* unable to implement this due to unbound type vars *)
 | StringContains of string * string
 | StringMatch of string * Js.Re.t
+| Throws of (unit -> unit)
+| ThrowsException of (unit -> unit) * exn
+| ThrowsMatchSnapshot of (unit -> unit)
+| ThrowsMessage of (unit -> unit) * string
+| ThrowsMessageRe of (unit -> unit) * Js.Re.t
 | Truthy of 'a
 | Undefined of 'a Js.undefined
 
@@ -36,6 +44,7 @@ type 'a matchSpec = 'a simpleMatchSpec matchModifier
   
 (* internal *)
 module LLExpect : sig
+  external expect : 'a -> < .. > Js.t = "" [@@bs.val]
   val exec : 'a matchSpec -> unit
 end = struct
   type specialMatch
@@ -82,14 +91,32 @@ end = struct
   | Not LessThan (a, b) -> (expect a) ## not ## toBeLessThan b
   | Just LessThanOrEqual (a, b) -> (expect a) ## toBeLessThanOrEqual b
   | Not LessThanOrEqual (a, b) -> (expect a) ## not ## toBeLessrThanOrEqual b
+  | Just MatchSnapshot a -> (expect a) ## toMatchSnapshot
+  | Not MatchSnapshot a -> (expect a) ## not ## toMatchSnapshot
+  | Just MatchSnapshotName (a, name) -> (expect a) ## toMatchSnapshot name
+  | Not MatchSnapshotName (a, name) -> (expect a) ## not ## toMatchSnapshot name
   | Just Null a -> (expect a) ## toBeNull ()
   | Not Null a -> (expect a) ## not ## toBeNull ()
   | Just ObjectContains (a, props) -> (expect a) ## toEqual (objectContaining props)
   | Not ObjectContains (a, props) -> (expect a) ## not ## toEqual (objectContaining props)
+  (*
+  | Just ObjectMatch (a, b) -> (expect a) ## toMatchObject b
+  | Not ObjectMatch (a, b) -> (expect a) ## not ## toMatchObject b
+  *)
   | Just StringMatch (s, re) -> (expect s) ## toMatch re
   | Not StringMatch (s, re) -> (expect s) ## not ## toMatch re
   | Just StringContains (a, b) -> (expect a) ## toEqual (stringContaining b)
   | Not StringContains (a, b) -> (expect a) ## not ## toEqual (stringContaining b)
+  | Just Throws f -> (expect f) ## toThrow
+  | Not Throws f -> (expect f) ## not ## toThrow
+  | Just ThrowsException (f, e) -> (expect f) ## toThrow e
+  | Not ThrowsException (f, e) -> (expect f) ## not ## toThrow e
+  | Just ThrowsMatchSnapshot f -> (expect f) ## toThrowErrorMatchingSnapshot
+  | Not ThrowsMatchSnapshot f -> (expect f) ## not ## toThrowErrorMatchingSnapshot
+  | Just ThrowsMessage (f, msg) -> (expect f) ## toThrow msg
+  | Not ThrowsMessage (f, msg) -> (expect f) ## not ## toThrow msg
+  | Just ThrowsMessageRe (f, re) -> (expect f) ## toThrow re
+  | Not ThrowsMessageRe (f, re) -> (expect f) ## not ## toThrow re
   | Just Truthy a -> (expect a) ## toBeTruthy ()
   | Not Truthy a -> (expect a) ## not ## toBeTruthy ()
   | Just Undefined a -> (expect a) ## toBeUndefined ()
@@ -212,9 +239,26 @@ module Expect = struct
   let toMatchRe : Js.Re.t -> string partial -> string matchSpec =
     fun re -> mapMod (fun a -> StringMatch (a, re))
 
-  (* toMatchSnaphsot *)
-  (* toThrow *) (* js-y? *)
-  (* toThrowErrorMatchingSnapshot *) (* js-y? *)
+  let toMatchSnaphsot : 'a partial -> 'a matchSpec =
+    fun a -> mapMod (fun a -> MatchSnapshot a) a
+
+  let toMatchSnaphsotWithName : string -> 'a partial -> 'a matchSpec =
+    fun name -> mapMod (fun a -> MatchSnapshotName (a, name))
+
+  let toThrow : (unit -> unit) partial -> (unit -> unit) matchSpec =
+    mapMod (fun f -> Throws f)
+  
+  let toThrowErrorMatchingSnapshot : (unit -> unit) partial -> (unit -> unit) matchSpec =
+    mapMod (fun f -> ThrowsMatchSnapshot f)
+
+  (*let toThrowException : exn -> (unit -> unit) partial -> (unit -> unit) matchSpec =
+    fun e -> mapMod (fun f -> ThrowsException (f, e))*)
+
+  let toThrowMessage : string -> (unit -> unit) partial -> (unit -> unit) matchSpec =
+    fun msg -> mapMod (fun f -> ThrowsMessage (f, msg))
+
+  let toThrowMessageRe : Js.Re.t -> (unit -> unit) partial -> (unit -> unit) matchSpec =
+    fun re -> mapMod (fun f -> ThrowsMessageRe (f, re))
 
   let not_ : 'a partial -> 'a partial = function
     | Just a -> Not a
@@ -250,7 +294,11 @@ module ExpectJS = struct
   let toContainProperties : string array -> 'a Js.t partial -> 'a matchSpec =
     fun props -> mapMod (fun a -> ObjectContains (a, props))
 
-  (* toMatchObject *) (* js-y *)
+  let toMatchObject : < .. > Js.t -> < .. > Js.t partial -> unit matchSpec =
+    (*fun b -> mapMod (fun a -> ObjectMatch (a, b))*)
+    fun b -> function
+    | Just a -> LLExpect.(expect a) ## toMatchObject b; Just Ok
+    | Not a -> LLExpect.(expect a) ## not ## toMatchObject b; Just Ok
 end
 
 module Mock = struct

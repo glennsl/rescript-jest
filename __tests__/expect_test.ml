@@ -5,61 +5,131 @@ let _ =
 describe "Expect" (fun _ -> 
   let open Expect in
 
-  test "expect1 - toBe" (fun _ -> expect (1 + 2) |> toBe 3);
-  test "expect1 - ==" (fun _ -> expect (1 + 2) == 3);
-  test "expect1 - toBeCloseTo" (fun _ -> expect (1. +. 2.) |> toBeCloseTo 3.);
-  test "expect1 - toBeSoCloseTo" (fun _ -> expect (1. +. 2.) |> toBeSoCloseTo 3. ~digits:9);
-  test "expect1 - toBeGreaterThan" (fun _ -> expect 4 |> toBeGreaterThan 3);
-  test "expect1 - >" (fun _ -> expect 4 > 3);
-  test "expect1 - toBeGreaterThanOrEqual" (fun _ -> expect 4 |> toBeGreaterThanOrEqual 4);
-  test "expect1 - >=" (fun _ -> expect 4 >= 4);
-  test "expect1 - toBeLessThan" (fun _ -> expect 4 |> toBeLessThan 5);
-  test "expect1 - " (fun _ -> expect 4 < 5);
-  test "expect1 - toBeLessThanOrEqual" (fun _ -> expect 4 |> toBeLessThanOrEqual 4);
-  test "expect1 - <=" (fun _ -> expect 4 <= 4);
-  test "expect1 - toBeSuperSetOf" (fun _ -> expect [| "a"; "b"; "c" |] |> toBeSupersetOf [| "a"; "c" |]);
-  test "expect1 - toContain" (fun _ -> expect [| "a"; "b"; "c" |] |> toContain "b");
-  test "expect1 - toContainString" (fun _ -> expect "banana" |> toContainString "nana");
-  test "expect1 - toHaveLength" (fun _ -> expect [| "a"; "b"; "c" |] |> toHaveLength 3);
-  test "expect1 - toEqual" (fun _ -> expect (1 + 2) |> toEqual 3);
-  test "expect1 - toMatch" (fun _ -> expect "banana" |> toMatch "nana");
-  test "expect1 - toMatchRe" (fun _ -> expect "banana" |> toMatchRe [%re "/ana/"]);
-  test "expect1 - =" (fun _ -> expect (1 + 2) = 3);
-  test "expect1 - not_ |> toBe" (fun _ -> expect (1 + 2) |> not_ |> toBe 4);
-  test "expect1 - <>" (fun _ -> expect (1 + 2) <> 4);
-  test "expect1 - !=" (fun _ -> expect (1 + 2) != 4);
+  test "toBe" (fun _ ->
+    expect (1 + 2) |> toBe 3);
+  test "==" (fun _ ->
+    expect (1 + 2) == 3);
+  test "toBeCloseTo" (fun _ ->
+    expect (1. +. 2.) |> toBeCloseTo 3.);
+  test "toBeSoCloseTo" (fun _ ->
+    expect (1. +. 2.) |> toBeSoCloseTo 3. ~digits:9);
+  test "toBeGreaterThan" (fun _ ->
+    expect 4 |> toBeGreaterThan 3);
+  test ">" (fun _ ->
+    expect 4 > 3);
+  test "toBeGreaterThanOrEqual" (fun _ ->
+    expect 4 |> toBeGreaterThanOrEqual 4);
+  test ">=" (fun _ ->
+    expect 4 >= 4);
+  test "toBeLessThan" (fun _ ->
+    expect 4 |> toBeLessThan 5);
+  test "<" (fun _ ->
+    expect 4 < 5);
+  test "toBeLessThanOrEqual" (fun _ ->
+    expect 4 |> toBeLessThanOrEqual 4);
+  test "<=" (fun _ ->
+    expect 4 <= 4);
+  test "toBeSuperSetOf" (fun _ ->
+    expect [| "a"; "b"; "c" |] |> toBeSupersetOf [| "a"; "c" |]);
+  test "toContain" (fun _ ->
+    expect [| "a"; "b"; "c" |] |> toContain "b");
+  test "toContainString" (fun _ ->
+    expect "banana" |> toContainString "nana");
+  test "toHaveLength" (fun _ ->
+    expect [| "a"; "b"; "c" |] |> toHaveLength 3);
+  test "toEqual" (fun _ ->
+    expect (1 + 2) |> toEqual 3);
+  test "toMatch" (fun _ ->
+    expect "banana" |> toMatch "nana");
+  test "toMatchRe" (fun _ ->
+    expect "banana" |> toMatchRe [%re "/ana/"]);
+  test "toThrow" (fun _ ->
+    expect (fun () -> assert false) |> toThrow);
+  (*test "toThrowException" (fun _ ->
+    expect (fun () -> raise (Invalid_argument "foo")) |> toThrowException (Invalid_argument "foo"));*)
+  test "toThrowMessage" (fun _ ->
+    expect (fun () -> raise (Invalid_argument "foo")) |> toThrowMessage "Invalid_argument,-3,foo");
+  test "toThrowMessageRe" (fun _ ->
+    expect (fun () -> assert false) |> toThrowMessageRe [%re "/Assert_failure/"]);
+  test "=" (fun _ ->
+    expect (1 + 2) = 3);
+  test "not_ |> toBe" (fun _ ->
+    expect (1 + 2) |> not_ |> toBe 4);
+  test "<>" (fun _ ->
+    expect (1 + 2) <> 4);
+  test "!=" (fun _ ->
+    expect (1 + 2) != 4);
 );
 
 describe "ExpectJS" (fun _ -> 
   let open ExpectJS in
 
-  test "expect1 - toBe" (fun _ -> expect (1 + 2) |> toBe 3);
-  test "expect1 - ==" (fun _ -> expect (1 + 2) == 3);
-  test "expect1 - toBeCloseTo" (fun _ -> expect (1. +. 2.) |> toBeCloseTo 3.);
-  test "expect1 - toBeSoCloseTo" (fun _ -> expect (1. +. 2.) |> toBeSoCloseTo 3. ~digits:9);
-  test "expect1 - toBeDefined" (fun _ -> expect (Js.Undefined.return 3) |> toBeDefined);
-  test "expect1 - toBeFalsy" (fun _ -> expect nan |> toBeFalsy);
-  test "expect1 - toBeGreaterThan" (fun _ -> expect 4 |> toBeGreaterThan 3);
-  test "expect1 - >" (fun _ -> expect 4 > 3);
-  test "expect1 - toBeGreaterThanOrEqual" (fun _ -> expect 4 |> toBeGreaterThanOrEqual 4);
-  test "expect1 - >=" (fun _ -> expect 4 >= 4);
-  test "expect1 - toBeLessThan" (fun _ -> expect 4 |> toBeLessThan 5);
-  test "expect1 - " (fun _ -> expect 4 < 5);
-  test "expect1 - toBeLessThanOrEqual" (fun _ -> expect 4 |> toBeLessThanOrEqual 4);
-  test "expect1 - <=" (fun _ -> expect 4 <= 4);
-  test "expect1 - toBeNull" (fun _ -> expect nan |> toBeFalsy);
-  test "expect1 - toBeSuperSetOf" (fun _ -> expect [| "a"; "b"; "c" |] |> toBeSupersetOf [| "a"; "c" |]);
-  test "expect1 - toBeTruthy" (fun _ -> expect [||] |> toBeTruthy);
-  test "expect1 - toBeUndefined" (fun _ -> expect Js.Undefined.empty |> toBeUndefined);
-  test "expect1 - toContain" (fun _ -> expect [| "a"; "b"; "c" |] |> toContain "b");
-  test "expect1 - toContainString" (fun _ -> expect "banana" |> toContainString "nana");
-  test "expect1 - toContainProperties" (fun _ -> expect [%obj { foo = 0; bar = true }] |> toContainProperties [| "foo"; "bar" |]);
-  test "expect1 - toHaveLength" (fun _ -> expect [| "a"; "b"; "c" |] |> toHaveLength 3);
-  test "expect1 - toEqual" (fun _ -> expect (1 + 2) |> toEqual 3);
-  test "expect1 - toMatch" (fun _ -> expect "banana" |> toMatch "nana");
-  test "expect1 - toMatchRe" (fun _ -> expect "banana" |> toMatchRe [%re "/ana/"]);
-  test "expect1 - =" (fun _ -> expect (1 + 2) = 3);
-  test "expect1 - not_ |> toBe" (fun _ -> expect (1 + 2) |> not_ |> toBe 4);
-  test "expect1 - <>" (fun _ -> expect (1 + 2) <> 4);
-  test "expect1 - !=" (fun _ -> expect (1 + 2) != 4);
+  test "toBe" (fun _ ->
+    expect (1 + 2) |> toBe 3);
+  test "==" (fun _ ->
+    expect (1 + 2) == 3);
+  test "toBeCloseTo" (fun _ ->
+    expect (1. +. 2.) |> toBeCloseTo 3.);
+  test "toBeSoCloseTo" (fun _ ->
+    expect (1. +. 2.) |> toBeSoCloseTo 3. ~digits:9);
+  test "toBeDefined" (fun _ ->
+    expect (Js.Undefined.return 3) |> toBeDefined);
+  test "toBeFalsy" (fun _ ->
+    expect nan |> toBeFalsy);
+  test "toBeGreaterThan" (fun _ ->
+    expect 4 |> toBeGreaterThan 3);
+  test ">" (fun _ ->
+    expect 4 > 3);
+  test "toBeGreaterThanOrEqual" (fun _ ->
+    expect 4 |> toBeGreaterThanOrEqual 4);
+  test ">=" (fun _ ->
+    expect 4 >= 4);
+  test "toBeLessThan" (fun _ ->
+    expect 4 |> toBeLessThan 5);
+  test "" (fun _ ->
+    expect 4 < 5);
+  test "toBeLessThanOrEqual" (fun _ ->
+    expect 4 |> toBeLessThanOrEqual 4);
+  test "<=" (fun _ ->
+    expect 4 <= 4);
+  test "toBeNull" (fun _ ->
+    expect nan |> toBeFalsy);
+  test "toBeSuperSetOf" (fun _ ->
+    expect [| "a"; "b"; "c" |] |> toBeSupersetOf [| "a"; "c" |]);
+  test "toBeTruthy" (fun _ ->
+    expect [||] |> toBeTruthy);
+  test "toBeUndefined" (fun _ ->
+    expect Js.Undefined.empty |> toBeUndefined);
+  test "toContain" (fun _ ->
+    expect [| "a"; "b"; "c" |] |> toContain "b");
+  test "toContainString" (fun _ ->
+    expect "banana" |> toContainString "nana");
+  test "toContainProperties" (fun _ ->
+    expect [%obj { foo = 0; bar = true }] |> toContainProperties [| "foo"; "bar" |]);
+  test "toHaveLength" (fun _ ->
+    expect [| "a"; "b"; "c" |] |> toHaveLength 3);
+  test "toEqual" (fun _ ->
+    expect (1 + 2) |> toEqual 3);
+  test "toMatch" (fun _ ->
+    expect "banana" |> toMatch "nana");
+  test "toMatchRe" (fun _ ->
+    expect "banana" |> toMatchRe [%re "/ana/"]);
+  test "toMatchObject" (fun _ ->
+    expect [%obj { a = 1; b = 2 }] |> toMatchObject [%obj { a = 1; b = 2 }]);
+  test "toThrow" (fun _ ->
+    expect (fun () -> assert false) |> toThrow);
+  (*test "toThrowException" (fun _ ->
+    expect (fun () -> raise (Invalid_argument "foo")) |> toThrowException (Invalid_argument "foo"));*)
+  test "toThrowMessage" (fun _ ->
+    expect (fun () -> raise (Invalid_argument "foo")) |> toThrowMessage "Invalid_argument,-3,foo");
+  test "toThrowMessageRe" (fun _ ->
+    expect (fun () -> assert false) |> toThrowMessageRe [%re "/Assert_failure/"]);
+  test "=" (fun _ ->
+    expect (1 + 2) = 3);
+  test "not_ |> toBe" (fun _ ->
+    expect (1 + 2) |> not_ |> toBe 4);
+  test "<>" (fun _ ->
+    expect (1 + 2) <> 4);
+  test "!=" (fun _ ->
+    expect (1 + 2) != 4);
 );
