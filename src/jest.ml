@@ -239,10 +239,10 @@ module Expect = struct
   let toMatchRe : Js.Re.t -> string partial -> string matchSpec =
     fun re -> mapMod (fun a -> StringMatch (a, re))
 
-  let toMatchSnaphsot : 'a partial -> 'a matchSpec =
+  let toMatchSnapshot : 'a partial -> 'a matchSpec =
     fun a -> mapMod (fun a -> MatchSnapshot a) a
 
-  let toMatchSnaphsotWithName : string -> 'a partial -> 'a matchSpec =
+  let toMatchSnapshotWithName : string -> 'a partial -> 'a matchSpec =
     fun name -> mapMod (fun a -> MatchSnapshotName (a, name))
 
   let toThrow : (unit -> unit) partial -> (unit -> unit) matchSpec =
