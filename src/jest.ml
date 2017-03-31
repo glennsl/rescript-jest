@@ -91,8 +91,8 @@ end = struct
   | Not LessThan (a, b) -> (expect a) ## not ## toBeLessThan b
   | Just LessThanOrEqual (a, b) -> (expect a) ## toBeLessThanOrEqual b
   | Not LessThanOrEqual (a, b) -> (expect a) ## not ## toBeLessrThanOrEqual b
-  | Just MatchSnapshot a -> (expect a) ## toMatchSnapshot
-  | Not MatchSnapshot a -> (expect a) ## not ## toMatchSnapshot
+  | Just MatchSnapshot a -> (expect a) ## toMatchSnapshot ()
+  | Not MatchSnapshot a -> (expect a) ## not ## toMatchSnapshot ()
   | Just MatchSnapshotName (a, name) -> (expect a) ## toMatchSnapshot name
   | Not MatchSnapshotName (a, name) -> (expect a) ## not ## toMatchSnapshot name
   | Just Null a -> (expect a) ## toBeNull ()
@@ -107,12 +107,12 @@ end = struct
   | Not StringMatch (s, re) -> (expect s) ## not ## toMatch re
   | Just StringContains (a, b) -> (expect a) ## toEqual (stringContaining b)
   | Not StringContains (a, b) -> (expect a) ## not ## toEqual (stringContaining b)
-  | Just Throws f -> (expect f) ## toThrow
-  | Not Throws f -> (expect f) ## not ## toThrow
+  | Just Throws f -> (expect f) ## toThrow ()
+  | Not Throws f -> (expect f) ## not ## toThrow ()
   | Just ThrowsException (f, e) -> (expect f) ## toThrow e
   | Not ThrowsException (f, e) -> (expect f) ## not ## toThrow e
-  | Just ThrowsMatchSnapshot f -> (expect f) ## toThrowErrorMatchingSnapshot
-  | Not ThrowsMatchSnapshot f -> (expect f) ## not ## toThrowErrorMatchingSnapshot
+  | Just ThrowsMatchSnapshot f -> (expect f) ## toThrowErrorMatchingSnapshot ()
+  | Not ThrowsMatchSnapshot f -> (expect f) ## not ## toThrowErrorMatchingSnapshot ()
   | Just ThrowsMessage (f, msg) -> (expect f) ## toThrow msg
   | Not ThrowsMessage (f, msg) -> (expect f) ## not ## toThrow msg
   | Just ThrowsMessageRe (f, re) -> (expect f) ## toThrow re
