@@ -131,37 +131,24 @@ end = struct
 end
 
 module Runner (A : Asserter) = struct
-  let returnUndefined callback a = callback a; Js.Undefined.empty
-
   external test : string -> (unit -> unit Js.undefined) -> unit = "" [@@bs.val]
   let test : string -> (unit -> 'a A.t) -> unit = fun name callback ->
-    test name (returnUndefined (fun () -> A.assert_ (callback ())))
-  external testOnly : string -> (unit -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
-  let testOnly : string -> (unit -> 'a A.t) -> unit = fun name callback ->
-    testOnly name (returnUndefined (fun () -> A.assert_ (callback ())))
-  [@@ocaml.deprecated "Use `Only.test` instead"]
-  external testSkip : string -> (unit -> 'a A.t) -> unit = "test.skip" [@@bs.val]
-  [@@ocaml.deprecated "Use `Skip.test` instead"]
+    test name (fun () ->
+      A.assert_ @@ callback ();
+      Js.undefined)
       
   external testAsync : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "test" [@@bs.val]
   let testAsync : string -> (('a A.t -> unit) -> unit) -> unit = fun name callback ->
-    testAsync name (returnUndefined (fun done_ -> callback (fun case -> A.assert_ case; done_ ())))
-  external testAsyncOnly : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
-  let testAsyncOnly : string -> (('a A.t -> unit) -> unit) -> unit = fun name callback ->
-    testAsyncOnly name (returnUndefined (fun done_ -> callback (fun case -> A.assert_ case; done_ ())))
-  [@@ocaml.deprecated "Use `Only.testAsync` instead"]
-  external testAsyncSkip : string -> (('a A.t -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
-  [@@ocaml.deprecated "Use `Skip.testAsync` instead"]
+    testAsync name (fun done_ ->
+      callback (fun case ->
+        A.assert_ case;
+        done_ ());
+      Js.undefined)
 
   external testPromise : string -> (unit -> ('a, 'e) promise) -> unit = "test" [@@bs.val]
   let testPromise : string -> (unit -> ('a A.t, 'e) promise) -> unit = fun name callback ->
-    testPromise name (fun () -> callback () |> Promise.then_ A.assert_)
-  external testPromiseOnly : string -> (unit -> ('a, 'e) promise) -> unit = "test.only" [@@bs.val]
-  let testPromiseOnly : string -> (unit -> ('a A.t, 'e) promise) -> unit = fun name callback ->
-    testPromiseOnly name (fun () -> callback () |> Promise.then_ A.assert_)
-  [@@ocaml.deprecated "Use `Only.testPromise` instead"]
-  external testPromiseSkip : string -> (unit -> ('a A.t, 'e) promise) -> unit = "test.skip" [@@bs.val]
-  [@@ocaml.deprecated "Use `Skip.testPromise` instead"]
+    testPromise name (fun () ->
+      callback () |> Promise.then_ A.assert_)
 
   external describe : string -> (unit -> unit) -> unit = "" [@@bs.val]
   external describeOnly : string -> (unit -> unit) -> unit = "describe.only" [@@bs.val]
@@ -177,15 +164,22 @@ module Runner (A : Asserter) = struct
   module Only = struct
     external test : string -> (unit -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
     let test : string -> (unit -> 'a A.t) -> unit = fun name callback ->
-      test name (returnUndefined (fun () -> A.assert_ (callback ())))
+      test name (fun () ->
+        A.assert_ @@ callback ();
+        Js.undefined)
 
     external testAsync : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
     let testAsync : string -> (('a A.t -> unit) -> unit) -> unit = fun name callback ->
-      testAsync name (returnUndefined (fun done_ -> callback (fun case -> A.assert_ case; done_ ())))
+      testAsync name (fun done_ ->
+        callback (fun case ->
+          A.assert_ case;
+          done_ ());
+        Js.undefined)
 
     external testPromise : string -> (unit -> ('a, 'e) promise) -> unit = "test.only" [@@bs.val]
     let testPromise : string -> (unit -> ('a A.t, 'e) promise) -> unit = fun name callback ->
-      testPromise name (fun () -> callback () |> Promise.then_ A.assert_)
+      testPromise name (fun () ->
+        callback () |> Promise.then_ A.assert_)
 
     external describe : string -> (unit -> unit) -> unit = "describe.only" [@@bs.val]
   end
@@ -199,6 +193,28 @@ module Runner (A : Asserter) = struct
 end
 
 include Runner(LLExpect)
+
+external testOnly : string -> (unit -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
+let testOnly : string -> (unit -> 'a matchSpec) -> unit = fun name callback ->
+  testOnly name (fun () -> LLExpect.assert_ @@ callback (); Js.undefined)
+[@@ocaml.deprecated "Use `Only.test` instead"]
+external testSkip : string -> (unit -> 'a matchSpec) -> unit = "test.skip" [@@bs.val]
+[@@ocaml.deprecated "Use `Skip.test` instead"]
+
+external testAsyncOnly : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
+let testAsyncOnly : string -> (('a matchSpec -> unit) -> unit) -> unit = fun name callback ->
+  testAsyncOnly name (fun done_ -> callback (fun case -> LLExpect.assert_ case; done_ ()); Js.undefined)
+[@@ocaml.deprecated "Use `Only.testAsync` instead"]
+external testAsyncSkip : string -> (('a matchSpec -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
+[@@ocaml.deprecated "Use `Skip.testAsync` instead"]
+
+external testPromiseOnly : string -> (unit -> ('a, 'e) promise) -> unit = "test.only" [@@bs.val]
+let testPromiseOnly : string -> (unit -> ('a matchSpec, 'e) promise) -> unit = fun name callback ->
+  testPromiseOnly name (fun () -> callback () |> Promise.then_ LLExpect.assert_)
+[@@ocaml.deprecated "Use `Only.testPromise` instead"]
+external testPromiseSkip : string -> (unit -> ('a matchSpec, 'e) promise) -> unit = "test.skip" [@@bs.val]
+[@@ocaml.deprecated "Use `Skip.testPromise` instead"]
+
 
 (*
  * Not implemented:
@@ -221,7 +237,7 @@ module Expect = struct
 
   (* toHaveBeenCalled* *)
   
-  let toBeCloseTo : 'a -> 'a partial -> 'a matchSpec =
+  let toBeCloseTo : float -> float partial -> 'a matchSpec =
     fun b -> mapMod (fun a -> FloatCloseTo (a, b, None))
   
   let toBeSoCloseTo : float -> digits:int -> float partial -> float matchSpec =

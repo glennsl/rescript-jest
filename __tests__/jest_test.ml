@@ -1,4 +1,6 @@
 open Jest
+open Expect
+open! Expect.Operators
 
 external setTimeout : (unit -> unit) -> int -> unit = "" [@@bs.val]
 external setImmediate : (unit -> unit) -> unit = "" [@@bs.val]
@@ -14,7 +16,7 @@ describe "Fake Timers" (fun _ ->
     let before = !flag in
     Jest.runAllTimers ();
     
-    Just (Equal ((before, !flag), (false, true)))
+    expect (before, !flag) = (false, true)
   );
   
   test "runAllTicks" (fun _ ->
@@ -24,7 +26,7 @@ describe "Fake Timers" (fun _ ->
     let before = !flag in
     Jest.runAllTicks ();
     
-    Just (Equal ((before, !flag), (false, true)))
+    expect (before, !flag) = (false, true)
   );
   
   test "runAllImmediates" (fun _ ->
@@ -34,7 +36,7 @@ describe "Fake Timers" (fun _ ->
     let before = !flag in
     Jest.runAllImmediates ();
     
-    Just (Equal ((before, !flag), (false, true)))
+    expect (before, !flag) = (false, true)
   );
   
   test "runTimersToTime" (fun _ ->
@@ -46,7 +48,7 @@ describe "Fake Timers" (fun _ ->
     let inbetween = !flag in
     Jest.runTimersToTime 1000;
     
-    Just (Equal ((before, inbetween, !flag), (false, false, true)))
+    expect (before, inbetween, !flag) = (false, false, true)
   );
   
   test "runOnlyPendingTimers" (fun _ ->
@@ -59,7 +61,7 @@ describe "Fake Timers" (fun _ ->
     let inbetween = !count in
     Jest.runOnlyPendingTimers ();
     
-    Just (Equal ((before, inbetween, !count), (1, 2, 3)))
+    expect (before, inbetween, !count) = (1, 2, 3)
   );
   
   test "clearAllTimers" (fun _ ->
@@ -70,12 +72,12 @@ describe "Fake Timers" (fun _ ->
     Jest.clearAllTimers ();
     Jest.runAllTimers ();
     
-    Just (Equal ((before, !flag), (false, false)))
+    expect (before, !flag) = (false, false)
   );
   
   testAsync "clearAllTimers" (fun done_ ->
     Jest.useFakeTimers ();
     Jest.useRealTimers ();
-    setImmediate (fun () -> done_ (Just Ok));
+    setImmediate (fun () -> done_ (expect true |> toBe true));
   );
 );

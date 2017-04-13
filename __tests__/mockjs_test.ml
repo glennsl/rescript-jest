@@ -1,4 +1,5 @@
 open Jest
+open ExpectJs
 
 (* TODO: move to BS std lib *)
 external bind : ('a -> 'b) -> 'c -> 'a -> ('a -> 'b) = "" [@@bs.send]
@@ -15,21 +16,21 @@ describe "inferred_fn" (fun _ ->
     let mockFn = JestJs.inferred_fn () in
     let fn = MockJs.fn mockFn in
     
-    Just (Undefined (call fn ()))
+    expect (call fn ()) |> toBeUndefined
   );
   
   test "black hole for argument type object" (fun _ ->
     let mockFn = JestJs.inferred_fn () in
     let fn = MockJs.fn mockFn in
     
-    Just (Undefined (call fn [%bs.obj { property = 42 }]))
+    expect (call fn [%obj { property = 42 }]) |> toBeUndefined
   );
   
   test "black hole for argument type string" (fun _ ->
     let mockFn = JestJs.inferred_fn () in
     let fn = MockJs.fn mockFn in
     
-    Just (Undefined (call fn "some string"))
+    expect (call fn "some string") |> toBeUndefined
   );
   
   test "calls - records call arguments" (fun _ ->
@@ -40,7 +41,7 @@ describe "inferred_fn" (fun _ ->
     let _ = call fn "second" in
     let calls  = mockFn |> MockJs.mock |> MockJs.calls in
     
-    Just (Equal (calls, [| "first"; "second" |]))
+    expect calls |> toEqual [| "first"; "second" |]
   );
   
   test "mockClear - resets calls" (fun _ ->
@@ -53,10 +54,10 @@ describe "inferred_fn" (fun _ ->
     MockJs.mockClear mockFn;
     let after  = mockFn |> MockJs.mock |> MockJs.calls in
     
-    Just (Equal (
-      (before, inbetween, after),
+    expect
+      (before, inbetween, after)
+    |> toEqual
       ([||], [| 1; 2 |], [||])
-    ))
   );
   
   test "mockReset - resets calls" (fun _ ->
@@ -69,10 +70,10 @@ describe "inferred_fn" (fun _ ->
     MockJs.mockReset mockFn;
     let after  = mockFn |> MockJs.mock |> MockJs.calls in
     
-    Just (Equal (
-      (before, inbetween, after),
+    expect
+      (before, inbetween, after)
+    |> toEqual
       ([||], [| 1; 2 |], [||])
-    ))
   );
   
   test "mockReset - resets implementations" (fun _ ->
@@ -84,10 +85,10 @@ describe "inferred_fn" (fun _ ->
     MockJs.mockReset mockFn;
     let after = call fn () in 
     
-    Just (Equal (
-      (before, after),
+    expect
+      (before, after)
+    |> toEqual
       (Js.Undefined.return 128, Js.Undefined.empty)
-    ))
   );
   
   test "mockImplementation - sets implementation to use for subsequent invocations" (fun _ ->
@@ -97,10 +98,10 @@ describe "inferred_fn" (fun _ ->
     let before = call fn 10 in
     mockFn |> MockJs.mockImplementation ((fun a -> Js.Undefined.return (string_of_int a)) [@bs]) |> ignore;
     
-    Just (Equal (
-      (before, call fn 18, call fn 24),
+    expect
+      (before, call fn 18, call fn 24)
+    |> toEqual
       (Js.Undefined.empty, Js.Undefined.return "18", Js.Undefined.return "24")
-    ))
   );
   
   test "mockImplementationOnce - queues implementation for one subsequent invocation" (fun _ ->
@@ -111,10 +112,10 @@ describe "inferred_fn" (fun _ ->
     mockFn |> MockJs.mockImplementationOnce ((fun a -> Js.Undefined.return (string_of_int a)) [@bs]) |> ignore;
     mockFn |> MockJs.mockImplementationOnce ((fun a -> Js.Undefined.return (string_of_int (a * 2))) [@bs]) |> ignore;
     
-    Just (Equal (
-      (before, call fn 18, call fn 24, call fn 12),
+    expect
+      (before, call fn 18, call fn 24, call fn 12)
+    |> toEqual
       (Js.Undefined.empty, Js.Undefined.return "18", Js.Undefined.return "48", Js.Undefined.empty)
-    ))
   );
   
   test "mockReturnThis - returns `this` on subsequent invocations" (fun _ ->
@@ -125,10 +126,10 @@ describe "inferred_fn" (fun _ ->
     let before = call fn () in
     mockFn |> MockJs.mockReturnThis |> ignore;
     
-    Just (Equal (
-      (before, call fn (), call fn ()),
+    expect
+      (before, call fn (), call fn ())
+    |> toEqual
       (Js.Undefined.empty, Js.Undefined.return this, Js.Undefined.return this)
-    ))
   );
   
   test "mockReturnValue - returns given value on subsequent invocations" (fun _ ->
@@ -138,10 +139,10 @@ describe "inferred_fn" (fun _ ->
     let before = call fn 10 in
     mockFn |> MockJs.mockReturnValue (Js.Undefined.return 146) |> ignore;
     
-    Just (Equal (
-      (before, call fn 18, call fn 24),
+    expect
+      (before, call fn 18, call fn 24)
+    |> toEqual
       (Js.Undefined.empty, Js.Undefined.return 146, Js.Undefined.return 146)
-    ))
   );
   
   test "mockReturnValueOnce - queues implementation for one subsequent invocation" (fun _ ->
@@ -152,18 +153,18 @@ describe "inferred_fn" (fun _ ->
     mockFn |> MockJs.mockReturnValueOnce (Js.Undefined.return 29) |> ignore;
     mockFn |> MockJs.mockReturnValueOnce (Js.Undefined.return 41) |> ignore;
     
-    Just (Equal (
-      (before, call fn 18, call fn 24, call fn 12),
+    expect
+      (before, call fn 18, call fn 24, call fn 12)
+    |> toEqual
       (Js.Undefined.empty, Js.Undefined.return 29, Js.Undefined.return 41, Js.Undefined.empty)
-    ))
   );
   
   (*
-  testSkip "bindThis" (fun _ ->
+  Skip.test "bindThis" (fun _ ->
     let fn = ((fun a -> string_of_int a) [@bs]) in
     let boundFn = bindThis fn "this" in
     
-    Just (Equal (call boundFn () 2, "2"))
+    expect (call boundFn () 2) |> toEqual "2"
   );
   *)
   
@@ -177,10 +178,10 @@ describe "inferred_fn" (fun _ ->
     MockJs.mockClear mockFn; (* doesn't do anything? *)
     let after  = mockFn |> MockJs.mock |> MockJs.instances in
     
-    Just (Equal (
-      (before, inbetween, after),
+    expect
+      (before, inbetween, after)
+    |> toEqual
       ([||], [| Js.Undefined.empty; Js.Undefined.empty |], [||])
-    ))
   );
   *)
 );
@@ -190,7 +191,7 @@ describe "fn" (fun _ ->
     let mockFn = JestJs.fn (fun a -> string_of_int a) in
     let fn = MockJs.fn mockFn in
     
-    Just (Be (fn 18, "18"))
+    expect (fn 18) |> toBe "18"
   );
   
   test "calls - records call arguments" (fun _ ->
@@ -200,7 +201,7 @@ describe "fn" (fun _ ->
     let _ = MockJs.fn mockFn 89435 in
     let calls  = mockFn |> MockJs.mock |> MockJs.calls in
     
-    Just (Equal (calls, [| 74; 89435 |]))
+    expect calls |> toEqual [| 74; 89435 |]
   );
   
   testSkip "mockClear - resets calls" (fun _ ->
@@ -212,10 +213,10 @@ describe "fn" (fun _ ->
     MockJs.mockClear mockFn;
     let after = mockFn |> MockJs.mock |> MockJs.calls in
     
-    Just (Equal (
-      (before, inbetween, after),
+    expect
+      (before, inbetween, after)
+    |> toEqual
       ([||], [| 1; 2 |], [||])
-    ))
   );
   
   test "mockReset - resets calls" (fun _ ->
@@ -228,10 +229,10 @@ describe "fn" (fun _ ->
     MockJs.mockReset mockFn;
     let after  = mockFn |> MockJs.mock |> MockJs.calls in
     
-    Just (Equal (
-      (before, inbetween, after),
+    expect
+      (before, inbetween, after)
+    |> toEqual
       ([||], [| 1; 2 |], [||])
-    ))
   );
   
   (* TODO: Actually removes the original imlementation too, causing it to return undefined, which usually won't be a valid return value for the function type it mocks *)
@@ -244,10 +245,10 @@ describe "fn" (fun _ ->
     MockJs.mockReset mockFn;
     let after = fn 1 in 
     
-    Just (Equal (
-      (before, after),
+    expect
+      (before, after)
+    |> toEqual
       ("128", "1")
-    ))
   );
   
   test "mockImplementation - sets implementation to use for subsequent invocations" (fun _ ->
@@ -257,10 +258,10 @@ describe "fn" (fun _ ->
     let before = fn 10 in
     mockFn |> MockJs.mockImplementation (fun a -> string_of_int (a * 2)) |> ignore;
     
-    Just (Equal (
-      (before, fn 18, fn 24),
+    expect
+      (before, fn 18, fn 24)
+    |> toEqual
       ("10", "36", "48")
-    ))
   );
   
   test "mockImplementationOnce - queues implementation for one subsequent invocation" (fun _ ->
@@ -271,10 +272,10 @@ describe "fn" (fun _ ->
     mockFn |> MockJs.mockImplementationOnce (fun a -> string_of_int (a * 3)) |> ignore;
     mockFn |> MockJs.mockImplementationOnce (fun a -> string_of_int (a * 2)) |> ignore;
     
-    Just (Equal (
-      (before, fn 18, fn 24, fn 12),
+    expect
+      (before, fn 18, fn 24, fn 12)
+    |> toEqual
       ("10", "54", "48", "12")
-    ))
   );
 
   (* mockReturnThis doesn't make sense for native functions
@@ -286,10 +287,10 @@ describe "fn" (fun _ ->
     let before = fn () in
     mockFn |> MockJs.mockReturnThis |> ignore;
     
-    Just (Equal (
-      (before, fn (), fn ()),
+    expect
+      (before, fn (), fn ())
+    |> toEqual
       (Js.Undefined.empty, Js.Undefined.return this, Js.Undefined.return this)
-    ))
   );
   *)
   
@@ -300,10 +301,10 @@ describe "fn" (fun _ ->
     let before = fn 10 in
     mockFn |> MockJs.mockReturnValue "146" |> ignore;
     
-    Just (Equal (
-      (before, fn 18, fn 24),
+    expect
+      (before, fn 18, fn 24)
+    |> toEqual
       ("10", "146", "146")
-    ))
   );
   
   test "mockReturnValueOnce - queues implementation for one subsequent invocation" (fun _ ->
@@ -314,10 +315,10 @@ describe "fn" (fun _ ->
     mockFn |> MockJs.mockReturnValueOnce "29" |> ignore;
     mockFn |> MockJs.mockReturnValueOnce "41" |> ignore;
     
-    Just (Equal (
-      (before, fn 18, fn 24, fn 12),
+    expect
+      (before, fn 18, fn 24, fn 12)
+    |> toEqual
       ("10", "29", "41", "12")
-    ))
   );
 );
 
@@ -326,7 +327,7 @@ describe "fn2" (fun _ ->
     let mockFn = JestJs.fn2 ((fun a b -> string_of_int (a + b)) [@bs]) in
     let fn = MockJs.fn mockFn in
     
-    Just (Be (call2 fn 18 24, "42"))
+    expect (call2 fn 18 24) |> toBe "42"
   );
 );
 
@@ -338,7 +339,7 @@ describe "MockJs.make" (fun _ ->
     let instance  = mockFn |> MockJs.make 4 in
     let instances  = mockFn |> MockJs.mock |> MockJs.instances in
     
-    Just (Equal (instances, [| instance |]))
+    expect instances |> toEqual [| instance |]
   );
 );
 *)
