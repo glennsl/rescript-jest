@@ -194,6 +194,9 @@ end
 
 include Runner(LLExpect)
 
+let pass = Just Ok
+let fail message = Just (Fail message)
+
 external testOnly : string -> (unit -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
 let testOnly : string -> (unit -> 'a matchSpec) -> unit = fun name callback ->
   testOnly name (fun () -> LLExpect.assert_ @@ callback (); Js.undefined)

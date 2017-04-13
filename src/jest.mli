@@ -61,6 +61,9 @@ module Skip : sig
   external describe : string -> (unit -> unit) -> unit = "describe.skip" [@@bs.val]
 end
 
+val pass : unit matchSpec
+val fail : string -> string matchSpec
+
 val testOnly : string -> (unit -> 'a matchSpec) -> unit
 [@@ocaml.deprecated "Use `Only.test` instead"]
 external testSkip : string -> (unit -> 'a matchSpec) -> unit = "test.skip" [@@bs.val]

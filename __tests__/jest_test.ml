@@ -78,6 +78,6 @@ describe "Fake Timers" (fun _ ->
   testAsync "clearAllTimers" (fun done_ ->
     Jest.useFakeTimers ();
     Jest.useRealTimers ();
-    setImmediate (fun () -> done_ (expect true |> toBe true));
+    setImmediate (fun () -> done_ pass);
   );
 );
