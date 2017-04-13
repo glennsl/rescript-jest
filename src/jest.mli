@@ -76,6 +76,10 @@ val testPromiseOnly : string -> (unit -> ('a matchSpec, 'e) promise) -> unit
 [@@ocaml.deprecated "Use `Only.testPromise` instead"]
 external testPromiseSkip : string -> (unit -> ('a matchSpec, 'e) promise) -> unit = "test.skip" [@@bs.val]
 [@@ocaml.deprecated "Use `Skip.testPromise` instead"]
+external describeOnly : string -> (unit -> unit) -> unit = "describe.only" [@@bs.val]
+[@@ocaml.deprecated "Use `Only.describe` instead"]
+external describeSkip : string -> (unit -> unit) -> unit = "describe.skip" [@@bs.val]
+[@@ocaml.deprecated "Use `Skip.describe` instead"]
 
 module Expect : sig
   type 'a partial

@@ -151,10 +151,6 @@ module Runner (A : Asserter) = struct
       callback () |> Promise.then_ A.assert_)
 
   external describe : string -> (unit -> unit) -> unit = "" [@@bs.val]
-  external describeOnly : string -> (unit -> unit) -> unit = "describe.only" [@@bs.val]
-  [@@ocaml.deprecated "Use `Only.describe` instead"]
-  external describeSkip : string -> (unit -> unit) -> unit = "describe.skip" [@@bs.val]
-  [@@ocaml.deprecated "Use `Skip.describe` instead"]
 
   external beforeAll : (unit -> unit) -> unit = "" [@@bs.val]
   external beforeEach : (unit -> unit) -> unit = "" [@@bs.val]
@@ -218,6 +214,10 @@ let testPromiseOnly name callback =
 external testPromiseSkip : string -> (unit -> ('a matchSpec, 'e) promise) -> unit = "test.skip" [@@bs.val]
 [@@ocaml.deprecated "Use `Skip.testPromise` instead"]
 
+external describeOnly : string -> (unit -> unit) -> unit = "describe.only" [@@bs.val]
+[@@ocaml.deprecated "Use `Only.describe` instead"]
+external describeSkip : string -> (unit -> unit) -> unit = "describe.skip" [@@bs.val]
+[@@ocaml.deprecated "Use `Skip.describe` instead"]
 
 (*
  * Not implemented:
@@ -349,8 +349,8 @@ module ExpectJs = struct
   let toMatchObject b =
     (*mapMod (fun a -> ObjectMatch (a, b))*)
     function
-    | Just a -> LLExpect.(expect a) ## toMatchObject b; Just Ok
-    | Not a -> LLExpect.(expect a) ## not ## toMatchObject b; Just Ok
+    | Just a -> ignore @@ (LLExpect.expect a) ## toMatchObject b; Just Ok
+    | Not a -> ignore @@ (LLExpect.expect a) ## not ## toMatchObject b; Just Ok
 end
 
 module MockJs = struct

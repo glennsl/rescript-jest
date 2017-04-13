@@ -204,7 +204,7 @@ describe "fn" (fun _ ->
     expect calls |> toEqual [| 74; 89435 |]
   );
   
-  testSkip "mockClear - resets calls" (fun _ ->
+  Skip.test "mockClear - resets calls" (fun _ ->
     let mockFn = JestJs.fn (fun a -> string_of_int a) in
     
     let before = mockFn |> MockJs.mock |> MockJs.calls in 
@@ -236,7 +236,7 @@ describe "fn" (fun _ ->
   );
   
   (* TODO: Actually removes the original imlementation too, causing it to return undefined, which usually won't be a valid return value for the function type it mocks *)
-  testSkip "mockReset - resets implementations" (fun _ ->
+  Skip.test "mockReset - resets implementations" (fun _ ->
     let mockFn = JestJs.fn (fun a -> string_of_int a) in
     mockFn |> MockJs.mockReturnValue "128" |> ignore;
     let fn = MockJs.fn mockFn in
