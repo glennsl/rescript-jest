@@ -26,10 +26,10 @@
   },
   "homepage": "https://github.com/BuckleTypes/bs-jest#readme",
   "devDependencies": {
-    "bs-platform": "bloomberg/bucklescript"
+    "bs-platform": "^1.6.0"
   },
   "dependencies": {
     "jest": "^19.0.2",
-    "bs-promise": "^0.3.0"
+    "bs-promise": "^0.3.1"
   }
 }
