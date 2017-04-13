@@ -6,11 +6,6 @@ let _ =
   (*
   test "test - expect fail" (fun _ -> expect (1 + 2) |> toBe 4);
   *)
-  (* These could also be modeled as `Only.test` and `Only.skip`, might work better with the async and promise variants *)
-  (*
-  testOnly "testOnly" (fun _ -> (expect (1 + 2) |> toBe 3));
-  *)
-  testSkip "testSkip" (fun _ -> expect (1 + 2) |> toBe 3);
   
   testAsync "testAsync" (fun done_ -> done_ (expect (1 + 2) |> toBe 3));
   (*
@@ -19,10 +14,6 @@ let _ =
   (*
   testAsync "testAsync - expect fail" (fun done_ -> done_ (expect (1 + 2) |> toBe 4));
   *)
-  (*
-  testAsyncOnly "testAsyncOnly" (fun done_ -> done_ (expect (1 + 2) |> toBe 3));
-  *)
-  testAsyncSkip "testAsyncSkip" (fun done_ -> done_ (expect (1 + 2) |> toBe 3));
   
   testPromise "testPromise" (fun _ -> Promise.resolve (expect (1 + 2) |> toBe 3));
   (*
@@ -31,22 +22,8 @@ let _ =
   (*
   testPromise "testPromise - expect fail" (fun _ -> Promise.resolve (expect (1 + 2) |> toBe 4));
   *)
-  (*
-  testPromiseOnly "testPromiseOnly" (fun _ -> Promise.resolve (expect (1 + 2) |> toBe 3));
-  *)
-  testPromiseSkip "testPromiseSkip" (fun _ -> Promise.resolve (expect (1 + 2) |> toBe 3));
   
   describe "describe" (fun _ ->
-    test "some aspect" (fun _ -> expect (1 + 2) |> toBe 3)
-  );
-  
-  (*
-  describeOnly "describeOnly" (fun _ ->
-    let open Option6 in
-    test "some aspect" (fun _ -> (expect (1 + 2)) # toBe 3)
-  );
-  *)
-  describeSkip "describeSkip" (fun _ ->
     test "some aspect" (fun _ -> expect (1 + 2) |> toBe 3)
   );
   
@@ -86,5 +63,33 @@ let _ =
     test "x is 0" (fun _ -> expect !x |> toBe 0);
     test "x is suddenly 4" (fun _ -> expect !x |> toBe 4);
   );
+
+  describe "Only" (fun _ ->
+    (*
+    Only.test "Only.test" (fun _ -> (expect (1 + 2) |> toBe 3));
+
+    Only.testAsync "Only.testAsync" (fun done_ -> done_ (expect (1 + 2) |> toBe 3));
+
+    Only.testPromise "Only.testPromise" (fun _ -> Promise.resolve (expect (1 + 2) |> toBe 3));
+
+    Only.describe "Only.describe" (fun _ ->
+      test "some aspect" (fun _ -> (expect (1 + 2)) |> toBe 3)
+    );
+    *)
+    ()
+  );
   
+  describe "Skip" (fun _ ->
+    Skip.test "Skip.test" (fun _ -> expect (1 + 2) |> toBe 3);
+
+    Skip.testAsync "Skip.testAsync" (fun done_ ->
+      done_ (expect (1 + 2) |> toBe 3));
+
+    Skip.testPromise "Skip.testPromise" (fun _ ->
+      Promise.resolve (expect (1 + 2) |> toBe 3));
+
+    Skip.describe "Skip.describe" (fun _ ->
+      test "some aspect" (fun _ -> expect (1 + 2) |> toBe 3)
+    );
+  );
   
