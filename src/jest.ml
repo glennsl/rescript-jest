@@ -132,13 +132,13 @@ end
 
 module Runner (A : Asserter) = struct
   external test : string -> (unit -> unit Js.undefined) -> unit = "" [@@bs.val]
-  let test : string -> (unit -> 'a A.t) -> unit = fun name callback ->
+  let test name callback =
     test name (fun () ->
       A.assert_ @@ callback ();
       Js.undefined)
       
   external testAsync : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "test" [@@bs.val]
-  let testAsync : string -> (('a A.t -> unit) -> unit) -> unit = fun name callback ->
+  let testAsync name callback =
     testAsync name (fun done_ ->
       callback (fun case ->
         A.assert_ case;
@@ -146,7 +146,7 @@ module Runner (A : Asserter) = struct
       Js.undefined)
 
   external testPromise : string -> (unit -> ('a, 'e) promise) -> unit = "test" [@@bs.val]
-  let testPromise : string -> (unit -> ('a A.t, 'e) promise) -> unit = fun name callback ->
+  let testPromise name callback =
     testPromise name (fun () ->
       callback () |> Promise.then_ A.assert_)
 
@@ -163,13 +163,13 @@ module Runner (A : Asserter) = struct
 
   module Only = struct
     external test : string -> (unit -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
-    let test : string -> (unit -> 'a A.t) -> unit = fun name callback ->
+    let test name callback =
       test name (fun () ->
         A.assert_ @@ callback ();
         Js.undefined)
 
     external testAsync : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
-    let testAsync : string -> (('a A.t -> unit) -> unit) -> unit = fun name callback ->
+    let testAsync name callback =
       testAsync name (fun done_ ->
         callback (fun case ->
           A.assert_ case;
@@ -177,7 +177,7 @@ module Runner (A : Asserter) = struct
         Js.undefined)
 
     external testPromise : string -> (unit -> ('a, 'e) promise) -> unit = "test.only" [@@bs.val]
-    let testPromise : string -> (unit -> ('a A.t, 'e) promise) -> unit = fun name callback ->
+    let testPromise name callback =
       testPromise name (fun () ->
         callback () |> Promise.then_ A.assert_)
 
@@ -198,21 +198,21 @@ let pass = Just Ok
 let fail message = Just (Fail message)
 
 external testOnly : string -> (unit -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
-let testOnly : string -> (unit -> 'a matchSpec) -> unit = fun name callback ->
+let testOnly name callback =
   testOnly name (fun () -> LLExpect.assert_ @@ callback (); Js.undefined)
 [@@ocaml.deprecated "Use `Only.test` instead"]
 external testSkip : string -> (unit -> 'a matchSpec) -> unit = "test.skip" [@@bs.val]
 [@@ocaml.deprecated "Use `Skip.test` instead"]
 
 external testAsyncOnly : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
-let testAsyncOnly : string -> (('a matchSpec -> unit) -> unit) -> unit = fun name callback ->
+let testAsyncOnly name callback =
   testAsyncOnly name (fun done_ -> callback (fun case -> LLExpect.assert_ case; done_ ()); Js.undefined)
 [@@ocaml.deprecated "Use `Only.testAsync` instead"]
 external testAsyncSkip : string -> (('a matchSpec -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
 [@@ocaml.deprecated "Use `Skip.testAsync` instead"]
 
 external testPromiseOnly : string -> (unit -> ('a, 'e) promise) -> unit = "test.only" [@@bs.val]
-let testPromiseOnly : string -> (unit -> ('a matchSpec, 'e) promise) -> unit = fun name callback ->
+let testPromiseOnly name callback =
   testPromiseOnly name (fun () -> callback () |> Promise.then_ LLExpect.assert_)
 [@@ocaml.deprecated "Use `Only.testPromise` instead"]
 external testPromiseSkip : string -> (unit -> ('a matchSpec, 'e) promise) -> unit = "test.skip" [@@bs.val]
@@ -233,76 +233,77 @@ external testPromiseSkip : string -> (unit -> ('a matchSpec, 'e) promise) -> uni
 module Expect = struct
   type 'a partial = 'a matchModifier
   
-  let expect : 'a -> 'a partial = fun a -> Just a
+  let expect a =
+    Just a
   
-  let toBe : 'a -> 'a partial -> 'a matchSpec =
-    fun b -> mapMod (fun a -> Be (a, b))
+  let toBe b =
+    mapMod (fun a -> Be (a, b))
 
   (* toHaveBeenCalled* *)
   
-  let toBeCloseTo : float -> float partial -> 'a matchSpec =
-    fun b -> mapMod (fun a -> FloatCloseTo (a, b, None))
+  let toBeCloseTo b =
+    mapMod (fun a -> FloatCloseTo (a, b, None))
   
-  let toBeSoCloseTo : float -> digits:int -> float partial -> float matchSpec =
-    fun b ~digits -> mapMod (fun a -> FloatCloseTo (a, b, Some digits))
+  let toBeSoCloseTo b ~digits =
+    mapMod (fun a -> FloatCloseTo (a, b, Some digits))
 
-  let toBeGreaterThan : 'a -> 'a partial -> 'a matchSpec =
-    fun b -> mapMod (fun a -> GreaterThan (a, b))
+  let toBeGreaterThan b =
+    mapMod (fun a -> GreaterThan (a, b))
 
-  let toBeGreaterThanOrEqual : 'a -> 'a partial -> 'a matchSpec =
-    fun b -> mapMod (fun a -> GreaterThanOrEqual (a, b))
+  let toBeGreaterThanOrEqual b =
+    mapMod (fun a -> GreaterThanOrEqual (a, b))
 
-  let toBeLessThan : 'a -> 'a partial -> 'a matchSpec =
-    fun b -> mapMod (fun a -> LessThan (a, b))
+  let toBeLessThan b =
+    mapMod (fun a -> LessThan (a, b))
 
-  let toBeLessThanOrEqual : 'a -> 'a partial -> 'a matchSpec =
-    fun b -> mapMod (fun a -> LessThanOrEqual (a, b))
+  let toBeLessThanOrEqual b =
+    mapMod (fun a -> LessThanOrEqual (a, b))
 
   (** replaces expect.arrayContaining *)
-  let toBeSupersetOf : 'a array -> 'a array partial -> 'a matchSpec =
-    fun b -> mapMod (fun a -> ArraySuperset (a, b))
+  let toBeSupersetOf b =
+    mapMod (fun a -> ArraySuperset (a, b))
 
-  let toContain : 'a -> 'a array partial -> 'a matchSpec =
-    fun b -> mapMod (fun a -> ArrayContains (a, b))
+  let toContain b =
+    mapMod (fun a -> ArrayContains (a, b))
 
   (** replaces expect.stringContaining *)
-  let toContainString : string -> string partial -> 'a matchSpec =
-    fun b -> mapMod (fun a -> StringContains (a, b))
+  let toContainString b =
+    mapMod (fun a -> StringContains (a, b))
 
-  let toEqual : 'a -> 'a partial -> 'a matchSpec =
-    fun b -> mapMod (fun a -> Equal (a, b))
+  let toEqual b =
+    mapMod (fun a -> Equal (a, b))
 
-  let toHaveLength : int -> 'a array partial -> 'a matchSpec =
-    fun l -> mapMod (fun a -> ArrayLength (a, l))
+  let toHaveLength l =
+    mapMod (fun a -> ArrayLength (a, l))
 
-  let toMatch : string -> string partial -> string matchSpec =
-    fun s -> mapMod (fun a -> StringMatch (a, Js.Re.fromString s))
+  let toMatch s =
+    mapMod (fun a -> StringMatch (a, Js.Re.fromString s))
 
-  let toMatchRe : Js.Re.t -> string partial -> string matchSpec =
-    fun re -> mapMod (fun a -> StringMatch (a, re))
+  let toMatchRe re =
+    mapMod (fun a -> StringMatch (a, re))
 
-  let toMatchSnapshot : 'a partial -> 'a matchSpec =
+  let toMatchSnapshot =
     fun a -> mapMod (fun a -> MatchSnapshot a) a
 
-  let toMatchSnapshotWithName : string -> 'a partial -> 'a matchSpec =
-    fun name -> mapMod (fun a -> MatchSnapshotName (a, name))
+  let toMatchSnapshotWithName name =
+    mapMod (fun a -> MatchSnapshotName (a, name))
 
-  let toThrow : (unit -> unit) partial -> (unit -> unit) matchSpec =
+  let toThrow =
     mapMod (fun f -> Throws f)
   
-  let toThrowErrorMatchingSnapshot : (unit -> unit) partial -> (unit -> unit) matchSpec =
+  let toThrowErrorMatchingSnapshot =
     mapMod (fun f -> ThrowsMatchSnapshot f)
 
   (*let toThrowException : exn -> (unit -> unit) partial -> (unit -> unit) matchSpec =
     fun e -> mapMod (fun f -> ThrowsException (f, e))*)
 
-  let toThrowMessage : string -> (unit -> unit) partial -> (unit -> unit) matchSpec =
-    fun msg -> mapMod (fun f -> ThrowsMessage (f, msg))
+  let toThrowMessage message =
+    mapMod (fun f -> ThrowsMessage (f, message))
 
-  let toThrowMessageRe : Js.Re.t -> (unit -> unit) partial -> (unit -> unit) matchSpec =
-    fun re -> mapMod (fun f -> ThrowsMessageRe (f, re))
+  let toThrowMessageRe re =
+    mapMod (fun f -> ThrowsMessageRe (f, re))
 
-  let not_ : 'a partial -> 'a partial = function
+  let not_ = function
     | Just a -> Not a
     | Not _ -> raise (Invalid_argument "I suck at GADTs")
 
@@ -311,11 +312,11 @@ module Expect = struct
     (** experimental *)
 
     let (==) = fun a b -> toBe b a
-    let (>) = fun a b -> toBeGreaterThan b a
+    let (>)  = fun a b -> toBeGreaterThan b a
     let (>=) = fun a b -> toBeGreaterThanOrEqual b a
-    let (<) = fun a b -> toBeLessThan b a
+    let (<)  = fun a b -> toBeLessThan b a
     let (<=) = fun a b -> toBeLessThanOrEqual b a
-    let (=) = fun a b -> toEqual b a
+    let (=)  = fun a b -> toEqual b a
     let (<>) = fun a b -> a |> not_ |> toEqual b
     let (!=) = fun a b -> a |> not_ |> toBe b
   end
@@ -324,30 +325,30 @@ end
 module ExpectJs = struct
   include Expect
 
-  let toBeDefined : 'a Js.undefined partial -> 'a matchSpec =
+  let toBeDefined =
     fun a -> mapMod (fun a -> Defined a) a
 
-  let toBeFalsy : 'a partial -> 'a matchSpec =
+  let toBeFalsy =
     fun a -> mapMod (fun a -> Falsy a) a
 
   (* toBeInstanceOf *)
 
-  let toBeNull : 'a Js.null partial -> 'a matchSpec =
+  let toBeNull =
     fun a -> mapMod (fun a -> Null a) a
 
-  let toBeTruthy : 'a partial -> 'a matchSpec =
+  let toBeTruthy =
     fun a -> mapMod (fun a -> Truthy a) a
 
-  let toBeUndefined : 'a Js.undefined partial -> 'a matchSpec =
+  let toBeUndefined =
     fun a -> mapMod (fun a -> Undefined a) a
 
   (** replaces expect.objectContaining *)
-  let toContainProperties : string array -> 'a Js.t partial -> 'a matchSpec =
-    fun props -> mapMod (fun a -> ObjectContains (a, props))
+  let toContainProperties props =
+    mapMod (fun a -> ObjectContains (a, props))
 
-  let toMatchObject : < .. > Js.t -> < .. > Js.t partial -> unit matchSpec =
-    (*fun b -> mapMod (fun a -> ObjectMatch (a, b))*)
-    fun b -> function
+  let toMatchObject b =
+    (*mapMod (fun a -> ObjectMatch (a, b))*)
+    function
     | Just a -> LLExpect.(expect a) ## toMatchObject b; Just Ok
     | Not a -> LLExpect.(expect a) ## not ## toMatchObject b; Just Ok
 end
