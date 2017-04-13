@@ -7,28 +7,18 @@ describe "Expect" (fun _ ->
 
   test "toBe" (fun _ ->
     expect (1 + 2) |> toBe 3);
-  test "==" (fun _ ->
-    expect (1 + 2) == 3);
   test "toBeCloseTo" (fun _ ->
     expect (1. +. 2.) |> toBeCloseTo 3.);
   test "toBeSoCloseTo" (fun _ ->
     expect (1. +. 2.) |> toBeSoCloseTo 3. ~digits:9);
   test "toBeGreaterThan" (fun _ ->
     expect 4 |> toBeGreaterThan 3);
-  test ">" (fun _ ->
-    expect 4 > 3);
   test "toBeGreaterThanOrEqual" (fun _ ->
     expect 4 |> toBeGreaterThanOrEqual 4);
-  test ">=" (fun _ ->
-    expect 4 >= 4);
   test "toBeLessThan" (fun _ ->
     expect 4 |> toBeLessThan 5);
-  test "<" (fun _ ->
-    expect 4 < 5);
   test "toBeLessThanOrEqual" (fun _ ->
     expect 4 |> toBeLessThanOrEqual 4);
-  test "<=" (fun _ ->
-    expect 4 <= 4);
   test "toBeSuperSetOf" (fun _ ->
     expect [| "a"; "b"; "c" |] |> toBeSupersetOf [| "a"; "c" |]);
   test "toContain" (fun _ ->
@@ -51,10 +41,26 @@ describe "Expect" (fun _ ->
     expect (fun () -> raise (Invalid_argument "foo")) |> toThrowMessage "Invalid_argument,-3,foo");
   test "toThrowMessageRe" (fun _ ->
     expect (fun () -> assert false) |> toThrowMessageRe [%re "/Assert_failure/"]);
-  test "=" (fun _ ->
-    expect (1 + 2) = 3);
   test "not_ |> toBe" (fun _ ->
     expect (1 + 2) |> not_ |> toBe 4);
+);
+
+describe "Expect.Operators" (fun _ -> 
+  let open Expect in
+  let open! Expect.Operators in
+
+  test "==" (fun _ ->
+    expect (1 + 2) == 3);
+  test ">" (fun _ ->
+    expect 4 > 3);
+  test ">=" (fun _ ->
+    expect 4 >= 4);
+  test "<" (fun _ ->
+    expect 4 < 5);
+  test "<=" (fun _ ->
+    expect 4 <= 4);
+  test "=" (fun _ ->
+    expect (1 + 2) = 3);
   test "<>" (fun _ ->
     expect (1 + 2) <> 4);
   test "!=" (fun _ ->
@@ -66,8 +72,6 @@ describe "ExpectJs" (fun _ ->
 
   test "toBe" (fun _ ->
     expect (1 + 2) |> toBe 3);
-  test "==" (fun _ ->
-    expect (1 + 2) == 3);
   test "toBeCloseTo" (fun _ ->
     expect (1. +. 2.) |> toBeCloseTo 3.);
   test "toBeSoCloseTo" (fun _ ->
@@ -78,20 +82,12 @@ describe "ExpectJs" (fun _ ->
     expect nan |> toBeFalsy);
   test "toBeGreaterThan" (fun _ ->
     expect 4 |> toBeGreaterThan 3);
-  test ">" (fun _ ->
-    expect 4 > 3);
   test "toBeGreaterThanOrEqual" (fun _ ->
     expect 4 |> toBeGreaterThanOrEqual 4);
-  test ">=" (fun _ ->
-    expect 4 >= 4);
   test "toBeLessThan" (fun _ ->
     expect 4 |> toBeLessThan 5);
-  test "" (fun _ ->
-    expect 4 < 5);
   test "toBeLessThanOrEqual" (fun _ ->
     expect 4 |> toBeLessThanOrEqual 4);
-  test "<=" (fun _ ->
-    expect 4 <= 4);
   test "toBeNull" (fun _ ->
     expect nan |> toBeFalsy);
   test "toBeSuperSetOf" (fun _ ->
@@ -124,12 +120,6 @@ describe "ExpectJs" (fun _ ->
     expect (fun () -> raise (Invalid_argument "foo")) |> toThrowMessage "Invalid_argument,-3,foo");
   test "toThrowMessageRe" (fun _ ->
     expect (fun () -> assert false) |> toThrowMessageRe [%re "/Assert_failure/"]);
-  test "=" (fun _ ->
-    expect (1 + 2) = 3);
   test "not_ |> toBe" (fun _ ->
     expect (1 + 2) |> not_ |> toBe 4);
-  test "<>" (fun _ ->
-    expect (1 + 2) <> 4);
-  test "!=" (fun _ ->
-    expect (1 + 2) != 4);
 );

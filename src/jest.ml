@@ -178,9 +178,6 @@ module Expect = struct
   let toBe : 'a -> 'a partial -> 'a matchSpec =
     fun b -> mapMod (fun a -> Be (a, b))
 
-  let (==) = fun a b -> toBe b a
-  (** experimetnal, causes compiler warning if used *)
-
   (* toHaveBeenCalled* *)
   
   let toBeCloseTo : 'a -> 'a partial -> 'a matchSpec =
@@ -192,26 +189,14 @@ module Expect = struct
   let toBeGreaterThan : 'a -> 'a partial -> 'a matchSpec =
     fun b -> mapMod (fun a -> GreaterThan (a, b))
 
-  let (>) = fun a b -> toBeGreaterThan b a
-  (** experimetnal, causes compiler warning if used *)
-
   let toBeGreaterThanOrEqual : 'a -> 'a partial -> 'a matchSpec =
     fun b -> mapMod (fun a -> GreaterThanOrEqual (a, b))
-
-  let (>=) = fun a b -> toBeGreaterThanOrEqual b a
-  (** experimetnal, causes compiler warning if used *)
 
   let toBeLessThan : 'a -> 'a partial -> 'a matchSpec =
     fun b -> mapMod (fun a -> LessThan (a, b))
 
-  let (<) = fun a b -> toBeLessThan b a
-  (** experimetnal, causes compiler warning if used *)
-
   let toBeLessThanOrEqual : 'a -> 'a partial -> 'a matchSpec =
     fun b -> mapMod (fun a -> LessThanOrEqual (a, b))
-
-  let (<=) = fun a b -> toBeLessThanOrEqual b a
-  (** experimetnal, causes compiler warning if used *)
 
   (** replaces expect.arrayContaining *)
   let toBeSupersetOf : 'a array -> 'a array partial -> 'a matchSpec =
@@ -226,9 +211,6 @@ module Expect = struct
 
   let toEqual : 'a -> 'a partial -> 'a matchSpec =
     fun b -> mapMod (fun a -> Equal (a, b))
-
-  let (=) = fun a b -> toEqual b a
-  (** experimetnal, causes compiler warning if used *)
 
   let toHaveLength : int -> 'a array partial -> 'a matchSpec =
     fun l -> mapMod (fun a -> ArrayLength (a, l))
@@ -264,10 +246,19 @@ module Expect = struct
     | Just a -> Not a
     | Not _ -> raise (Invalid_argument "I suck at GADTs")
 
-  let (<>) = fun a b -> a |> not_ |> toEqual b
-  (** experimetnal, causes compiler warning if used *)
-  let (!=) = fun a b -> a |> not_ |> toBe b
-  (** experimetnal, causes compiler warning if used *)
+
+  module Operators = struct
+    (** experimental *)
+
+    let (==) = fun a b -> toBe b a
+    let (>) = fun a b -> toBeGreaterThan b a
+    let (>=) = fun a b -> toBeGreaterThanOrEqual b a
+    let (<) = fun a b -> toBeLessThan b a
+    let (<=) = fun a b -> toBeLessThanOrEqual b a
+    let (=) = fun a b -> toEqual b a
+    let (<>) = fun a b -> a |> not_ |> toEqual b
+    let (!=) = fun a b -> a |> not_ |> toBe b
+  end
 end
 
 module ExpectJs = struct
