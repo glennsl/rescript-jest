@@ -87,8 +87,8 @@ end = struct
   | Not Equal (a, b) -> (expect a) ## not ## toEqual b
   | Just Falsy a -> (expect a) ## toBeFalsy ()
   | Not Falsy a -> (expect a) ## not ## toBeFalsy ()
-  | Just FloatCloseTo (a, b, p) -> (expect a) ## toBeCloseTo a b (Js.Undefined.from_opt p)
-  | Not FloatCloseTo (a, b, p) -> (expect a) ## not ## toBeCloseTo a b (Js.Undefined.from_opt p)
+  | Just FloatCloseTo (a, b, p) -> (expect a) ## toBeCloseTo b (Js.Undefined.from_opt p)
+  | Not FloatCloseTo (a, b, p) -> (expect a) ## not ## toBeCloseTo b (Js.Undefined.from_opt p)
   | Just GreaterThan (a, b) -> (expect a) ## toBeGreaterThan b
   | Not GreaterThan (a, b) -> (expect a) ## not ## toBeGreaterThan b
   | Just GreaterThanOrEqual (a, b) -> (expect a) ## toBeGreaterThanOrEqual b
