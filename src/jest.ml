@@ -2,45 +2,45 @@
 module Promise = Bs_promise
 type ('a, 'e) promise = ('a, 'e) Promise.t
 
-type 'a simpleMatchSpec =
-| Ok
-| Fail of string
-| ArrayContains of 'a array * 'a
-| ArrayLength of 'a array * int
-| ArraySuperset of 'a array * 'a array
-| Be of 'a * 'a
-| Defined of 'a Js.undefined
-| Equal of 'a * 'a
-| Falsy of 'a
-| FloatCloseTo of float * float * int option
-| GreaterThan of 'a * 'a
-| GreaterThanOrEqual of 'a * 'a
-| LessThan of 'a * 'a
-| LessThanOrEqual of 'a * 'a
-| MatchSnapshot of 'a
-| MatchSnapshotName of 'a * string
-| Null of 'a Js.null
-| ObjectContains of 'a Js.t * string array
-(*| ObjectMatch of < .. > Js.t * < .. > Js.t*) (* unable to implement this due to unbound type vars *)
-| StringContains of string * string
-| StringMatch of string * Js.Re.t
-| Throws of (unit -> unit)
-| ThrowsException of (unit -> unit) * exn
-| ThrowsMatchSnapshot of (unit -> unit)
-| ThrowsMessage of (unit -> unit) * string
-| ThrowsMessageRe of (unit -> unit) * Js.Re.t
-| Truthy of 'a
-| Undefined of 'a Js.undefined
+type 'a simpleAssertion =
+| Ok : 'a simpleAssertion
+| Fail : string -> 'a simpleAssertion
+| ArrayContains : 'a array * 'a -> 'a simpleAssertion
+| ArrayLength : 'a array * int -> 'a simpleAssertion
+| ArraySuperset : 'a array * 'a array -> 'a simpleAssertion
+| Be : 'a * 'a -> 'a simpleAssertion
+| Defined : 'a Js.undefined -> 'a simpleAssertion
+| Equal : 'a * 'a -> 'a simpleAssertion
+| Falsy : 'a -> 'a simpleAssertion
+| FloatCloseTo : float * float * int option -> 'a simpleAssertion
+| GreaterThan : 'a * 'a -> 'a simpleAssertion
+| GreaterThanOrEqual : 'a * 'a -> 'a simpleAssertion
+| LessThan : 'a * 'a -> 'a simpleAssertion
+| LessThanOrEqual : 'a * 'a -> 'a simpleAssertion
+| MatchSnapshot : 'a -> 'a simpleAssertion
+| MatchSnapshotName : 'a * string -> 'a simpleAssertion
+| Null : 'a Js.null -> 'a simpleAssertion
+| ObjectContains : 'a Js.t * string array -> 'a simpleAssertion
+(*| ObjectMatch : < .. > Js.t * < .. > Js.t*) (* unable to implement this due to unbound type vars *)
+| StringContains : string * string -> 'a simpleAssertion
+| StringMatch : string * Js.Re.t -> 'a simpleAssertion
+| Throws : (unit -> unit) -> 'a simpleAssertion
+| ThrowsException : (unit -> unit) * exn -> 'a simpleAssertion
+| ThrowsMatchSnapshot : (unit -> unit) -> 'a simpleAssertion
+| ThrowsMessage : (unit -> unit) * string -> 'a simpleAssertion
+| ThrowsMessageRe : (unit -> unit) * Js.Re.t -> 'a simpleAssertion
+| Truthy : 'a -> 'a simpleAssertion
+| Undefined : 'a Js.undefined -> 'a simpleAssertion
 
-type 'a matchModifier =
-| Just : 'a -> 'a matchModifier
-| Not : 'a -> 'a matchModifier
+type 'a modifier =
+| Just of 'a
+| Not of 'a
+
+type 'a assertion = 'a simpleAssertion modifier
 
 let mapMod f = function
 | Just a -> Just (f a)
 | Not a -> Not (f a)
-
-type 'a matchSpec = 'a simpleMatchSpec matchModifier
   
 module type Asserter = sig
   type 'a t
@@ -49,11 +49,11 @@ end
 
 (* internal *)
 module LLExpect : sig
-  type 'a t = 'a matchSpec
+  type 'a t = 'a assertion
   external expect : 'a -> < .. > Js.t = "" [@@bs.val] (* exposed to support toMatchObject *)
   val assert_ : 'a t -> unit
 end = struct
-  type 'a t = 'a matchSpec
+  type 'a t = 'a assertion
   type specialMatch
   external expect : 'a -> < .. > Js.t = "" [@@bs.val]
   external fail : string -> unit = "" [@@bs.val]
@@ -69,7 +69,7 @@ end = struct
     }
   |}]
 
-  let assert_: 'a matchSpec -> unit = function
+  let assert_ = function
   | Just Ok -> ()
   | Not Ok -> fail "not ok"
   | Just Fail message -> fail message
@@ -197,21 +197,21 @@ external testOnly : string -> (unit -> unit Js.undefined) -> unit = "test.only" 
 let testOnly name callback =
   testOnly name (fun () -> LLExpect.assert_ @@ callback (); Js.undefined)
 [@@ocaml.deprecated "Use `Only.test` instead"]
-external testSkip : string -> (unit -> 'a matchSpec) -> unit = "test.skip" [@@bs.val]
+external testSkip : string -> (unit -> 'a assertion) -> unit = "test.skip" [@@bs.val]
 [@@ocaml.deprecated "Use `Skip.test` instead"]
 
 external testAsyncOnly : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
 let testAsyncOnly name callback =
   testAsyncOnly name (fun done_ -> callback (fun case -> LLExpect.assert_ case; done_ ()); Js.undefined)
 [@@ocaml.deprecated "Use `Only.testAsync` instead"]
-external testAsyncSkip : string -> (('a matchSpec -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
+external testAsyncSkip : string -> (('a assertion -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
 [@@ocaml.deprecated "Use `Skip.testAsync` instead"]
 
 external testPromiseOnly : string -> (unit -> ('a, 'e) promise) -> unit = "test.only" [@@bs.val]
 let testPromiseOnly name callback =
   testPromiseOnly name (fun () -> callback () |> Promise.then_ LLExpect.assert_)
 [@@ocaml.deprecated "Use `Only.testPromise` instead"]
-external testPromiseSkip : string -> (unit -> ('a matchSpec, 'e) promise) -> unit = "test.skip" [@@bs.val]
+external testPromiseSkip : string -> (unit -> ('a assertion, 'e) promise) -> unit = "test.skip" [@@bs.val]
 [@@ocaml.deprecated "Use `Skip.testPromise` instead"]
 
 external describeOnly : string -> (unit -> unit) -> unit = "describe.only" [@@bs.val]
@@ -231,7 +231,7 @@ external describeSkip : string -> (unit -> unit) -> unit = "describe.skip" [@@bs
  *)
 
 module Expect = struct
-  type 'a partial = 'a matchModifier
+  type 'a partial = 'a modifier
   
   let expect a =
     Just a

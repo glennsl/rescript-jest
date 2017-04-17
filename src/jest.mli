@@ -2,7 +2,7 @@
 module Promise = Bs_promise
 type ('a, 'e) promise = ('a, 'e) Promise.t
 
-type 'a matchSpec
+type 'a assertion
 
 module type Asserter = sig
   type 'a t
@@ -36,9 +36,9 @@ module Runner (A : Asserter) : sig
   end
 end
 
-val test : string -> (unit -> 'a matchSpec) -> unit
-val testAsync : string -> (('a matchSpec -> unit) -> unit) -> unit
-val testPromise : string -> (unit -> ('a matchSpec, 'e) promise) -> unit
+val test : string -> (unit -> 'a assertion) -> unit
+val testAsync : string -> (('a assertion -> unit) -> unit) -> unit
+val testPromise : string -> (unit -> ('a assertion, 'e) promise) -> unit
 
 external describe : string -> (unit -> unit) -> unit = "" [@@bs.val]
 
@@ -48,33 +48,33 @@ external afterAll : (unit -> unit) -> unit = "" [@@bs.val]
 external afterEach : (unit -> unit) -> unit = "" [@@bs.val]
 
 module Only : sig
-  val test : string -> (unit -> 'a matchSpec) -> unit
-  val testAsync : string -> (('a matchSpec -> unit) -> unit) -> unit
-  val testPromise : string -> (unit -> ('a matchSpec, 'e) promise) -> unit
+  val test : string -> (unit -> 'a assertion) -> unit
+  val testAsync : string -> (('a assertion -> unit) -> unit) -> unit
+  val testPromise : string -> (unit -> ('a assertion, 'e) promise) -> unit
   external describe : string -> (unit -> unit) -> unit = "describe.only" [@@bs.val]
 end
 
 module Skip : sig
-  external test : string -> (unit -> 'a matchSpec) -> unit = "test.skip" [@@bs.val]
-  external testAsync : string -> (('a matchSpec -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
-  external testPromise : string -> (unit -> ('a matchSpec, 'e) promise) -> unit = "test.skip" [@@bs.val]
+  external test : string -> (unit -> 'a assertion) -> unit = "test.skip" [@@bs.val]
+  external testAsync : string -> (('a assertion -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
+  external testPromise : string -> (unit -> ('a assertion, 'e) promise) -> unit = "test.skip" [@@bs.val]
   external describe : string -> (unit -> unit) -> unit = "describe.skip" [@@bs.val]
 end
 
-val pass : unit matchSpec
-val fail : string -> string matchSpec
+val pass : unit assertion
+val fail : string -> string assertion
 
-val testOnly : string -> (unit -> 'a matchSpec) -> unit
+val testOnly : string -> (unit -> 'a assertion) -> unit
 [@@ocaml.deprecated "Use `Only.test` instead"]
-external testSkip : string -> (unit -> 'a matchSpec) -> unit = "test.skip" [@@bs.val]
+external testSkip : string -> (unit -> 'a assertion) -> unit = "test.skip" [@@bs.val]
 [@@ocaml.deprecated "Use `Skip.test` instead"]
-val testAsyncOnly : string -> (('a matchSpec -> unit) -> unit) -> unit
+val testAsyncOnly : string -> (('a assertion -> unit) -> unit) -> unit
 [@@ocaml.deprecated "Use `Only.testAsync` instead"]
-external testAsyncSkip : string -> (('a matchSpec -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
+external testAsyncSkip : string -> (('a assertion -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
 [@@ocaml.deprecated "Use `Skip.testAsync` instead"]
-val testPromiseOnly : string -> (unit -> ('a matchSpec, 'e) promise) -> unit
+val testPromiseOnly : string -> (unit -> ('a assertion, 'e) promise) -> unit
 [@@ocaml.deprecated "Use `Only.testPromise` instead"]
-external testPromiseSkip : string -> (unit -> ('a matchSpec, 'e) promise) -> unit = "test.skip" [@@bs.val]
+external testPromiseSkip : string -> (unit -> ('a assertion, 'e) promise) -> unit = "test.skip" [@@bs.val]
 [@@ocaml.deprecated "Use `Skip.testPromise` instead"]
 external describeOnly : string -> (unit -> unit) -> unit = "describe.only" [@@bs.val]
 [@@ocaml.deprecated "Use `Only.describe` instead"]
@@ -86,39 +86,39 @@ module Expect : sig
   
   val expect : 'a -> 'a partial
 
-  val toBe : 'a -> 'a partial -> 'a matchSpec
-  val toBeCloseTo : float -> float partial -> 'a matchSpec
-  val toBeSoCloseTo : float -> digits:int -> float partial -> float matchSpec
-  val toBeGreaterThan : 'a -> 'a partial -> 'a matchSpec
-  val toBeGreaterThanOrEqual : 'a -> 'a partial -> 'a matchSpec
-  val toBeLessThan : 'a -> 'a partial -> 'a matchSpec
-  val toBeLessThanOrEqual : 'a -> 'a partial -> 'a matchSpec
-  val toBeSupersetOf : 'a array -> 'a array partial -> 'a matchSpec
-  val toContain : 'a -> 'a array partial -> 'a matchSpec
-  val toContainString : string -> string partial -> 'a matchSpec
-  val toEqual : 'a -> 'a partial -> 'a matchSpec
-  val toHaveLength : int -> 'a array partial -> 'a matchSpec
-  val toMatch : string -> string partial -> string matchSpec
-  val toMatchRe : Js.Re.t -> string partial -> string matchSpec
-  val toMatchSnapshot : 'a partial -> 'a matchSpec
-  val toMatchSnapshotWithName : string -> 'a partial -> 'a matchSpec
-  val toThrow : (unit -> unit) partial -> (unit -> unit) matchSpec
-  val toThrowErrorMatchingSnapshot : (unit -> unit) partial -> (unit -> unit) matchSpec
-  val toThrowMessage : string -> (unit -> unit) partial -> (unit -> unit) matchSpec
-  val toThrowMessageRe : Js.Re.t -> (unit -> unit) partial -> (unit -> unit) matchSpec
+  val toBe : 'a -> 'a partial -> 'a assertion
+  val toBeCloseTo : float -> float partial -> 'a assertion
+  val toBeSoCloseTo : float -> digits:int -> float partial -> float assertion
+  val toBeGreaterThan : 'a -> 'a partial -> 'a assertion
+  val toBeGreaterThanOrEqual : 'a -> 'a partial -> 'a assertion
+  val toBeLessThan : 'a -> 'a partial -> 'a assertion
+  val toBeLessThanOrEqual : 'a -> 'a partial -> 'a assertion
+  val toBeSupersetOf : 'a array -> 'a array partial -> 'a assertion
+  val toContain : 'a -> 'a array partial -> 'a assertion
+  val toContainString : string -> string partial -> 'a assertion
+  val toEqual : 'a -> 'a partial -> 'a assertion
+  val toHaveLength : int -> 'a array partial -> 'a assertion
+  val toMatch : string -> string partial -> string assertion
+  val toMatchRe : Js.Re.t -> string partial -> string assertion
+  val toMatchSnapshot : 'a partial -> 'a assertion
+  val toMatchSnapshotWithName : string -> 'a partial -> 'a assertion
+  val toThrow : (unit -> unit) partial -> (unit -> unit) assertion
+  val toThrowErrorMatchingSnapshot : (unit -> unit) partial -> (unit -> unit) assertion
+  val toThrowMessage : string -> (unit -> unit) partial -> (unit -> unit) assertion
+  val toThrowMessageRe : Js.Re.t -> (unit -> unit) partial -> (unit -> unit) assertion
   val not_ : 'a partial -> 'a partial
 
   module Operators : sig
     (** experimental *)
 
-    val (==) : 'a partial -> 'a -> 'a matchSpec
-    val (>)  : 'a partial -> 'a -> 'a matchSpec
-    val (>=) : 'a partial -> 'a -> 'a matchSpec
-    val (<)  : 'a partial -> 'a -> 'a matchSpec
-    val (<=) : 'a partial -> 'a -> 'a matchSpec
-    val (=)  : 'a partial -> 'a -> 'a matchSpec
-    val (<>) : 'a partial -> 'a -> 'a matchSpec
-    val (!=) : 'a partial -> 'a -> 'a matchSpec
+    val (==) : 'a partial -> 'a -> 'a assertion
+    val (>)  : 'a partial -> 'a -> 'a assertion
+    val (>=) : 'a partial -> 'a -> 'a assertion
+    val (<)  : 'a partial -> 'a -> 'a assertion
+    val (<=) : 'a partial -> 'a -> 'a assertion
+    val (=)  : 'a partial -> 'a -> 'a assertion
+    val (<>) : 'a partial -> 'a -> 'a assertion
+    val (!=) : 'a partial -> 'a -> 'a assertion
   end
 end
 
@@ -127,48 +127,48 @@ module ExpectJs : sig
 
   val expect : 'a -> 'a partial
 
-  val toBe : 'a -> 'a partial -> 'a matchSpec
-  val toBeCloseTo : float -> float partial -> 'a matchSpec
-  val toBeSoCloseTo : float -> digits:int -> float partial -> float matchSpec
-  val toBeGreaterThan : 'a -> 'a partial -> 'a matchSpec
-  val toBeGreaterThanOrEqual : 'a -> 'a partial -> 'a matchSpec
-  val toBeLessThan : 'a -> 'a partial -> 'a matchSpec
-  val toBeLessThanOrEqual : 'a -> 'a partial -> 'a matchSpec
-  val toBeSupersetOf : 'a array -> 'a array partial -> 'a matchSpec
-  val toContain : 'a -> 'a array partial -> 'a matchSpec
-  val toContainString : string -> string partial -> 'a matchSpec
-  val toEqual : 'a -> 'a partial -> 'a matchSpec
-  val toHaveLength : int -> 'a array partial -> 'a matchSpec
-  val toMatch : string -> string partial -> string matchSpec
-  val toMatchRe : Js.Re.t -> string partial -> string matchSpec
-  val toMatchSnapshot : 'a partial -> 'a matchSpec
-  val toMatchSnapshotWithName : string -> 'a partial -> 'a matchSpec
-  val toThrow : (unit -> unit) partial -> (unit -> unit) matchSpec
-  val toThrowErrorMatchingSnapshot : (unit -> unit) partial -> (unit -> unit) matchSpec
-  val toThrowMessage : string -> (unit -> unit) partial -> (unit -> unit) matchSpec
-  val toThrowMessageRe : Js.Re.t -> (unit -> unit) partial -> (unit -> unit) matchSpec
+  val toBe : 'a -> 'a partial -> 'a assertion
+  val toBeCloseTo : float -> float partial -> 'a assertion
+  val toBeSoCloseTo : float -> digits:int -> float partial -> float assertion
+  val toBeGreaterThan : 'a -> 'a partial -> 'a assertion
+  val toBeGreaterThanOrEqual : 'a -> 'a partial -> 'a assertion
+  val toBeLessThan : 'a -> 'a partial -> 'a assertion
+  val toBeLessThanOrEqual : 'a -> 'a partial -> 'a assertion
+  val toBeSupersetOf : 'a array -> 'a array partial -> 'a assertion
+  val toContain : 'a -> 'a array partial -> 'a assertion
+  val toContainString : string -> string partial -> 'a assertion
+  val toEqual : 'a -> 'a partial -> 'a assertion
+  val toHaveLength : int -> 'a array partial -> 'a assertion
+  val toMatch : string -> string partial -> string assertion
+  val toMatchRe : Js.Re.t -> string partial -> string assertion
+  val toMatchSnapshot : 'a partial -> 'a assertion
+  val toMatchSnapshotWithName : string -> 'a partial -> 'a assertion
+  val toThrow : (unit -> unit) partial -> (unit -> unit) assertion
+  val toThrowErrorMatchingSnapshot : (unit -> unit) partial -> (unit -> unit) assertion
+  val toThrowMessage : string -> (unit -> unit) partial -> (unit -> unit) assertion
+  val toThrowMessageRe : Js.Re.t -> (unit -> unit) partial -> (unit -> unit) assertion
   val not_ : 'a partial -> 'a partial
 
   module Operators : sig
     (** experimental *)
 
-    val (==) : 'a partial -> 'a -> 'a matchSpec
-    val (>)  : 'a partial -> 'a -> 'a matchSpec
-    val (>=) : 'a partial -> 'a -> 'a matchSpec
-    val (<)  : 'a partial -> 'a -> 'a matchSpec
-    val (<=) : 'a partial -> 'a -> 'a matchSpec
-    val (=)  : 'a partial -> 'a -> 'a matchSpec
-    val (<>) : 'a partial -> 'a -> 'a matchSpec
-    val (!=) : 'a partial -> 'a -> 'a matchSpec
+    val (==) : 'a partial -> 'a -> 'a assertion
+    val (>)  : 'a partial -> 'a -> 'a assertion
+    val (>=) : 'a partial -> 'a -> 'a assertion
+    val (<)  : 'a partial -> 'a -> 'a assertion
+    val (<=) : 'a partial -> 'a -> 'a assertion
+    val (=)  : 'a partial -> 'a -> 'a assertion
+    val (<>) : 'a partial -> 'a -> 'a assertion
+    val (!=) : 'a partial -> 'a -> 'a assertion
   end
 
-  val toBeDefined : 'a Js.undefined partial -> 'a matchSpec
-  val toBeFalsy : 'a partial -> 'a matchSpec
-  val toBeNull : 'a Js.null partial -> 'a matchSpec
-  val toBeTruthy : 'a partial -> 'a matchSpec
-  val toBeUndefined : 'a Js.undefined partial -> 'a matchSpec
-  val toContainProperties : string array -> 'a Js.t partial -> 'a matchSpec
-  val toMatchObject : < .. > Js.t -> < .. > Js.t partial -> unit matchSpec
+  val toBeDefined : 'a Js.undefined partial -> 'a assertion
+  val toBeFalsy : 'a partial -> 'a assertion
+  val toBeNull : 'a Js.null partial -> 'a assertion
+  val toBeTruthy : 'a partial -> 'a assertion
+  val toBeUndefined : 'a Js.undefined partial -> 'a assertion
+  val toContainProperties : string array -> 'a Js.t partial -> 'a assertion
+  val toMatchObject : < .. > Js.t -> < .. > Js.t partial -> unit assertion
 end
 
 module MockJs : sig
