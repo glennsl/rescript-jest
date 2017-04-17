@@ -21,11 +21,11 @@ type 'a simpleAssertion =
 | MatchSnapshotName : 'a * string -> 'a simpleAssertion
 | Null : 'a Js.null -> 'a simpleAssertion
 | ObjectContains : 'a Js.t * string array -> 'a simpleAssertion
-(*| ObjectMatch : < .. > Js.t * < .. > Js.t*) (* unable to implement this due to unbound type vars *)
+| ObjectMatch : < .. > Js.t * < .. > Js.t -> 'a simpleAssertion
 | StringContains : string * string -> 'a simpleAssertion
 | StringMatch : string * Js.Re.t -> 'a simpleAssertion
 | Throws : (unit -> unit) -> 'a simpleAssertion
-| ThrowsException : (unit -> unit) * exn -> 'a simpleAssertion
+(*| ThrowsException : (unit -> unit) * exn -> 'a simpleAssertion*)
 | ThrowsMatchSnapshot : (unit -> unit) -> 'a simpleAssertion
 | ThrowsMessage : (unit -> unit) * string -> 'a simpleAssertion
 | ThrowsMessageRe : (unit -> unit) * Js.Re.t -> 'a simpleAssertion
@@ -50,7 +50,6 @@ end
 (* internal *)
 module LLExpect : sig
   type 'a t = 'a assertion
-  external expect : 'a -> < .. > Js.t = "" [@@bs.val] (* exposed to support toMatchObject *)
   val assert_ : 'a t -> unit
 end = struct
   type 'a t = 'a assertion
@@ -106,18 +105,18 @@ end = struct
   | Not Null a -> (expect a) ## not ## toBeNull ()
   | Just ObjectContains (a, props) -> (expect a) ## toEqual (objectContaining props)
   | Not ObjectContains (a, props) -> (expect a) ## not ## toEqual (objectContaining props)
-  (*
   | Just ObjectMatch (a, b) -> (expect a) ## toMatchObject b
   | Not ObjectMatch (a, b) -> (expect a) ## not ## toMatchObject b
-  *)
   | Just StringMatch (s, re) -> (expect s) ## toMatch re
   | Not StringMatch (s, re) -> (expect s) ## not ## toMatch re
   | Just StringContains (a, b) -> (expect a) ## toEqual (stringContaining b)
   | Not StringContains (a, b) -> (expect a) ## not ## toEqual (stringContaining b)
   | Just Throws f -> (expect f) ## toThrow ()
   | Not Throws f -> (expect f) ## not ## toThrow ()
+  (*
   | Just ThrowsException (f, e) -> (expect f) ## toThrow e
   | Not ThrowsException (f, e) -> (expect f) ## not ## toThrow e
+  *)
   | Just ThrowsMatchSnapshot f -> (expect f) ## toThrowErrorMatchingSnapshot ()
   | Not ThrowsMatchSnapshot f -> (expect f) ## not ## toThrowErrorMatchingSnapshot ()
   | Just ThrowsMessage (f, msg) -> (expect f) ## toThrow msg
@@ -347,10 +346,7 @@ module ExpectJs = struct
     mapMod (fun a -> ObjectContains (a, props))
 
   let toMatchObject b =
-    (*mapMod (fun a -> ObjectMatch (a, b))*)
-    function
-    | Just a -> ignore @@ (LLExpect.expect a) ## toMatchObject b; Just Ok
-    | Not a -> ignore @@ (LLExpect.expect a) ## not ## toMatchObject b; Just Ok
+    mapMod (fun a -> ObjectMatch (a, b))
 end
 
 module MockJs = struct

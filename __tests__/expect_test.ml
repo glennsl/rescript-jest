@@ -111,7 +111,7 @@ describe "ExpectJs" (fun _ ->
   test "toMatchRe" (fun _ ->
     expect "banana" |> toMatchRe [%re "/ana/"]);
   test "toMatchObject" (fun _ ->
-    expect [%obj { a = 1; b = 2 }] |> toMatchObject [%obj { a = 1; b = 2 }]);
+    expect [%obj { a = 1; b = 2; c = 3 }] |> toMatchObject [%obj { a = 1; b = 2 }]);
   test "toThrow" (fun _ ->
     expect (fun () -> assert false) |> toThrow);
   (*test "toThrowException" (fun _ ->
