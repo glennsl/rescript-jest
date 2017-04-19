@@ -1,6 +1,6 @@
 {
   "name": "bs-jest",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "BuckleScript bindings to the Jest testing framework",
   "scripts": {
     "start": "bsb -make-world -w",
