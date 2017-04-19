@@ -15,7 +15,7 @@ let _ =
   testAsync "testAsync - expect fail" (fun done_ -> done_ (expect (1 + 2) |> toBe 4));
   *)
   
-  testPromise "testPromise" (fun _ -> Promise.resolve (expect (1 + 2) |> toBe 3));
+  testPromise "testPromise" (fun _ -> Js.Promise.resolve (expect (1 + 2) |> toBe 3));
   (*
   testPromise "testPromise - reject" (fun _ -> Promise.reject ());
   *)
@@ -86,7 +86,7 @@ let _ =
       done_ (expect (1 + 2) |> toBe 3));
 
     Skip.testPromise "Skip.testPromise" (fun _ ->
-      Promise.resolve (expect (1 + 2) |> toBe 3));
+      Js.Promise.resolve (expect (1 + 2) |> toBe 3));
 
     Skip.describe "Skip.describe" (fun _ ->
       test "some aspect" (fun _ -> expect (1 + 2) |> toBe 3)

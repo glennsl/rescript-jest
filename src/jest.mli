@@ -1,7 +1,3 @@
-
-module Promise = Bs_promise
-type ('a, 'e) promise = ('a, 'e) Promise.t
-
 type 'a assertion
 
 module type Asserter = sig
@@ -12,7 +8,7 @@ end
 module Runner (A : Asserter) : sig
   val test : string -> (unit -> 'a A.t) -> unit
   val testAsync : string -> (('a A.t -> unit) -> unit) -> unit
-  val testPromise : string -> (unit -> ('a A.t, 'e) promise) -> unit
+  val testPromise : string -> (unit -> 'a A.t Js.Promise.t) -> unit
 
   external describe : string -> (unit -> unit) -> unit = "" [@@bs.val]
 
@@ -24,21 +20,21 @@ module Runner (A : Asserter) : sig
   module Only : sig
     val test : string -> (unit -> 'a A.t) -> unit
     val testAsync : string -> (('a A.t -> unit) -> unit) -> unit
-    val testPromise : string -> (unit -> ('a A.t, 'e) promise) -> unit
+    val testPromise : string -> (unit -> 'a A.t Js.Promise.t) -> unit
     external describe : string -> (unit -> unit) -> unit = "describe.only" [@@bs.val]
   end
 
   module Skip : sig
     external test : string -> (unit -> 'a A.t) -> unit = "test.skip" [@@bs.val]
     external testAsync : string -> (('a A.t -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
-    external testPromise : string -> (unit -> ('a A.t, 'e) promise) -> unit = "test.skip" [@@bs.val]
+    external testPromise : string -> (unit -> 'a A.t Js.Promise.t) -> unit = "test.skip" [@@bs.val]
     external describe : string -> (unit -> unit) -> unit = "describe.skip" [@@bs.val]
   end
 end
 
 val test : string -> (unit -> 'a assertion) -> unit
 val testAsync : string -> (('a assertion -> unit) -> unit) -> unit
-val testPromise : string -> (unit -> ('a assertion, 'e) promise) -> unit
+val testPromise : string -> (unit -> 'a assertion Js.Promise.t) -> unit
 
 external describe : string -> (unit -> unit) -> unit = "" [@@bs.val]
 
@@ -50,14 +46,14 @@ external afterEach : (unit -> unit) -> unit = "" [@@bs.val]
 module Only : sig
   val test : string -> (unit -> 'a assertion) -> unit
   val testAsync : string -> (('a assertion -> unit) -> unit) -> unit
-  val testPromise : string -> (unit -> ('a assertion, 'e) promise) -> unit
+  val testPromise : string -> (unit -> 'a assertion Js.Promise.t) -> unit
   external describe : string -> (unit -> unit) -> unit = "describe.only" [@@bs.val]
 end
 
 module Skip : sig
   external test : string -> (unit -> 'a assertion) -> unit = "test.skip" [@@bs.val]
   external testAsync : string -> (('a assertion -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
-  external testPromise : string -> (unit -> ('a assertion, 'e) promise) -> unit = "test.skip" [@@bs.val]
+  external testPromise : string -> (unit -> 'a assertion Js.Promise.t) -> unit = "test.skip" [@@bs.val]
   external describe : string -> (unit -> unit) -> unit = "describe.skip" [@@bs.val]
 end
 
@@ -72,9 +68,9 @@ val testAsyncOnly : string -> (('a assertion -> unit) -> unit) -> unit
 [@@ocaml.deprecated "Use `Only.testAsync` instead"]
 external testAsyncSkip : string -> (('a assertion -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
 [@@ocaml.deprecated "Use `Skip.testAsync` instead"]
-val testPromiseOnly : string -> (unit -> ('a assertion, 'e) promise) -> unit
+val testPromiseOnly : string -> (unit -> 'a assertion Js.Promise.t) -> unit
 [@@ocaml.deprecated "Use `Only.testPromise` instead"]
-external testPromiseSkip : string -> (unit -> ('a assertion, 'e) promise) -> unit = "test.skip" [@@bs.val]
+external testPromiseSkip : string -> (unit -> 'a assertion Js.Promise.t) -> unit = "test.skip" [@@bs.val]
 [@@ocaml.deprecated "Use `Skip.testPromise` instead"]
 external describeOnly : string -> (unit -> unit) -> unit = "describe.only" [@@bs.val]
 [@@ocaml.deprecated "Use `Only.describe` instead"]

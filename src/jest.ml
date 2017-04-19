@@ -1,7 +1,3 @@
-
-module Promise = Bs_promise
-type ('a, 'e) promise = ('a, 'e) Promise.t
-
 type 'a simpleAssertion =
 | Ok : 'a simpleAssertion
 | Fail : string -> 'a simpleAssertion
@@ -144,10 +140,10 @@ module Runner (A : Asserter) = struct
         done_ ());
       Js.undefined)
 
-  external testPromise : string -> (unit -> ('a, 'e) promise) -> unit = "test" [@@bs.val]
+  external testPromise : string -> (unit -> 'a Js.Promise.t) -> unit = "test" [@@bs.val]
   let testPromise name callback =
     testPromise name (fun () ->
-      callback () |> Promise.then_ A.assert_)
+      callback () |> Js.Promise.then_ (fun a -> a |> A.assert_ |> Js.Promise.resolve))
 
   external describe : string -> (unit -> unit) -> unit = "" [@@bs.val]
 
@@ -171,10 +167,10 @@ module Runner (A : Asserter) = struct
           done_ ());
         Js.undefined)
 
-    external testPromise : string -> (unit -> ('a, 'e) promise) -> unit = "test.only" [@@bs.val]
+    external testPromise : string -> (unit -> 'a Js.Promise.t) -> unit = "test.only" [@@bs.val]
     let testPromise name callback =
       testPromise name (fun () ->
-        callback () |> Promise.then_ A.assert_)
+        callback () |> Js.Promise.then_ (fun a -> a |> A.assert_ |> Js.Promise.resolve))
 
     external describe : string -> (unit -> unit) -> unit = "describe.only" [@@bs.val]
   end
@@ -182,7 +178,7 @@ module Runner (A : Asserter) = struct
   module Skip = struct
     external test : string -> (unit -> 'a A.t) -> unit = "test.skip" [@@bs.val]
     external testAsync : string -> (('a A.t -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
-    external testPromise : string -> (unit -> ('a A.t, 'e) promise) -> unit = "test.skip" [@@bs.val]
+    external testPromise : string -> (unit -> 'a A.t Js.Promise.t) -> unit = "test.skip" [@@bs.val]
     external describe : string -> (unit -> unit) -> unit = "describe.skip" [@@bs.val]
   end
 end
@@ -206,11 +202,11 @@ let testAsyncOnly name callback =
 external testAsyncSkip : string -> (('a assertion -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
 [@@ocaml.deprecated "Use `Skip.testAsync` instead"]
 
-external testPromiseOnly : string -> (unit -> ('a, 'e) promise) -> unit = "test.only" [@@bs.val]
+external testPromiseOnly : string -> (unit -> 'a Js.Promise.t) -> unit = "test.only" [@@bs.val]
 let testPromiseOnly name callback =
-  testPromiseOnly name (fun () -> callback () |> Promise.then_ LLExpect.assert_)
+  testPromiseOnly name (fun () -> callback () |> Js.Promise.then_ (fun assertion -> Js.Promise.resolve LLExpect.assert_))
 [@@ocaml.deprecated "Use `Only.testPromise` instead"]
-external testPromiseSkip : string -> (unit -> ('a assertion, 'e) promise) -> unit = "test.skip" [@@bs.val]
+external testPromiseSkip : string -> (unit -> 'a assertion Js.Promise.t) -> unit = "test.skip" [@@bs.val]
 [@@ocaml.deprecated "Use `Skip.testPromise` instead"]
 
 external describeOnly : string -> (unit -> unit) -> unit = "describe.only" [@@bs.val]
