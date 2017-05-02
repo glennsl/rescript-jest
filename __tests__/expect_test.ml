@@ -35,6 +35,8 @@ describe "Expect" (fun _ ->
     expect "banana" |> toMatchRe [%re "/ana/"]);
   test "toThrow" (fun _ ->
     expect (fun () -> assert false) |> toThrow);
+  Skip.test "toThrow - no throw - should compile, but fail test" (fun _ ->
+    expect (fun () -> 2) |> toThrow);
   (*test "toThrowException" (fun _ ->
     expect (fun () -> raise (Invalid_argument "foo")) |> toThrowException (Invalid_argument "foo"));*)
   test "toThrowMessage" (fun _ ->

@@ -98,10 +98,10 @@ module Expect : sig
   val toMatchRe : Js.Re.t -> string partial -> string assertion
   val toMatchSnapshot : 'a partial -> 'a assertion
   val toMatchSnapshotWithName : string -> 'a partial -> 'a assertion
-  val toThrow : (unit -> unit) partial -> (unit -> unit) assertion
-  val toThrowErrorMatchingSnapshot : (unit -> unit) partial -> (unit -> unit) assertion
-  val toThrowMessage : string -> (unit -> unit) partial -> (unit -> unit) assertion
-  val toThrowMessageRe : Js.Re.t -> (unit -> unit) partial -> (unit -> unit) assertion
+  val toThrow : (unit -> 'a) partial -> unit assertion
+  val toThrowErrorMatchingSnapshot : (unit -> 'a) partial -> unit assertion
+  val toThrowMessage : string -> (unit -> 'a) partial -> unit assertion
+  val toThrowMessageRe : Js.Re.t -> (unit -> 'a) partial -> unit assertion
   val not_ : 'a partial -> 'a partial
 
   module Operators : sig
@@ -139,10 +139,10 @@ module ExpectJs : sig
   val toMatchRe : Js.Re.t -> string partial -> string assertion
   val toMatchSnapshot : 'a partial -> 'a assertion
   val toMatchSnapshotWithName : string -> 'a partial -> 'a assertion
-  val toThrow : (unit -> unit) partial -> (unit -> unit) assertion
-  val toThrowErrorMatchingSnapshot : (unit -> unit) partial -> (unit -> unit) assertion
-  val toThrowMessage : string -> (unit -> unit) partial -> (unit -> unit) assertion
-  val toThrowMessageRe : Js.Re.t -> (unit -> unit) partial -> (unit -> unit) assertion
+  val toThrow : (unit -> 'a) partial -> unit assertion
+  val toThrowErrorMatchingSnapshot : (unit -> 'a) partial -> unit assertion
+  val toThrowMessage : string -> (unit -> 'a) partial -> unit assertion
+  val toThrowMessageRe : Js.Re.t -> (unit -> 'a) partial -> unit assertion
   val not_ : 'a partial -> 'a partial
 
   module Operators : sig

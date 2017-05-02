@@ -20,11 +20,11 @@ type 'a simpleAssertion =
 | ObjectMatch : < .. > Js.t * < .. > Js.t -> 'a simpleAssertion
 | StringContains : string * string -> 'a simpleAssertion
 | StringMatch : string * Js.Re.t -> 'a simpleAssertion
-| Throws : (unit -> unit) -> 'a simpleAssertion
+| Throws : (unit -> 'b) -> 'a simpleAssertion
 (*| ThrowsException : (unit -> unit) * exn -> 'a simpleAssertion*)
-| ThrowsMatchSnapshot : (unit -> unit) -> 'a simpleAssertion
-| ThrowsMessage : (unit -> unit) * string -> 'a simpleAssertion
-| ThrowsMessageRe : (unit -> unit) * Js.Re.t -> 'a simpleAssertion
+| ThrowsMatchSnapshot : (unit -> 'b) -> 'a simpleAssertion
+| ThrowsMessage : (unit -> 'b) * string -> 'a simpleAssertion
+| ThrowsMessageRe : (unit -> 'b) * Js.Re.t -> 'a simpleAssertion
 | Truthy : 'a -> 'a simpleAssertion
 | Undefined : 'a Js.undefined -> 'a simpleAssertion
 
@@ -50,6 +50,7 @@ module LLExpect : sig
 end = struct
   type 'a t = 'a assertion
   type specialMatch
+
   external expect : 'a -> < .. > Js.t = "" [@@bs.val]
   external fail : string -> unit = "" [@@bs.val]
   external arrayContaining : 'a array -> specialMatch = "expect.arrayContaining" [@@bs.val]
@@ -283,20 +284,24 @@ module Expect = struct
   let toMatchSnapshotWithName name =
     mapMod (fun a -> MatchSnapshotName (a, name))
 
-  let toThrow =
-    mapMod (fun f -> Throws f)
+  let toThrow: (unit -> 'a) partial -> unit assertion = function
+    | Just a -> Just (Throws a)
+    | Not a -> Not (Throws a)
   
-  let toThrowErrorMatchingSnapshot =
-    mapMod (fun f -> ThrowsMatchSnapshot f)
+  let toThrowErrorMatchingSnapshot = function
+    | Just a -> Just (ThrowsMatchSnapshot a)
+    | Not a -> Not (ThrowsMatchSnapshot a)
 
   (*let toThrowException : exn -> (unit -> unit) partial -> (unit -> unit) matchSpec =
     fun e -> mapMod (fun f -> ThrowsException (f, e))*)
 
-  let toThrowMessage message =
-    mapMod (fun f -> ThrowsMessage (f, message))
+  let toThrowMessage message = function
+    | Just a -> Just (ThrowsMessage (a, message))
+    | Not a -> Not (ThrowsMessage (a, message))
 
-  let toThrowMessageRe re =
-    mapMod (fun f -> ThrowsMessageRe (f, re))
+  let toThrowMessageRe re = function
+    | Just a -> Just (ThrowsMessageRe (a, re))
+    | Not a -> Not (ThrowsMessageRe (a, re))
 
   let not_ = function
     | Just a -> Not a
