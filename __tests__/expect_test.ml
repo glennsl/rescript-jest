@@ -45,6 +45,9 @@ describe "Expect" (fun _ ->
     expect (fun () -> assert false) |> toThrowMessageRe [%re "/Assert_failure/"]);
   test "not_ |> toBe" (fun _ ->
     expect (1 + 2) |> not_ |> toBe 4);
+
+  test "expectFn" (fun _ ->
+    expectFn raise (Invalid_argument "foo") |> toThrowMessage "Invalid_argument,-3,foo");
 );
 
 describe "Expect.Operators" (fun _ -> 

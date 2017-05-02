@@ -231,6 +231,9 @@ module Expect = struct
   
   let expect a =
     Just a
+
+  let expectFn f a =
+    Just (fun () -> f a)
   
   let toBe b =
     mapMod (fun a -> Be (a, b))

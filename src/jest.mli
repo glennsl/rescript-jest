@@ -81,6 +81,7 @@ module Expect : sig
   type 'a partial
   
   val expect : 'a -> 'a partial
+  val expectFn : ('a -> 'b) -> 'a -> (unit -> 'b) partial (* EXPERIMENTAL *)
 
   val toBe : 'a -> 'a partial -> 'a assertion
   val toBeCloseTo : float -> float partial -> 'a assertion
@@ -122,6 +123,7 @@ module ExpectJs : sig
   type 'a partial
 
   val expect : 'a -> 'a partial
+  val expectFn : ('a -> 'b) -> 'a -> (unit -> 'b) partial
 
   val toBe : 'a -> 'a partial -> 'a assertion
   val toBeCloseTo : float -> float partial -> 'a assertion
