@@ -120,45 +120,7 @@ module Expect : sig
 end
 
 module ExpectJs : sig
-  type 'a partial
-
-  val expect : 'a -> 'a partial
-  val expectFn : ('a -> 'b) -> 'a -> (unit -> 'b) partial
-
-  val toBe : 'a -> 'a partial -> 'a assertion
-  val toBeCloseTo : float -> float partial -> 'a assertion
-  val toBeSoCloseTo : float -> digits:int -> float partial -> float assertion
-  val toBeGreaterThan : 'a -> 'a partial -> 'a assertion
-  val toBeGreaterThanOrEqual : 'a -> 'a partial -> 'a assertion
-  val toBeLessThan : 'a -> 'a partial -> 'a assertion
-  val toBeLessThanOrEqual : 'a -> 'a partial -> 'a assertion
-  val toBeSupersetOf : 'a array -> 'a array partial -> 'a assertion
-  val toContain : 'a -> 'a array partial -> 'a assertion
-  val toContainString : string -> string partial -> 'a assertion
-  val toEqual : 'a -> 'a partial -> 'a assertion
-  val toHaveLength : int -> 'a array partial -> 'a assertion
-  val toMatch : string -> string partial -> string assertion
-  val toMatchRe : Js.Re.t -> string partial -> string assertion
-  val toMatchSnapshot : 'a partial -> 'a assertion
-  val toMatchSnapshotWithName : string -> 'a partial -> 'a assertion
-  val toThrow : (unit -> 'a) partial -> unit assertion
-  val toThrowErrorMatchingSnapshot : (unit -> 'a) partial -> unit assertion
-  val toThrowMessage : string -> (unit -> 'a) partial -> unit assertion
-  val toThrowMessageRe : Js.Re.t -> (unit -> 'a) partial -> unit assertion
-  val not_ : 'a partial -> 'a partial
-
-  module Operators : sig
-    (** experimental *)
-
-    val (==) : 'a partial -> 'a -> 'a assertion
-    val (>)  : 'a partial -> 'a -> 'a assertion
-    val (>=) : 'a partial -> 'a -> 'a assertion
-    val (<)  : 'a partial -> 'a -> 'a assertion
-    val (<=) : 'a partial -> 'a -> 'a assertion
-    val (=)  : 'a partial -> 'a -> 'a assertion
-    val (<>) : 'a partial -> 'a -> 'a assertion
-    val (!=) : 'a partial -> 'a -> 'a assertion
-  end
+  include module type of Expect
 
   val toBeDefined : 'a Js.undefined partial -> 'a assertion
   val toBeFalsy : 'a partial -> 'a assertion
