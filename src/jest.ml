@@ -357,7 +357,6 @@ module MockJs = struct
   (** experimental *)
 
   type ('fn, 'args, 'ret) fn
-  type ('args, 'ret) mock
   
   (* TODO: "... contains type variables cannot be generalized"
   (** Equiavlent to calling new mock() *)
@@ -369,13 +368,12 @@ module MockJs = struct
   *)
   
   external fn : ('fn, _, _) fn -> 'fn = "%identity"
-  external mock : (_, 'args, 'ret) fn -> ('args, 'ret) mock = "" [@@bs.get]
-  external calls : ('args, _) mock -> 'args array = "" [@@bs.get]
+  external calls : (_, 'args, _) fn -> 'args array = "" [@@bs.get] [@@bs.scope "mock"]
   let calls self = Js.Array.copy (calls self) (* Awesome, the bloody things are mutated so we need to copy *)
   let calls self = calls self |> Array.map [%bs.raw {|
     function (args) { return args.length === 1 ? args[0] : args }
   |}] (* there's no such thing as aa 1-ary tuple, so we need to unbox single-element arrays *)
-  external instances : (_, 'ret') mock -> 'ret array = "" [@@bs.get] (* TODO: semms this only records "instances" created by `new` *)
+  external instances : (_, _, 'ret) fn -> 'ret array = "" [@@bs.get] [@@bs.scope "mock"] (* TODO: semms this only records "instances" created by `new` *)
   let instances self = Js.Array.copy (instances self) (* Awesome, the bloody things are mutated so we need to copy *)
   (* "... contains type variables cannot be generalized"
   let calls : 'args fn -> 'args = [%bs.raw {|

@@ -39,7 +39,7 @@ describe "inferred_fn" (fun _ ->
     
     let _ = call fn "first" in
     let _ = call fn "second" in
-    let calls  = mockFn |> MockJs.mock |> MockJs.calls in
+    let calls  = mockFn |> MockJs.calls in
     
     expect calls |> toEqual [| "first"; "second" |]
   );
@@ -48,11 +48,11 @@ describe "inferred_fn" (fun _ ->
     let mockFn = JestJs.inferred_fn () in
     let fn = MockJs.fn mockFn in
     
-    let before  = mockFn |> MockJs.mock |> MockJs.calls in 
+    let before  = mockFn |> MockJs.calls in 
     let _ = (call fn 1, call fn 2) in
-    let inbetween  = mockFn |> MockJs.mock |> MockJs.calls in
+    let inbetween  = mockFn |> MockJs.calls in
     MockJs.mockClear mockFn;
-    let after  = mockFn |> MockJs.mock |> MockJs.calls in
+    let after  = mockFn |> MockJs.calls in
     
     expect
       (before, inbetween, after)
@@ -64,11 +64,11 @@ describe "inferred_fn" (fun _ ->
     let mockFn = JestJs.inferred_fn () in
     let fn = MockJs.fn mockFn in
     
-    let before  = mockFn |> MockJs.mock |> MockJs.calls in 
+    let before  = mockFn |> MockJs.calls in 
     let _ = (call fn 1, call fn 2) in
-    let inbetween  = mockFn |> MockJs.mock |> MockJs.calls in
+    let inbetween  = mockFn |> MockJs.calls in
     MockJs.mockReset mockFn;
-    let after  = mockFn |> MockJs.mock |> MockJs.calls in
+    let after  = mockFn |> MockJs.calls in
     
     expect
       (before, inbetween, after)
@@ -199,7 +199,7 @@ describe "fn" (fun _ ->
     
     let _ = MockJs.fn mockFn 74 in
     let _ = MockJs.fn mockFn 89435 in
-    let calls  = mockFn |> MockJs.mock |> MockJs.calls in
+    let calls  = mockFn |> MockJs.calls in
     
     expect calls |> toEqual [| 74; 89435 |]
   );
@@ -207,11 +207,11 @@ describe "fn" (fun _ ->
   Skip.test "mockClear - resets calls" (fun _ ->
     let mockFn = JestJs.fn (fun a -> string_of_int a) in
     
-    let before = mockFn |> MockJs.mock |> MockJs.calls in 
+    let before = mockFn |> MockJs.calls in 
     let _ = (MockJs.fn mockFn 1, MockJs.fn mockFn 2) in
-    let inbetween = mockFn |> MockJs.mock |> MockJs.calls in
+    let inbetween = mockFn |> MockJs.calls in
     MockJs.mockClear mockFn;
-    let after = mockFn |> MockJs.mock |> MockJs.calls in
+    let after = mockFn |> MockJs.calls in
     
     expect
       (before, inbetween, after)
@@ -223,11 +223,11 @@ describe "fn" (fun _ ->
     let mockFn = JestJs.fn (fun a -> string_of_int a) in
     let fn = MockJs.fn mockFn in
     
-    let before  = mockFn |> MockJs.mock |> MockJs.calls in 
+    let before  = mockFn |> MockJs.calls in 
     let _ = (fn 1, fn 2) in
-    let inbetween  = mockFn |> MockJs.mock |> MockJs.calls in
+    let inbetween  = mockFn |> MockJs.calls in
     MockJs.mockReset mockFn;
-    let after  = mockFn |> MockJs.mock |> MockJs.calls in
+    let after  = mockFn |> MockJs.calls in
     
     expect
       (before, inbetween, after)

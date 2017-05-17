@@ -135,12 +135,10 @@ module MockJs : sig
   (** experimental *)
 
   type ('fn, 'args, 'ret) fn
-  type ('args, 'ret) mock
   
   external fn : ('fn, _, _) fn -> 'fn = "%identity"
-  external mock : (_, 'args, 'ret) fn -> ('args, 'ret) mock = "" [@@bs.get]
-  val calls : ('args, _) mock -> 'args array
-  val instances : (_, 'ret') mock -> 'ret array
+  val calls : (_, 'args, _) fn -> 'args array
+  val instances : (_, _, 'ret) fn -> 'ret array
   
   (** Beware: this actually replaces `mock`, not just `mock.instances` and `mock.calls` *)
   external mockClear : unit = "" [@@bs.send.pipe: _ fn]
