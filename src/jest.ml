@@ -163,8 +163,8 @@ module Runner (A : Asserter) = struct
     external testAsync : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
     let testAsync name callback =
       testAsync name (fun done_ ->
-        callback (fun case ->
-          A.assert_ case;
+        callback (fun assertion ->
+          A.assert_ assertion;
           done_ ());
         Js.undefined)
 
@@ -198,14 +198,14 @@ external testSkip : string -> (unit -> 'a assertion) -> unit = "test.skip" [@@bs
 
 external testAsyncOnly : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
 let testAsyncOnly name callback =
-  testAsyncOnly name (fun done_ -> callback (fun case -> LLExpect.assert_ case; done_ ()); Js.undefined)
+  testAsyncOnly name (fun done_ -> callback (fun assertion -> LLExpect.assert_ assertion; done_ ()); Js.undefined)
 [@@ocaml.deprecated "Use `Only.testAsync` instead"]
 external testAsyncSkip : string -> (('a assertion -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
 [@@ocaml.deprecated "Use `Skip.testAsync` instead"]
 
 external testPromiseOnly : string -> (unit -> 'a Js.Promise.t) -> unit = "test.only" [@@bs.val]
 let testPromiseOnly name callback =
-  testPromiseOnly name (fun () -> callback () |> Js.Promise.then_ (fun assertion -> Js.Promise.resolve LLExpect.assert_))
+  testPromiseOnly name (fun () -> callback () |> Js.Promise.then_ (fun assertion -> Js.Promise.resolve @@ LLExpect.assert_ assertion))
 [@@ocaml.deprecated "Use `Only.testPromise` instead"]
 external testPromiseSkip : string -> (unit -> 'a assertion Js.Promise.t) -> unit = "test.skip" [@@bs.val]
 [@@ocaml.deprecated "Use `Skip.testPromise` instead"]
