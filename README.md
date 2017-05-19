@@ -1,6 +1,6 @@
 # bs-jest - [BuckleScript](https://github.com/bloomberg/bucklescript) bindings for [Jest](https://github.com/facebook/jest) [![Build Status](https://travis-ci.org/BuckleTypes/bs-jest.svg?branch=master)](https://travis-ci.org/BuckleTypes/bs-jest)
 
-Very very **experimental** (yep, that's one less "very" than before!) and **WIP**
+Very very **experimental** (yep, that's one less "very" than before! Progress!) and **WIP**
 
 ## Status
 
@@ -10,14 +10,39 @@ Very very **experimental** (yep, that's one less "very" than before!) and **WIP*
 * [The Jest Object](https://facebook.github.io/jest/docs/jest-object.html#content): Fake timers are fully implemented and tested. Mock functionality has been moved to `JestJs`. It's mostly implemented, but experimental and largely untested.
 * [Snapshotting] Completely untested. Expect functions exist, but there's currently no way to implement custom snapshot serializers.
 
+## Example
+
+```ml
+open Jest
+
+let _ =
+
+describe "Expect" (fun () -> 
+  let open Expect in
+
+  test "toBe" (fun () ->
+    expect (1 + 2) |> toBe 3);
+);
+
+describe "Expect.Operators" (fun () -> 
+  let open Expect in
+  let open! Expect.Operators in
+
+  test "==" (fun () ->
+    expect (1 + 2) == 3);
+);
+```
+
+See [the tests](https://github.com/BuckleTypes/bs-jest/tree/master/__tests__) for more examples.
+
 ## Usage
 
-See [the tests](https://github.com/BuckleTypes/bs-jest/tree/master/__tests__) for examples. Put tests in a `__tests__` directory and use the suffix `*test.ml`/`*test.re`. When compiled they will be put in a `__tests__` directory under `lib`, with a `*test.js` suffix, ready to be picked up when you run `jest`. If you're not already familiar with [Jest](https://github.com/facebook/jest), see [the Jest documentation](https://facebook.github.io/jest/).
+Put tests in a `__tests__` directory and use the suffix `*test.ml`/`*test.re`. When compiled they will be put in a `__tests__` directory under `lib`, with a `*test.js` suffix, ready to be picked up when you run `jest`. If you're not already familiar with [Jest](https://github.com/facebook/jest), see [the Jest documentation](https://facebook.github.io/jest/).
 
 ## Contribute
 ```sh
 git clone https://github.com/BuckleTypes/bs-jest.git
-cs bs-jest
+cd bs-jest
 npm install
 ```
 
