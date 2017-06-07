@@ -35,6 +35,20 @@ describe "Expect.Operators" (fun () ->
 
 See [the tests](https://github.com/BuckleTypes/bs-jest/tree/master/__tests__) for more examples.
 
+## Installation
+
+```sh
+npm install --save-dev bs-jest
+```
+
+Then add `bs-jest` to `bs-dev-dependencies` in your `bsconfig.json`:
+```js
+{
+  ...
+  "bs-dependencies": ["bs-jest"]
+}
+```
+
 ## Usage
 
 Put tests in a `__tests__` directory and use the suffix `*test.ml`/`*test.re`. When compiled they will be put in a `__tests__` directory under `lib`, with a `*test.js` suffix, ready to be picked up when you run `jest`. If you're not already familiar with [Jest](https://github.com/facebook/jest), see [the Jest documentation](https://facebook.github.io/jest/).
