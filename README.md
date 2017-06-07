@@ -13,6 +13,7 @@ Very very **experimental** (yep, that's one less "very" than before! Progress!) 
 ## Example
 
 ```ml
+(* OCaml *)
 open Jest
 
 let _ =
@@ -31,6 +32,28 @@ describe "Expect.Operators" (fun () ->
   test "==" (fun () ->
     expect (1 + 2) == 3);
 );
+```
+
+```reason
+/* Reason */
+open Jest;
+
+let _ =
+
+describe "Expect" (fun () => {
+  open Expect;
+	
+  test "toBe" (fun () =>
+    expect (1 + 2) |> toBe 3)
+});
+    
+describe "Expect.Operators" (fun () => {
+  open Expect;
+  open! Expect.Operators;
+  
+  test "==" (fun () =>
+    expect (1 + 2) === 3)
+});
 ```
 
 See [the tests](https://github.com/BuckleTypes/bs-jest/tree/master/__tests__) for more examples.
