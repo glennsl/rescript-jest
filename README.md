@@ -68,7 +68,7 @@ Then add `bs-jest` to `bs-dev-dependencies` in your `bsconfig.json`:
 ```js
 {
   ...
-  "bs-dependencies": ["bs-jest"]
+  "bs-dev-dependencies": ["bs-jest"]
 }
 ```
 
