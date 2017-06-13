@@ -7,7 +7,7 @@
     "build": "bsb -make-world",
     "test": "npm run build && jest",
     "watch:bsb": "bsb -make-world -w",
-    "watch:jest": "jest --watchAll",
+    "watch:jest": "npm run build && jest --watchAll",
     "watch:screen": "screen -c .screenrc"
   },
   "repository": {
@@ -29,6 +29,16 @@
     "bs-platform": "bloomberg/bucklescript"
   },
   "dependencies": {
+    "bs-loader": "^1.5.1",
     "jest": "^19.0.2"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "ml"
+    ],
+    "transform": {
+      ".(re|ml)": "bs-loader"
+    }
   }
 }
