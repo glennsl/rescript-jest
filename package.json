@@ -7,8 +7,7 @@
     "build": "bsb -make-world",
     "test": "npm run build && jest",
     "watch:bsb": "bsb -make-world -w",
-    "watch:jest": "npm run build && jest --watchAll",
-    "watch:screen": "screen -c .screenrc"
+    "watch:jest": "npm run build && jest --watchAll"
   },
   "repository": {
     "type": "git",
