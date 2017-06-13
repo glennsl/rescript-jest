@@ -76,6 +76,8 @@ Then add `bs-jest` to `bs-dev-dependencies` in your `bsconfig.json`:
 
 Put tests in a `__tests__` directory and use the suffix `*test.ml`/`*test.re`. When compiled they will be put in a `__tests__` directory under `lib`, with a `*test.js` suffix, ready to be picked up when you run `jest`. If you're not already familiar with [Jest](https://github.com/facebook/jest), see [the Jest documentation](https://facebook.github.io/jest/).
 
+Jest can be configured to use [bs-loader](https://github.com/rrdelaney/bs-loader) as a transform, which will compile you code on-the-fly before running the tests, meaning you only need one watcher. See bs-loader's documentation for [the details](https://github.com/rrdelaney/bs-loader#using-the-loader).
+
 ## Contribute
 ```sh
 git clone https://github.com/BuckleTypes/bs-jest.git
@@ -83,4 +85,4 @@ cd bs-jest
 npm install
 ```
 
-Then build and run tests with `npm test`, start watcher with `npm run watch:jest` respectively. It uses [bs-loader]() as a transform, which will compile the code on-the-fly as you make changes.
+Then build and run tests with `npm test`, start watcher with `npm run watch:jest` respectively. It uses [bs-loader](https://github.com/rrdelaney/bs-loader) as a transform, which will compile the code on-the-fly as you make changes.
