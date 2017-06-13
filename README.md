@@ -83,4 +83,4 @@ cd bs-jest
 npm install
 ```
 
-Then build and run tests with `npm test`, start watchers for `bsb`and `jest` with `npm run watch:bsb` and `npm run watch:jest` respectively. Install `screen` to be able to use `npm run watch:screen` to run both watchers in a single terminal window.
+Then build and run tests with `npm test`, start watcher with `npm run watch:jest` respectively. It uses [bs-loader]() as a transform, which will compile the code on-the-fly as you make changes.
