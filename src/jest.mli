@@ -58,7 +58,7 @@ module Skip : sig
 end
 
 val pass : unit assertion
-val fail : string -> string assertion
+val fail : string -> unit assertion
 
 val testOnly : string -> (unit -> 'a assertion) -> unit
 [@@ocaml.deprecated "Use `Only.test` instead"]
