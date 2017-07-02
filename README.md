@@ -74,7 +74,7 @@ Then add `bs-jest` to `bs-dev-dependencies` in your `bsconfig.json`:
 
 ## Usage
 
-Put tests in a `__tests__` directory and use the suffix `*test.ml`/`*test.re`. When compiled they will be put in a `__tests__` directory under `lib`, with a `*test.js` suffix, ready to be picked up when you run `jest`. If you're not already familiar with [Jest](https://github.com/facebook/jest), see [the Jest documentation](https://facebook.github.io/jest/).
+Put tests in a `__tests__` directory and use the suffix `*test.ml`/`*test.re` (Make sure they are valid module names. e.g. `<name>.test.re` is not a valid module). When compiled they will be put in a `__tests__` directory under `lib`, with a `*test.js` suffix, ready to be picked up when you run `jest`. If you're not already familiar with [Jest](https://github.com/facebook/jest), see [the Jest documentation](https://facebook.github.io/jest/).
 
 ## Contribute
 ```sh
