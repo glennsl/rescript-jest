@@ -1,4 +1,4 @@
-# bs-jest - [BuckleScript](https://github.com/bucklescript/bucklescript) bindings for [Jest](https://github.com/facebook/jest) [![Build Status](https://travis-ci.org/BuckleTypes/bs-jest.svg?branch=master)](https://travis-ci.org/BuckleTypes/bs-jest)
+# bs-jest - [BuckleScript](https://github.com/bucklescript/bucklescript) bindings for [Jest](https://github.com/facebook/jest) [![Build Status](https://travis-ci.org/reasonml-community/bs-jest.svg?branch=master)](https://travis-ci.org/reasonml-community/bs-jest)
 
 Very very **experimental** (yep, that's one less "very" than before! Progress!) and **WIP**
 
@@ -56,7 +56,7 @@ describe "Expect.Operators" (fun () => {
 });
 ```
 
-See [the tests](https://github.com/BuckleTypes/bs-jest/tree/master/__tests__) for more examples.
+See [the tests](https://github.com/reasonml-community/bs-jest/tree/master/__tests__) for more examples.
 
 ## Installation
 
@@ -78,7 +78,7 @@ Put tests in a `__tests__` directory and use the suffix `*test.ml`/`*test.re` (M
 
 ## Contribute
 ```sh
-git clone https://github.com/BuckleTypes/bs-jest.git
+git clone https://github.com/reasonml-community/bs-jest.git
 cd bs-jest
 npm install
 ```
