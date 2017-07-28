@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/BuckleTypes/bs-jest#readme",
   "devDependencies": {
-    "bs-platform": "bloomberg/bucklescript"
+    "bs-platform": "^1.8.2"
   },
   "dependencies": {
     "jest": "^19.0.2"
