@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BuckleTypes/bs-jest.git"
+    "url": "git+https://github.com/reasonml-community/bs-jest.git"
   },
   "keywords": [
     "jest",
@@ -22,9 +22,9 @@
   "author": "glennsl",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/BuckleTypes/bs-jest/issues"
+    "url": "https://github.com/reasonml-community/bs-jest/issues"
   },
-  "homepage": "https://github.com/BuckleTypes/bs-jest#readme",
+  "homepage": "https://github.com/reasonml-community/bs-jest#readme",
   "devDependencies": {
     "bs-platform": "^1.8.2"
   },
