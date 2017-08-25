@@ -1,10 +1,13 @@
 {
   "name": "bs-jest",
-  "bsc-flags": ["-bs-no-version-header"],
-  "sources": [{
-    "dir": "src"
-  }, {
-    "dir": "__tests__",
-    "type": "dev"
-  }]
+  "bsc-flags": ["-bs-no-version-header", "-bs-super-errors"],
+  "sources": [
+    {
+      "dir": "src"
+    },
+    {
+      "dir": "__tests__",
+      "type": "dev"
+    }
+  ]
 }
