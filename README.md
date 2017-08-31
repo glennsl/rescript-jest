@@ -71,6 +71,18 @@ Then add `bs-jest` to `bs-dev-dependencies` in your `bsconfig.json`:
   "bs-dev-dependencies": ["bs-jest"]
 }
 ```
+Then add `__tests__` to `sources` in your `bsconfig.json`:
+```js
+"sources": [
+  {
+    "dir": "src"
+  },
+  {
+    "dir": "__tests__",
+    "type": "dev"
+  }
+]
+```
 
 ## Usage
 
