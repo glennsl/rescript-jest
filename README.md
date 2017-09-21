@@ -96,3 +96,8 @@ npm install
 ```
 
 Then build and run tests with `npm test`, start watchers for `bsb`and `jest` with `npm run watch:bsb` and `npm run watch:jest` respectively. Install `screen` to be able to use `npm run watch:screen` to run both watchers in a single terminal window.
+
+## Changes
+
+### Next
+* Added `testAll`, `Only.testAll`, `Skip.testAll` that generates tests from a list of inputs

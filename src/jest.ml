@@ -127,24 +127,32 @@ end = struct
 end
 
 module Runner (A : Asserter) = struct
-  external test : string -> (unit -> unit Js.undefined) -> unit = "" [@@bs.val]
+  external _test : string -> (unit -> unit Js.undefined) -> unit = "test" [@@bs.val]
+  external _testAsync : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "test" [@@bs.val]
+  external _testPromise : string -> (unit -> 'a Js.Promise.t) -> unit = "test" [@@bs.val]
+
   let test name callback =
-    test name (fun () ->
+    _test name (fun () ->
       A.assert_ @@ callback ();
       Js.undefined)
       
-  external testAsync : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "test" [@@bs.val]
   let testAsync name callback =
-    testAsync name (fun done_ ->
+    _testAsync name (fun done_ ->
       callback (fun case ->
         A.assert_ case;
         done_ ());
       Js.undefined)
 
-  external testPromise : string -> (unit -> 'a Js.Promise.t) -> unit = "test" [@@bs.val]
   let testPromise name callback =
-    testPromise name (fun () ->
+    _testPromise name (fun () ->
       callback () |> Js.Promise.then_ (fun a -> a |> A.assert_ |> Js.Promise.resolve))
+
+  let testAll name inputs callback =
+    inputs |> List.iter (fun input ->
+      let name = {j|$name - $input|j} in
+      _test name (fun () ->
+        A.assert_ @@ callback input;
+        Js.undefined))
 
   external describe : string -> (unit -> unit) -> unit = "" [@@bs.val]
 
@@ -154,24 +162,32 @@ module Runner (A : Asserter) = struct
   external afterEach : (unit -> unit) -> unit = "" [@@bs.val]
 
   module Only = struct
-    external test : string -> (unit -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
+    external _test : string -> (unit -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
+    external _testAsync : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
+    external _testPromise : string -> (unit -> 'a Js.Promise.t) -> unit = "test.only" [@@bs.val]
+
     let test name callback =
-      test name (fun () ->
+      _test name (fun () ->
         A.assert_ @@ callback ();
         Js.undefined)
 
-    external testAsync : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
     let testAsync name callback =
-      testAsync name (fun done_ ->
+      _testAsync name (fun done_ ->
         callback (fun assertion ->
           A.assert_ assertion;
           done_ ());
         Js.undefined)
 
-    external testPromise : string -> (unit -> 'a Js.Promise.t) -> unit = "test.only" [@@bs.val]
     let testPromise name callback =
-      testPromise name (fun () ->
+      _testPromise name (fun () ->
         callback () |> Js.Promise.then_ (fun a -> a |> A.assert_ |> Js.Promise.resolve))
+
+    let testAll name inputs callback =
+      inputs |> List.iter (fun input ->
+        let name = {j|$name - $input|j} in
+        _test name (fun () ->
+          A.assert_ @@ callback input;
+          Js.undefined))
 
     external describe : string -> (unit -> unit) -> unit = "describe.only" [@@bs.val]
   end
@@ -180,6 +196,7 @@ module Runner (A : Asserter) = struct
     external test : string -> (unit -> 'a A.t) -> unit = "test.skip" [@@bs.val]
     external testAsync : string -> (('a A.t -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
     external testPromise : string -> (unit -> 'a A.t Js.Promise.t) -> unit = "test.skip" [@@bs.val]
+    external testAll : string -> 'a list -> ('a -> 'b A.t) -> unit = "test.skip" [@@bs.val]
     external describe : string -> (unit -> unit) -> unit = "describe.skip" [@@bs.val]
   end
 end

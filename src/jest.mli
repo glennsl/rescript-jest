@@ -9,6 +9,7 @@ module Runner (A : Asserter) : sig
   val test : string -> (unit -> 'a A.t) -> unit
   val testAsync : string -> (('a A.t -> unit) -> unit) -> unit
   val testPromise : string -> (unit -> 'a A.t Js.Promise.t) -> unit
+  val testAll : string -> 'a list -> ('a -> 'b A.t) -> unit
 
   external describe : string -> (unit -> unit) -> unit = "" [@@bs.val]
 
@@ -21,6 +22,7 @@ module Runner (A : Asserter) : sig
     val test : string -> (unit -> 'a A.t) -> unit
     val testAsync : string -> (('a A.t -> unit) -> unit) -> unit
     val testPromise : string -> (unit -> 'a A.t Js.Promise.t) -> unit
+    val testAll : string -> 'a list -> ('a -> 'b A.t) -> unit
     external describe : string -> (unit -> unit) -> unit = "describe.only" [@@bs.val]
   end
 
@@ -28,6 +30,7 @@ module Runner (A : Asserter) : sig
     external test : string -> (unit -> 'a A.t) -> unit = "test.skip" [@@bs.val]
     external testAsync : string -> (('a A.t -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
     external testPromise : string -> (unit -> 'a A.t Js.Promise.t) -> unit = "test.skip" [@@bs.val]
+    val testAll : string -> 'a list -> ('a -> 'b A.t) -> unit
     external describe : string -> (unit -> unit) -> unit = "describe.skip" [@@bs.val]
   end
 end
@@ -35,6 +38,7 @@ end
 val test : string -> (unit -> 'a assertion) -> unit
 val testAsync : string -> (('a assertion -> unit) -> unit) -> unit
 val testPromise : string -> (unit -> 'a assertion Js.Promise.t) -> unit
+val testAll : string -> 'a list -> ('a -> 'b assertion) -> unit
 
 external describe : string -> (unit -> unit) -> unit = "" [@@bs.val]
 
@@ -47,6 +51,7 @@ module Only : sig
   val test : string -> (unit -> 'a assertion) -> unit
   val testAsync : string -> (('a assertion -> unit) -> unit) -> unit
   val testPromise : string -> (unit -> 'a assertion Js.Promise.t) -> unit
+  val testAll : string -> 'a list -> ('a -> 'b assertion) -> unit
   external describe : string -> (unit -> unit) -> unit = "describe.only" [@@bs.val]
 end
 
@@ -54,6 +59,7 @@ module Skip : sig
   external test : string -> (unit -> 'a assertion) -> unit = "test.skip" [@@bs.val]
   external testAsync : string -> (('a assertion -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
   external testPromise : string -> (unit -> 'a assertion Js.Promise.t) -> unit = "test.skip" [@@bs.val]
+  val testAll : string -> 'a list -> ('a -> 'b assertion) -> unit
   external describe : string -> (unit -> unit) -> unit = "describe.skip" [@@bs.val]
 end
 
