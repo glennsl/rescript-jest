@@ -59,7 +59,7 @@ module Skip : sig
   external test : string -> (unit -> 'a assertion) -> unit = "test.skip" [@@bs.val]
   external testAsync : string -> (('a assertion -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
   external testPromise : string -> (unit -> 'a assertion Js.Promise.t) -> unit = "test.skip" [@@bs.val]
-  val testAll : string -> 'a list -> ('a -> 'b assertion) -> unit
+  external testAll : string -> 'a list -> ('a -> 'b assertion) -> unit = "test.skip" [@@bs.val]
   external describe : string -> (unit -> unit) -> unit = "describe.skip" [@@bs.val]
 end
 
