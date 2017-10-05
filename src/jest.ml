@@ -205,33 +205,6 @@ include Runner(LLExpect)
 
 let pass = Just Ok
 let fail message = Just (Fail message)
-
-external testOnly : string -> (unit -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
-let testOnly name callback =
-  testOnly name (fun () -> LLExpect.assert_ @@ callback (); Js.undefined)
-[@@ocaml.deprecated "Use `Only.test` instead"]
-external testSkip : string -> (unit -> 'a assertion) -> unit = "test.skip" [@@bs.val]
-[@@ocaml.deprecated "Use `Skip.test` instead"]
-
-external testAsyncOnly : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
-let testAsyncOnly name callback =
-  testAsyncOnly name (fun done_ -> callback (fun assertion -> LLExpect.assert_ assertion; done_ ()); Js.undefined)
-[@@ocaml.deprecated "Use `Only.testAsync` instead"]
-external testAsyncSkip : string -> (('a assertion -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
-[@@ocaml.deprecated "Use `Skip.testAsync` instead"]
-
-external testPromiseOnly : string -> (unit -> 'a Js.Promise.t) -> unit = "test.only" [@@bs.val]
-let testPromiseOnly name callback =
-  testPromiseOnly name (fun () -> callback () |> Js.Promise.then_ (fun assertion -> Js.Promise.resolve @@ LLExpect.assert_ assertion))
-[@@ocaml.deprecated "Use `Only.testPromise` instead"]
-external testPromiseSkip : string -> (unit -> 'a assertion Js.Promise.t) -> unit = "test.skip" [@@bs.val]
-[@@ocaml.deprecated "Use `Skip.testPromise` instead"]
-
-external describeOnly : string -> (unit -> unit) -> unit = "describe.only" [@@bs.val]
-[@@ocaml.deprecated "Use `Only.describe` instead"]
-external describeSkip : string -> (unit -> unit) -> unit = "describe.skip" [@@bs.val]
-[@@ocaml.deprecated "Use `Skip.describe` instead"]
-
 (*
  * Not implemented:
  * - expect.anything - pointless when there's `option`, `Js.null` etc.

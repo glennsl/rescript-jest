@@ -66,23 +66,6 @@ end
 val pass : unit assertion
 val fail : string -> unit assertion
 
-val testOnly : string -> (unit -> 'a assertion) -> unit
-[@@ocaml.deprecated "Use `Only.test` instead"]
-external testSkip : string -> (unit -> 'a assertion) -> unit = "test.skip" [@@bs.val]
-[@@ocaml.deprecated "Use `Skip.test` instead"]
-val testAsyncOnly : string -> (('a assertion -> unit) -> unit) -> unit
-[@@ocaml.deprecated "Use `Only.testAsync` instead"]
-external testAsyncSkip : string -> (('a assertion -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
-[@@ocaml.deprecated "Use `Skip.testAsync` instead"]
-val testPromiseOnly : string -> (unit -> 'a assertion Js.Promise.t) -> unit
-[@@ocaml.deprecated "Use `Only.testPromise` instead"]
-external testPromiseSkip : string -> (unit -> 'a assertion Js.Promise.t) -> unit = "test.skip" [@@bs.val]
-[@@ocaml.deprecated "Use `Skip.testPromise` instead"]
-external describeOnly : string -> (unit -> unit) -> unit = "describe.only" [@@bs.val]
-[@@ocaml.deprecated "Use `Only.describe` instead"]
-external describeSkip : string -> (unit -> unit) -> unit = "describe.skip" [@@bs.val]
-[@@ocaml.deprecated "Use `Skip.describe` instead"]
-
 module Expect : sig
   type 'a partial
   
