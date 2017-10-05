@@ -99,5 +99,8 @@ Then build and run tests with `npm test`, start watchers for `bsb`and `jest` wit
 
 ## Changes
 
-### Next
+### 0.2.0
+* Removed deprecations
 * Added `testAll`, `Only.testAll`, `Skip.testAll` that generates tests from a list of inputs
+* Fixed type signature of `fail`
+* Added `expectFn`
