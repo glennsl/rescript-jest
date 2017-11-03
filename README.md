@@ -38,22 +38,22 @@ describe "Expect.Operators" (fun () ->
 /* Reason */
 open Jest;
 
-let _ =
+describe("Expect", () => {
+  open Expect;
 
-describe "Expect" (fun () => {
-  open Expect;
-	
-  test "toBe" (fun () =>
-    expect (1 + 2) |> toBe 3)
+  test("toBe", () =>
+    expect(1 + 2) |> toBe(3))
 });
-    
-describe "Expect.Operators" (fun () => {
-  open Expect;
-  open! Expect.Operators;
-  
-  test "==" (fun () =>
-    expect (1 + 2) === 3)
-});
+
+describe("Expect.Operators", () => {
+    open Expect;
+    open! Expect.Operators;
+
+    test("==", () =>
+      expect(1 + 2) === 3)
+  }
+);
+
 ```
 
 See [the tests](https://github.com/reasonml-community/bs-jest/tree/master/__tests__) for more examples.
