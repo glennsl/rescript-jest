@@ -15,8 +15,9 @@
     "url": "git+https://github.com/reasonml-community/bs-jest.git"
   },
   "keywords": [
-    "jest",
+    "reason",
     "bucklescript",
+    "jest",
     "test"
   ],
   "author": "glennsl",
