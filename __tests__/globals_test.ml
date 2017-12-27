@@ -10,31 +10,26 @@ let _ =
 
   test "test" (fun _ ->
     expect (1 + 2) |> toBe 3);
-  (*
-  test "test - expect fail" (fun _ ->
+    
+  Skip.test "test - expect fail" (fun _ ->
     expect (1 + 2) |> toBe 4);
-  *)
   
   testAsync "testAsync" (fun done_ ->
     done_ (expect (1 + 2) |> toBe 3));
-  (*
-  testAsync "testAsync - no done" (fun _ -> ());
-  *)
-  (*
-  testAsync "testAsync - expect fail" (fun done_ ->
+    
+  Skip.testAsync "testAsync - no done" (fun _ -> ());
+
+  Skip.testAsync "testAsync - expect fail" (fun done_ ->
     done_ (expect (1 + 2) |> toBe 4));
-  *)
   
   testPromise "testPromise" (fun _ ->
     Js.Promise.resolve (expect (1 + 2) |> toBe 3));
-  (*
-  testPromise "testPromise - reject" (fun _ ->
-    Promise.reject ());
-  *)
-  (*
-  testPromise "testPromise - expect fail" (fun _ ->
-    Promise.resolve (expect (1 + 2) |> toBe 4));
-  *)
+
+  Skip.testPromise "testPromise - reject" (fun _ ->
+    Js.Promise.reject (Failure ""));
+
+  Skip.testPromise "testPromise - expect fail" (fun _ ->
+    Js.Promise.resolve (expect (1 + 2) |> toBe 4));
 
   testAll "testAll" ["foo"; "bar"; "baz"] (fun input ->
     expect (Js.String.length input) |> toEqual 3);
