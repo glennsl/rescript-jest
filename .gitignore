@@ -3,7 +3,5 @@ node_modules/
 .bsb.lock
 lib/*
 !lib/js
-lib/js/*
-!lib/js/__tests__
 coverage
-.coverage.yml
+.coveralls.yml
