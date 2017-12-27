@@ -11,11 +11,11 @@
 
 ## Status
 
-* [Global](https://facebook.github.io/jest/docs/api.html#content): Fully implemented and tested, apart from `require.*`
-* [Expect](https://facebook.github.io/jest/docs/expect.html#content): Mostly implemented. Functionality that makes sense only for JS interop have been moved to `ExpectJS`. Some functionality does not make sense in a typed language, or is not possible to implement sensibly in ML.
-* [Mock Functions](https://facebook.github.io/jest/docs/mock-function-api.html#content): Experimental and unsafe implementation, very much in flux. The Jest bindings will most likely be relegated to the `MockJs` module as it's very quirky to use with native code. A separate native from-scratch implementation might suddenly appear as `Mock`.
-* [The Jest Object](https://facebook.github.io/jest/docs/jest-object.html#content): Fake timers are fully implemented and tested. Mock functionality has been moved to `JestJs`. It's mostly implemented, but experimental and largely untested.
-* [Snapshotting] Completely untested. Expect functions exist, but there's currently no way to implement custom snapshot serializers.
+* [Global](https://facebook.github.io/jest/docs/en/api.html): Fully implemented and tested, apart from `require.*`
+* [Expect](https://facebook.github.io/jest/docs/en/expect.html): Mostly implemented. Functionality that makes sense only for JS interop have been moved to `ExpectJs`. Some functionality does not make sense in a typed language, or is not possible to implement sensibly in ML.
+* [Mock Functions](https://facebook.github.io/jest/docs/en/mock-function-api.html): Experimental and unsafe implementation, very much in flux. The Jest bindings will most likely be relegated to the `MockJs` module as it's very quirky to use with native code. A separate native from-scratch implementation might suddenly appear as `Mock`.
+* [The Jest Object](https://facebook.github.io/jest/docs/en/jest-object.html): Fake timers are fully implemented and tested. Mock functionality has been moved to `JestJs`. It's mostly implemented, but experimental and largely untested.
+* __Snapshotting__: Expect functions exist and work, but there's currently no way to implement custom snapshot serializers.
 
 ## Example
 
