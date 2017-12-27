@@ -2,6 +2,12 @@ open Jest
 open Expect
 
 let _ =
+  test "pass" (fun _ ->
+    pass);
+
+  Skip.test "fail" (fun _ ->
+    fail "");
+
   test "test" (fun _ ->
     expect (1 + 2) |> toBe 3);
   (*
