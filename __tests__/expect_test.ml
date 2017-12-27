@@ -42,6 +42,13 @@ describe "Expect" (fun () ->
   test "toThrowMessageRe" (fun () ->
     expect (fun () -> assert false) |> toThrowMessageRe [%re "/Assert_failure/"]);
 
+  test "toMatchSnapshot" (fun () ->
+    expect "foo" |> toMatchSnapshot);
+  test "toMatchSnapshotWithName" (fun () ->
+    expect "foo" |> toMatchSnapshotWithName "bar");
+  test "toThrowErrorMatchingSnapshot" (fun () ->
+    expect (fun () -> Js.Exn.raiseError "foo error") |> toThrowErrorMatchingSnapshot);
+
   test "not toBe" (fun () ->
     expect (1 + 2) |> not_ |> toBe 4);
   test "not toBeCloseTo" (fun () ->
