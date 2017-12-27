@@ -162,9 +162,9 @@ module Runner (A : Asserter) = struct
   external afterEach : (unit -> unit) -> unit = "" [@@bs.val]
 
   module Only = struct
-    external _test : string -> (unit -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
-    external _testAsync : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "test.only" [@@bs.val]
-    external _testPromise : string -> (unit -> 'a Js.Promise.t) -> unit = "test.only" [@@bs.val]
+    external _test : string -> (unit -> unit Js.undefined) -> unit = "it.only" [@@bs.val]
+    external _testAsync : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "it.only" [@@bs.val]
+    external _testPromise : string -> (unit -> 'a Js.Promise.t) -> unit = "it.only" [@@bs.val]
 
     let test name callback =
       _test name (fun () ->
@@ -193,10 +193,10 @@ module Runner (A : Asserter) = struct
   end
 
   module Skip = struct
-    external test : string -> (unit -> 'a A.t) -> unit = "test.skip" [@@bs.val]
-    external testAsync : string -> (('a A.t -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
-    external testPromise : string -> (unit -> 'a A.t Js.Promise.t) -> unit = "test.skip" [@@bs.val]
-    external testAll : string -> 'a list -> ('a -> 'b A.t) -> unit = "test.skip" [@@bs.val]
+    external test : string -> (unit -> 'a A.t) -> unit = "it.skip" [@@bs.val]
+    external testAsync : string -> (('a A.t -> unit) -> unit) -> unit = "it.skip" [@@bs.val]
+    external testPromise : string -> (unit -> 'a A.t Js.Promise.t) -> unit = "it.skip" [@@bs.val]
+    external testAll : string -> 'a list -> ('a -> 'b A.t) -> unit = "it.skip" [@@bs.val]
     external describe : string -> (unit -> unit) -> unit = "describe.skip" [@@bs.val]
   end
 end

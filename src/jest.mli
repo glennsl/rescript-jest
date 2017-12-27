@@ -27,9 +27,9 @@ module Runner (A : Asserter) : sig
   end
 
   module Skip : sig
-    external test : string -> (unit -> 'a A.t) -> unit = "test.skip" [@@bs.val]
-    external testAsync : string -> (('a A.t -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
-    external testPromise : string -> (unit -> 'a A.t Js.Promise.t) -> unit = "test.skip" [@@bs.val]
+    external test : string -> (unit -> 'a A.t) -> unit = "it.skip" [@@bs.val]
+    external testAsync : string -> (('a A.t -> unit) -> unit) -> unit = "it.skip" [@@bs.val]
+    external testPromise : string -> (unit -> 'a A.t Js.Promise.t) -> unit = "it.skip" [@@bs.val]
     val testAll : string -> 'a list -> ('a -> 'b A.t) -> unit
     external describe : string -> (unit -> unit) -> unit = "describe.skip" [@@bs.val]
   end
@@ -56,10 +56,10 @@ module Only : sig
 end
 
 module Skip : sig
-  external test : string -> (unit -> 'a assertion) -> unit = "test.skip" [@@bs.val]
-  external testAsync : string -> (('a assertion -> unit) -> unit) -> unit = "test.skip" [@@bs.val]
-  external testPromise : string -> (unit -> 'a assertion Js.Promise.t) -> unit = "test.skip" [@@bs.val]
-  external testAll : string -> 'a list -> ('a -> 'b assertion) -> unit = "test.skip" [@@bs.val]
+  external test : string -> (unit -> 'a assertion) -> unit = "it.skip" [@@bs.val]
+  external testAsync : string -> (('a assertion -> unit) -> unit) -> unit = "it.skip" [@@bs.val]
+  external testPromise : string -> (unit -> 'a assertion Js.Promise.t) -> unit = "it.skip" [@@bs.val]
+  external testAll : string -> 'a list -> ('a -> 'b assertion) -> unit = "it.skip" [@@bs.val]
   external describe : string -> (unit -> unit) -> unit = "describe.skip" [@@bs.val]
 end
 
