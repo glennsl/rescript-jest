@@ -106,6 +106,11 @@ Then build and run tests with `npm test`, start watchers for `bsb`and `jest` wit
 
 ## Changes
 
+### 0.3.0
+* Added `toThrowException`
+* Fixed an issue with custom Runner implementation shadowing the global `test` function from jest
+* Fixed a typo in the js boundary of `not_ |> toBeLessThanEqual`
+
 ### 0.2.0
 * Removed deprecations
 * Added `testAll`, `Only.testAll`, `Skip.testAll` that generates tests from a list of inputs
