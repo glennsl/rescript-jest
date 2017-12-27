@@ -4,11 +4,11 @@ include Jest.Runner(struct
 end)
 
 
-let _ =
+let () =
   test "test" (fun () ->
     true);
 
-  Skip.test "test - expect fail" (fun _ ->
+  Skip.test "test - expect fail" (fun () ->
     false);
   
   testAsync "testAsync" (fun finish ->
@@ -16,15 +16,15 @@ let _ =
 
   Skip.testAsync "testAsync - no done" (fun _ -> ());
 
-  Skip.testAsync "testAsync - expect fail" (fun done_ ->
-    done_ false);
+  Skip.testAsync "testAsync - expect fail" (fun finish ->
+    finish false);
 
-  testPromise "testPromise" (fun _ ->
+  testPromise "testPromise" (fun () ->
     Js.Promise.resolve true);
 
-  Skip.testPromise "testPromise - reject" (fun _ ->
+  Skip.testPromise "testPromise - reject" (fun () ->
     Js.Promise.reject (Failure ""));
-  Skip.testPromise "testPromise - expect fail" (fun _ ->
+  Skip.testPromise "testPromise - expect fail" (fun () ->
     Js.Promise.resolve false);
 
   testAll "testAll" ["foo"; "bar"; "baz"] (fun input ->
@@ -32,60 +32,60 @@ let _ =
   testAll "testAll - tuples" [("foo", 3); ("barbaz", 6); ("bananas!", 8)] (fun (input, output) ->
     Js.String.length input == output);
   
-  describe "describe" (fun _ ->
-    test "some aspect" (fun _ ->
+  describe "describe" (fun () ->
+    test "some aspect" (fun () ->
       true)
   );
   
-  describe "beforeAll" (fun _ -> 
+  describe "beforeAll" (fun () -> 
     let x = ref 0 in
     
-    beforeAll (fun _ -> x := !x + 4);
-    test "x is 4" (fun _ -> !x == 4);
-    test "x is still 4" (fun _ -> !x == 4);
+    beforeAll (fun () -> x := !x + 4);
+    test "x is 4" (fun () -> !x == 4);
+    test "x is still 4" (fun () -> !x == 4);
   );
   
-  describe "beforeEach" (fun _ -> 
+  describe "beforeEach" (fun () -> 
     let x = ref 0 in
     
-    beforeEach (fun _ -> x := !x + 4);
-    test "x is 4" (fun _ -> !x == 4);
-    test "x is suddenly 8" (fun _ -> !x == 8);
+    beforeEach (fun () -> x := !x + 4);
+    test "x is 4" (fun () -> !x == 4);
+    test "x is suddenly 8" (fun () -> !x == 8);
   );
   
-  describe "afterAll" (fun _ -> 
+  describe "afterAll" (fun () -> 
     let x = ref 0 in
     
-    describe "phase 1" (fun _ ->
-      afterAll (fun _ -> x := !x + 4);
-      test "x is 0" (fun _ -> !x == 0)
+    describe "phase 1" (fun () ->
+      afterAll (fun () -> x := !x + 4);
+      test "x is 0" (fun () -> !x == 0)
     );
     
-    describe "phase 2" (fun _ -> 
-      test "x is suddenly 4" (fun _ -> !x == 4)
+    describe "phase 2" (fun () -> 
+      test "x is suddenly 4" (fun () -> !x == 4)
     );
   );
   
-  describe "afterEach" (fun _ -> 
+  describe "afterEach" (fun () -> 
     let x = ref 0 in
     
-    afterEach (fun _ -> x := !x + 4);
-    test "x is 0" (fun _ -> !x == 0);
-    test "x is suddenly 4" (fun _ -> !x == 4);
+    afterEach (fun () -> x := !x + 4);
+    test "x is 0" (fun () -> !x == 0);
+    test "x is suddenly 4" (fun () -> !x == 4);
   );
   
-  describe "Only" (fun _ ->
+  describe "Only" (fun () ->
    (* See runner_only_test.ml *)
    ()
   );
 
-  describe "Skip" (fun _ ->
-    Skip.test "Skip.test" (fun _ -> 1 + 2 == 3);
+  describe "Skip" (fun () ->
+    Skip.test "Skip.test" (fun () -> 1 + 2 == 3);
 
     Skip.testAsync "Skip.testAsync" (fun finish ->
       finish (1 + 2 == 3));
 
-    Skip.testPromise "Skip.testPromise" (fun _ ->
+    Skip.testPromise "Skip.testPromise" (fun () ->
       Js.Promise.resolve (1 + 2 == 3));
 
     Skip.testAll "testAll" ["foo"; "bar"; "baz"] (fun input ->
@@ -93,8 +93,8 @@ let _ =
     Skip.testAll "testAll - tuples" [("foo", 3); ("barbaz", 6); ("bananas!", 8)] (fun (input, output) ->
       Js.String.length input == output);
 
-    Skip.describe "Skip.describe" (fun _ ->
-      test "some aspect" (fun _ -> 1 + 2 == 3)
+    Skip.describe "Skip.describe" (fun () ->
+      test "some aspect" (fun () -> 1 + 2 == 3)
     );
   );
   

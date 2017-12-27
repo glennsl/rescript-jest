@@ -137,10 +137,10 @@ module Runner (A : Asserter) = struct
       Js.undefined)
       
   let testAsync name callback =
-    _testAsync name (fun done_ ->
+    _testAsync name (fun finish ->
       callback (fun case ->
         A.assert_ case;
-        done_ ());
+        finish ());
       Js.undefined)
 
   let testPromise name callback =
@@ -172,10 +172,10 @@ module Runner (A : Asserter) = struct
         Js.undefined)
 
     let testAsync name callback =
-      _testAsync name (fun done_ ->
+      _testAsync name (fun finish ->
         callback (fun assertion ->
           A.assert_ assertion;
-          done_ ());
+          finish ());
         Js.undefined)
 
     let testPromise name callback =

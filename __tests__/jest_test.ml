@@ -6,10 +6,10 @@ external setTimeout : (unit -> unit) -> int -> unit = "" [@@bs.val]
 external setImmediate : (unit -> unit) -> unit = "" [@@bs.val]
 external nextTick : (unit -> unit) -> unit = "process.nextTick" [@@bs.val]
 
-let _ = 
+let () = 
 
-describe "Fake Timers" (fun _ ->
-  test "runAllTimers" (fun _ ->
+describe "Fake Timers" (fun () ->
+  test "runAllTimers" (fun () ->
     let flag = ref false in
     Jest.useFakeTimers ();
     setTimeout (fun () -> flag := true) 0;
@@ -19,7 +19,7 @@ describe "Fake Timers" (fun _ ->
     expect (before, !flag) = (false, true)
   );
   
-  test "runAllTicks" (fun _ ->
+  test "runAllTicks" (fun () ->
     let flag = ref false in
     Jest.useFakeTimers ();
     nextTick (fun () -> flag := true);
@@ -29,7 +29,7 @@ describe "Fake Timers" (fun _ ->
     expect (before, !flag) = (false, true)
   );
   
-  test "runAllImmediates" (fun _ ->
+  test "runAllImmediates" (fun () ->
     let flag = ref false in
     Jest.useFakeTimers ();
     setImmediate (fun () -> flag := true);
@@ -39,7 +39,7 @@ describe "Fake Timers" (fun _ ->
     expect (before, !flag) = (false, true)
   );
   
-  test "runTimersToTime" (fun _ ->
+  test "runTimersToTime" (fun () ->
     let flag = ref false in
     Jest.useFakeTimers ();
     setTimeout (fun () -> flag := true) 1500;
@@ -51,7 +51,7 @@ describe "Fake Timers" (fun _ ->
     expect (before, inbetween, !flag) = (false, false, true)
   );
   
-  test "runOnlyPendingTimers" (fun _ ->
+  test "runOnlyPendingTimers" (fun () ->
     let count = ref 0 in
     Jest.useFakeTimers ();
     let rec recursiveTimeout () = count := !count + 1; setTimeout recursiveTimeout 1500 in
@@ -64,7 +64,7 @@ describe "Fake Timers" (fun _ ->
     expect (before, inbetween, !count) = (1, 2, 3)
   );
   
-  test "clearAllTimers" (fun _ ->
+  test "clearAllTimers" (fun () ->
     let flag = ref false in
     Jest.useFakeTimers ();
     setImmediate (fun () -> flag := true);
@@ -75,9 +75,9 @@ describe "Fake Timers" (fun _ ->
     expect (before, !flag) = (false, false)
   );
   
-  testAsync "clearAllTimers" (fun done_ ->
+  testAsync "clearAllTimers" (fun finish ->
     Jest.useFakeTimers ();
     Jest.useRealTimers ();
-    setImmediate (fun () -> done_ pass);
+    setImmediate (fun () -> finish pass);
   );
 );

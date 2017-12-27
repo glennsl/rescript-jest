@@ -1,16 +1,16 @@
 open Jest
 
-let _ =
-  test "pass" (fun _ ->
+let () =
+  test "pass" (fun () ->
     pass);
 
-  Skip.test "fail" (fun _ ->
+  Skip.test "fail" (fun () ->
     fail "");
 
-  test "test" (fun _ ->
+  test "test" (fun () ->
     pass);
     
-  Skip.test "test - expect fail" (fun _ ->
+  Skip.test "test - expect fail" (fun () ->
     fail "");
   
   testAsync "testAsync" (fun finish ->
@@ -21,13 +21,13 @@ let _ =
   Skip.testAsync "testAsync - expect fail" (fun finish ->
     finish (fail ""));
   
-  testPromise "testPromise" (fun _ ->
+  testPromise "testPromise" (fun () ->
     Js.Promise.resolve pass);
 
-  Skip.testPromise "testPromise - reject" (fun _ ->
+  Skip.testPromise "testPromise - reject" (fun () ->
     Js.Promise.reject (Failure ""));
 
-  Skip.testPromise "testPromise - expect fail" (fun _ ->
+  Skip.testPromise "testPromise - expect fail" (fun () ->
     Js.Promise.resolve (fail ""));
 
   testAll "testAll" ["foo"; "bar"; "baz"] (fun input ->
@@ -35,59 +35,59 @@ let _ =
   testAll "testAll - tuples" [("foo", 3); ("barbaz", 6); ("bananas!", 8)] (fun (input, output) ->
     if Js.String.length input == output then pass else fail "");
   
-  describe "describe" (fun _ ->
-    test "some aspect" (fun _ -> pass)
+  describe "describe" (fun () ->
+    test "some aspect" (fun () -> pass)
   );
   
-  describe "beforeAll" (fun _ -> 
+  describe "beforeAll" (fun () -> 
     let x = ref 0 in
     
-    beforeAll (fun _ -> x := !x + 4);
-    test "x is 4" (fun _ -> if !x == 4 then pass else fail "");
-    test "x is still 4" (fun _ -> if !x == 4 then pass else fail "");
+    beforeAll (fun () -> x := !x + 4);
+    test "x is 4" (fun () -> if !x == 4 then pass else fail "");
+    test "x is still 4" (fun () -> if !x == 4 then pass else fail "");
   );
   
-  describe "beforeEach" (fun _ -> 
+  describe "beforeEach" (fun () -> 
     let x = ref 0 in
     
-    beforeEach (fun _ -> x := !x + 4);
-    test "x is 4" (fun _ -> if !x == 4 then pass else fail "");
-    test "x is suddenly 8" (fun _ -> if !x == 8 then pass else fail "");
+    beforeEach (fun () -> x := !x + 4);
+    test "x is 4" (fun () -> if !x == 4 then pass else fail "");
+    test "x is suddenly 8" (fun () -> if !x == 8 then pass else fail "");
   );
   
-  describe "afterAll" (fun _ -> 
+  describe "afterAll" (fun () -> 
     let x = ref 0 in
     
-    describe "phase 1" (fun _ ->
-      afterAll (fun _ -> x := !x + 4);
-      test "x is 0" (fun _ -> if !x == 0 then pass else fail "")
+    describe "phase 1" (fun () ->
+      afterAll (fun () -> x := !x + 4);
+      test "x is 0" (fun () -> if !x == 0 then pass else fail "")
     );
     
-    describe "phase 2" (fun _ -> 
-      test "x is suddenly 4" (fun _ -> if !x == 4 then pass else fail "")
+    describe "phase 2" (fun () -> 
+      test "x is suddenly 4" (fun () -> if !x == 4 then pass else fail "")
     );
   );
   
-  describe "afterEach" (fun _ -> 
+  describe "afterEach" (fun () -> 
     let x = ref 0 in
     
-    afterEach (fun _ -> x := !x + 4);
-    test "x is 0" (fun _ -> if !x == 0 then pass else fail "");
-    test "x is suddenly 4" (fun _ -> if !x == 4 then pass else fail "");
+    afterEach (fun () -> x := !x + 4);
+    test "x is 0" (fun () -> if !x == 0 then pass else fail "");
+    test "x is suddenly 4" (fun () -> if !x == 4 then pass else fail "");
   );
   
-  describe "Only" (fun _ ->
+  describe "Only" (fun () ->
    (* See globals_only_test.ml *)
    ()
   );
 
-  describe "Skip" (fun _ ->
-    Skip.test "Skip.test" (fun _ -> pass);
+  describe "Skip" (fun () ->
+    Skip.test "Skip.test" (fun () -> pass);
 
     Skip.testAsync "Skip.testAsync" (fun finish ->
       finish pass);
 
-    Skip.testPromise "Skip.testPromise" (fun _ ->
+    Skip.testPromise "Skip.testPromise" (fun () ->
       Js.Promise.resolve pass);
 
     Skip.testAll "testAll" ["foo"; "bar"; "baz"] (fun input ->
@@ -95,8 +95,8 @@ let _ =
     Skip.testAll "testAll - tuples" [("foo", 3); ("barbaz", 6); ("bananas!", 8)] (fun (input, output) ->
       if Js.String.length input == output then pass else fail "");
 
-    Skip.describe "Skip.describe" (fun _ ->
-      test "some aspect" (fun _ -> pass);
+    Skip.describe "Skip.describe" (fun () ->
+      test "some aspect" (fun () -> pass);
     );
   );
   
