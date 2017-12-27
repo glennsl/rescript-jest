@@ -87,10 +87,10 @@ describe "Expect" (fun () ->
     expect (fun () -> assert false) |> not_ |> toThrowMessageRe [%re "/Assert_failure!/"]);
 
   test "expectFn" (fun () ->
-    expectFn raise (Invalid_argument "foo") |> toThrowMessage "Invalid_argument,-3,foo");
+    expectFn raise (Invalid_argument "foo") |> toThrowException (Invalid_argument "foo"));
   
   test "not not" (fun () ->
-    expectFn (fun () -> expect () |> not_ |> not_ |> toBe ()) () |> toThrow);
+    expectFn (fun () -> expect () |> not_ |> not_ |> toBe ()) () |> toThrowException (Invalid_argument "I suck at GADTs"));
 );
 
 describe "Expect.Operators" (fun () -> 
