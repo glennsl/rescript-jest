@@ -24,6 +24,7 @@ let () =
 
   Skip.testPromise "testPromise - reject" (fun () ->
     Js.Promise.reject (Failure ""));
+
   Skip.testPromise "testPromise - expect fail" (fun () ->
     Js.Promise.resolve false);
 

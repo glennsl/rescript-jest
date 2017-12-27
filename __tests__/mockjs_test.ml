@@ -43,6 +43,13 @@ describe "inferred_fn" (fun _ ->
     
     expect calls |> toEqual [| "first"; "second" |]
   );
+
+  test "instances - sanity check - is empty array" (fun _ ->
+    let mockFn = JestJs.inferred_fn () in
+    let instances  = MockJs.instances mockFn in
+
+    expect instances |> toEqual [||]
+  );
   
   test "mockClear - resets calls" (fun _ ->
     let mockFn = JestJs.inferred_fn () in
@@ -329,6 +336,17 @@ describe "fn2" (fun _ ->
     
     expect (call2 fn 18 24) |> toBe "42"
   );
+
+  (*
+  test "calls - records call arguments" (fun _ ->
+    let mockFn = JestJs.fn2 ((fun a b -> string_of_int (a + b)) [@bs]) in
+    
+    let _ = MockJs.fn mockFn 18 24 in
+    let calls  = mockFn |> MockJs.calls in
+    
+    expect calls |> toEqual [| (18, 24) |]
+  );
+  *)
 );
 
 (* TODO: depends on MockJs.make
