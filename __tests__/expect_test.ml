@@ -35,8 +35,8 @@ describe "Expect" (fun () ->
     expect "banana" |> toMatchRe [%re "/ana/"]);
   test "toThrow" (fun () ->
     expect (fun () -> assert false) |> toThrow);
-  (*test "toThrowException" (fun () ->
-    expect (fun () -> raise (Invalid_argument "foo")) |> toThrowException (Invalid_argument "foo"));*)
+  test "toThrowException" (fun () ->
+    expect (fun () -> raise (Invalid_argument "foo")) |> toThrowException (Invalid_argument "foo"));
   test "toThrowMessage" (fun () ->
     expect (fun () -> raise (Invalid_argument "foo")) |> toThrowMessage "Invalid_argument,-3,foo");
   test "toThrowMessageRe" (fun () ->
@@ -79,8 +79,8 @@ describe "Expect" (fun () ->
     expect "banana" |> not_ |> toMatchRe [%re "/anas/"]);
   test "not toThrow" (fun () ->
     expect (fun () -> 2) |> not_ |> toThrow);
-  (*test "toThrowException" (fun () ->
-    expect (fun () -> raise (Invalid_argument "foo")) |> toThrowException (Invalid_argument "foo"));*)
+  test "not toThrowException" (fun () ->
+    expect (fun () -> raise (Invalid_argument "foo")) |> not_ |> toThrowException (Invalid_argument "bar"));
   test "not toThrowMessage" (fun () ->
     expect (fun () -> raise (Invalid_argument "bar")) |> not_ |> toThrowMessage "Invalid_argument,-3,foo");
   test "not toThrowMessageRe" (fun () ->

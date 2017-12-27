@@ -90,6 +90,7 @@ module Expect : sig
   val toMatchSnapshotWithName : string -> 'a partial -> 'a assertion
   val toThrow : (unit -> 'a) partial -> unit assertion
   val toThrowErrorMatchingSnapshot : (unit -> 'a) partial -> unit assertion
+  val toThrowException : exn -> (unit -> 'a) partial -> unit assertion
   val toThrowMessage : string -> (unit -> 'a) partial -> unit assertion
   val toThrowMessageRe : Js.Re.t -> (unit -> 'a) partial -> unit assertion
   val not_ : 'a partial -> 'a partial

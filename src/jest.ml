@@ -21,7 +21,7 @@ type 'a simpleAssertion =
 | StringContains : string * string -> 'a simpleAssertion
 | StringMatch : string * Js.Re.t -> 'a simpleAssertion
 | Throws : (unit -> 'b) -> 'a simpleAssertion
-(*| ThrowsException : (unit -> unit) * exn -> 'a simpleAssertion*)
+| ThrowsException : (unit -> 'b) * exn -> 'a simpleAssertion
 | ThrowsMatchSnapshot : (unit -> 'b) -> 'a simpleAssertion
 | ThrowsMessage : (unit -> 'b) * string -> 'a simpleAssertion
 | ThrowsMessageRe : (unit -> 'b) * Js.Re.t -> 'a simpleAssertion
@@ -110,10 +110,8 @@ end = struct
   | Not StringContains (a, b) -> (expect a) ## not ## toEqual (stringContaining b)
   | Just Throws f -> (expect f) ## toThrow ()
   | Not Throws f -> (expect f) ## not ## toThrow ()
-  (*
-  | Just ThrowsException (f, e) -> (expect f) ## toThrow e
-  | Not ThrowsException (f, e) -> (expect f) ## not ## toThrow e
-  *)
+  | Just ThrowsException (f, e) -> (expect f) ## toThrow (Js.String.make e)
+  | Not ThrowsException (f, e) -> (expect f) ## not ## toThrow (Js.String.make e)
   | Just ThrowsMatchSnapshot f -> (expect f) ## toThrowErrorMatchingSnapshot ()
   | Not ThrowsMatchSnapshot f -> (expect f) ## not ## toThrowErrorMatchingSnapshot ()
   | Just ThrowsMessage (f, msg) -> (expect f) ## toThrow msg
@@ -278,23 +276,24 @@ module Expect = struct
     mapMod (fun a -> MatchSnapshotName (a, name))
 
   let toThrow: (unit -> 'a) partial -> unit assertion = function
-    | Just a -> Just (Throws a)
-    | Not a -> Not (Throws a)
+    | Just f -> Just (Throws f)
+    | Not f -> Not (Throws f)
   
   let toThrowErrorMatchingSnapshot = function
-    | Just a -> Just (ThrowsMatchSnapshot a)
-    | Not a -> Not (ThrowsMatchSnapshot a)
+    | Just f -> Just (ThrowsMatchSnapshot f)
+    | Not f -> Not (ThrowsMatchSnapshot f)
 
-  (*let toThrowException : exn -> (unit -> unit) partial -> (unit -> unit) matchSpec =
-    fun e -> mapMod (fun f -> ThrowsException (f, e))*)
+  let toThrowException e = function
+    | Just f -> Just (ThrowsException (f, e))
+    | Not f -> Not (ThrowsException (f, e))
 
   let toThrowMessage message = function
-    | Just a -> Just (ThrowsMessage (a, message))
-    | Not a -> Not (ThrowsMessage (a, message))
+    | Just f -> Just (ThrowsMessage (f, message))
+    | Not f -> Not (ThrowsMessage (f, message))
 
   let toThrowMessageRe re = function
-    | Just a -> Just (ThrowsMessageRe (a, re))
-    | Not a -> Not (ThrowsMessageRe (a, re))
+    | Just f -> Just (ThrowsMessageRe (f, re))
+    | Not f -> Not (ThrowsMessageRe (f, re))
 
   let not_ = function
     | Just a -> Not a
