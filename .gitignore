@@ -5,3 +5,5 @@ lib/*
 !lib/js
 lib/js/*
 !lib/js/__tests__
+coverage
+.coverage.yml

@@ -5,9 +5,10 @@
   "scripts": {
     "build": "bsb -make-world",
     "start": "bsb -make-world -w",
-    "test": "npm run build && jest",
+    "coverage": "nyc report --temp-directory=coverage --reporter=text-lcov | coveralls",
+    "test": "npm run build && jest --coverage && npm run coverage",
     "watch:bsb": "bsb -make-world -w",
-    "watch:jest": "jest --watchAll",
+    "watch:jest": "jest --coverage --watchAll",
     "watch:screen": "screen -c .screenrc"
   },
   "repository": {
@@ -27,7 +28,9 @@
   },
   "homepage": "https://github.com/reasonml-community/bs-jest#readme",
   "devDependencies": {
-    "bs-platform": "^1.9.0"
+    "bs-platform": "^1.9.0",
+    "coveralls": "^3.0.0",
+    "nyc": "^11.4.1"
   },
   "dependencies": {
     "jest": "^22.0.1"
