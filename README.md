@@ -1,6 +1,13 @@
-# bs-jest - [BuckleScript](https://github.com/bucklescript/bucklescript) bindings for [Jest](https://github.com/facebook/jest) [![Build Status](https://travis-ci.org/reasonml-community/bs-jest.svg?branch=master)](https://travis-ci.org/reasonml-community/bs-jest)
+# bs-jest
 
-Very very **experimental** (yep, that's one less "very" than before! Progress!) and **WIP**
+[BuckleScript](https://github.com/bucklescript/bucklescript) bindings for [Jest](https://github.com/facebook/jest) - Very very **experimental** (yep, that's one less "very" than before! Progress!) and **WIP**
+
+[![npm](https://img.shields.io/npm/v/bs-jest.svg)](https://npmjs.org/bs-jest)
+[![Travis](https://img.shields.io/travis/reasonml-community/bs-jest/master.svg)](https://travis-ci.org/reasonml-community/bs-jest)
+[![Coveralls](https://img.shields.io/coveralls/reasonml-community/bs-jest/master.svg)](https://coveralls.io/github/reasonml-community/bs-jest?branch=master)
+[![Dependencies](https://img.shields.io/david/reasonml-community/bs-jest.svg)]()
+[![Issues](https://img.shields.io/github/issues/reasonml-community/bs-jest.svg)]()
+[![Last Commit](https://img.shields.io/github/last-commit/reasonml-community/bs-jest.svg)]()
 
 ## Status
 
