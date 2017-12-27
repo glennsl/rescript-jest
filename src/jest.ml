@@ -93,7 +93,7 @@ end = struct
   | Just LessThan (a, b) -> (expect a) ## toBeLessThan b
   | Not LessThan (a, b) -> (expect a) ## not ## toBeLessThan b
   | Just LessThanOrEqual (a, b) -> (expect a) ## toBeLessThanOrEqual b
-  | Not LessThanOrEqual (a, b) -> (expect a) ## not ## toBeLessrThanOrEqual b
+  | Not LessThanOrEqual (a, b) -> (expect a) ## not ## toBeLessThanOrEqual b
   | Just MatchSnapshot a -> (expect a) ## toMatchSnapshot ()
   | Not MatchSnapshot a -> (expect a) ## not ## toMatchSnapshot ()
   | Just MatchSnapshotName (a, name) -> (expect a) ## toMatchSnapshot name
