@@ -95,6 +95,10 @@ Then add `__tests__` to `sources` in your `bsconfig.json`:
 
 Put tests in a `__tests__` directory and use the suffix `*test.ml`/`*test.re` (Make sure to use valid module names. e.g. `<name>_test.re` is valid while `<name>.test.re` is not). When compiled they will be put in a `__tests__` directory under `lib`, with a `*test.js` suffix, ready to be picked up when you run `jest`. If you're not already familiar with [Jest](https://github.com/facebook/jest), see [the Jest documentation](https://facebook.github.io/jest/).
 
+## Documentation
+
+For the moment, please refer to [Jest.mli](https://github.com/reasonml-community/bs-jest/blob/master/src/jest.mli).
+
 ## Contribute
 ```sh
 git clone https://github.com/reasonml-community/bs-jest.git
