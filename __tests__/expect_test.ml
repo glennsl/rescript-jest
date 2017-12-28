@@ -88,9 +88,6 @@ describe "Expect" (fun () ->
 
   test "expectFn" (fun () ->
     expectFn raise (Invalid_argument "foo") |> toThrowException (Invalid_argument "foo"));
-  
-  test "not not" (fun () ->
-    expectFn (fun () -> expect () |> not_ |> not_ |> toBe ()) () |> toThrowException (Invalid_argument "I suck at GADTs"));
 );
 
 describe "Expect.Operators" (fun () -> 

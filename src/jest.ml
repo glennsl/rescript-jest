@@ -1,43 +1,42 @@
-type 'a simpleAssertion =
-| Ok : 'a simpleAssertion
-| Fail : string -> 'a simpleAssertion
-| ArrayContains : 'a array * 'a -> 'a simpleAssertion
-| ArrayLength : 'a array * int -> 'a simpleAssertion
-| ArraySuperset : 'a array * 'a array -> 'a simpleAssertion
-| Be : 'a * 'a -> 'a simpleAssertion
-| Defined : 'a Js.undefined -> 'a simpleAssertion
-| Equal : 'a * 'a -> 'a simpleAssertion
-| Falsy : 'a -> 'a simpleAssertion
-| FloatCloseTo : float * float * int option -> 'a simpleAssertion
-| GreaterThan : 'a * 'a -> 'a simpleAssertion
-| GreaterThanOrEqual : 'a * 'a -> 'a simpleAssertion
-| LessThan : 'a * 'a -> 'a simpleAssertion
-| LessThanOrEqual : 'a * 'a -> 'a simpleAssertion
-| MatchSnapshot : 'a -> 'a simpleAssertion
-| MatchSnapshotName : 'a * string -> 'a simpleAssertion
-| Null : 'a Js.null -> 'a simpleAssertion
-| ObjectContains : 'a Js.t * string array -> 'a simpleAssertion
-| ObjectMatch : < .. > Js.t * < .. > Js.t -> 'a simpleAssertion
-| StringContains : string * string -> 'a simpleAssertion
-| StringMatch : string * Js.Re.t -> 'a simpleAssertion
-| Throws : (unit -> 'b) -> 'a simpleAssertion
-| ThrowsException : (unit -> 'b) * exn -> 'a simpleAssertion
-| ThrowsMatchSnapshot : (unit -> 'b) -> 'a simpleAssertion
-| ThrowsMessage : (unit -> 'b) * string -> 'a simpleAssertion
-| ThrowsMessageRe : (unit -> 'b) * Js.Re.t -> 'a simpleAssertion
-| Truthy : 'a -> 'a simpleAssertion
-| Undefined : 'a Js.undefined -> 'a simpleAssertion
-
-type 'a modifier =
-| Just of 'a
-| Not of 'a
-
-type 'a assertion = 'a simpleAssertion modifier
+type 'a modifier = [
+| `Just of 'a
+| `Not of 'a
+]
 
 let mapMod f = function
-| Just a -> Just (f a)
-| Not a -> Not (f a)
+| `Just a -> `Just (f a)
+| `Not a -> `Not (f a)
   
+type _ assertion =
+| Ok : _ assertion
+| Fail : string -> _ assertion
+| ArrayContains : ('a array * 'a) modifier -> 'a assertion
+| ArrayLength : ('a array * int) modifier -> 'a assertion
+| ArraySuperset : ('a array * 'a array) modifier -> 'a assertion
+| Be : ('a * 'a) modifier -> 'a assertion
+| Defined : ('a Js.undefined) modifier -> 'a assertion
+| Equal : ('a * 'a) modifier -> 'a assertion
+| Falsy : 'a modifier -> 'a assertion
+| FloatCloseTo : (float * float * int option) modifier -> _ assertion
+| GreaterThan : ('a * 'a) modifier -> 'a assertion
+| GreaterThanOrEqual : ('a * 'a) modifier -> 'a assertion
+| LessThan : ('a * 'a) modifier -> 'a assertion
+| LessThanOrEqual : ('a * 'a) modifier -> 'a assertion
+| MatchSnapshot : 'a -> 'a assertion
+| MatchSnapshotName : 'a * string -> 'a assertion
+| Null : 'a Js.null modifier -> 'a assertion
+| ObjectContains : ('a Js.t * string array) modifier -> 'a assertion
+| ObjectMatch : (< .. > Js.t * < .. > Js.t) modifier -> _ assertion
+| StringContains : (string * string) modifier -> _ assertion
+| StringMatch : (string * Js.Re.t) modifier -> _ assertion
+| Throws : (unit -> _) modifier -> _ assertion
+| ThrowsException : ((unit -> _) * exn) modifier -> _ assertion
+| ThrowsMatchSnapshot : (unit -> _) -> _ assertion
+| ThrowsMessage : ((unit -> _) * string) modifier -> _ assertion
+| ThrowsMessageRe : ((unit -> _) * Js.Re.t) modifier -> _ assertion
+| Truthy : 'a modifier -> 'a assertion
+| Undefined : 'a Js.undefined modifier -> 'a assertion
+
 module type Asserter = sig
   type 'a t
   val assert_ : 'a t -> unit
@@ -66,62 +65,57 @@ end = struct
   |}]
 
   let assert_ = function
-  | Just Ok -> ()
-  | Not Ok -> fail "not ok"
-  | Just Fail message -> fail message
-  | Not Fail _ -> ()
-  | Just ArrayContains (a, b) -> (expect a) ## toContain b
-  | Not ArrayContains (a, b) -> (expect a) ## not ## toContain b
-  | Just ArrayLength (a, l) -> (expect a) ## toHaveLength l
-  | Not ArrayLength (a, l) -> (expect a) ## not ## toHaveLength l
-  | Just ArraySuperset (a, b) -> (expect a) ## toEqual (arrayContaining b)
-  | Not ArraySuperset (a, b) -> (expect a) ## not ## toEqual (arrayContaining b)
-  | Just Be (a, b) -> (expect a) ## toBe b
-  | Not Be (a, b) -> (expect a) ## not ## toBe b
-  | Just Defined a -> (expect a) ## toBeDefined ()
-  | Not Defined a -> (expect a) ## not ## toBeDefined ()
-  | Just Equal (a, b) -> (expect a) ## toEqual b
-  | Not Equal (a, b) -> (expect a) ## not ## toEqual b
-  | Just Falsy a -> (expect a) ## toBeFalsy ()
-  | Not Falsy a -> (expect a) ## not ## toBeFalsy ()
-  | Just FloatCloseTo (a, b, p) -> (expect a) ## toBeCloseTo b (Js.Undefined.from_opt p)
-  | Not FloatCloseTo (a, b, p) -> (expect a) ## not ## toBeCloseTo b (Js.Undefined.from_opt p)
-  | Just GreaterThan (a, b) -> (expect a) ## toBeGreaterThan b
-  | Not GreaterThan (a, b) -> (expect a) ## not ## toBeGreaterThan b
-  | Just GreaterThanOrEqual (a, b) -> (expect a) ## toBeGreaterThanOrEqual b
-  | Not GreaterThanOrEqual (a, b) -> (expect a) ## not ## toBeGreaterThanOrEqual b
-  | Just LessThan (a, b) -> (expect a) ## toBeLessThan b
-  | Not LessThan (a, b) -> (expect a) ## not ## toBeLessThan b
-  | Just LessThanOrEqual (a, b) -> (expect a) ## toBeLessThanOrEqual b
-  | Not LessThanOrEqual (a, b) -> (expect a) ## not ## toBeLessThanOrEqual b
-  | Just MatchSnapshot a -> (expect a) ## toMatchSnapshot ()
-  | Not MatchSnapshot a -> (expect a) ## not ## toMatchSnapshot ()
-  | Just MatchSnapshotName (a, name) -> (expect a) ## toMatchSnapshot name
-  | Not MatchSnapshotName (a, name) -> (expect a) ## not ## toMatchSnapshot name
-  | Just Null a -> (expect a) ## toBeNull ()
-  | Not Null a -> (expect a) ## not ## toBeNull ()
-  | Just ObjectContains (a, props) -> (expect a) ## toEqual (objectContaining props)
-  | Not ObjectContains (a, props) -> (expect a) ## not ## toEqual (objectContaining props)
-  | Just ObjectMatch (a, b) -> (expect a) ## toMatchObject b
-  | Not ObjectMatch (a, b) -> (expect a) ## not ## toMatchObject b
-  | Just StringMatch (s, re) -> (expect s) ## toMatch re
-  | Not StringMatch (s, re) -> (expect s) ## not ## toMatch re
-  | Just StringContains (a, b) -> (expect a) ## toEqual (stringContaining b)
-  | Not StringContains (a, b) -> (expect a) ## not ## toEqual (stringContaining b)
-  | Just Throws f -> (expect f) ## toThrow ()
-  | Not Throws f -> (expect f) ## not ## toThrow ()
-  | Just ThrowsException (f, e) -> (expect f) ## toThrow (Js.String.make e)
-  | Not ThrowsException (f, e) -> (expect f) ## not ## toThrow (Js.String.make e)
-  | Just ThrowsMatchSnapshot f -> (expect f) ## toThrowErrorMatchingSnapshot ()
-  | Not ThrowsMatchSnapshot f -> (expect f) ## not ## toThrowErrorMatchingSnapshot ()
-  | Just ThrowsMessage (f, msg) -> (expect f) ## toThrow msg
-  | Not ThrowsMessage (f, msg) -> (expect f) ## not ## toThrow msg
-  | Just ThrowsMessageRe (f, re) -> (expect f) ## toThrow re
-  | Not ThrowsMessageRe (f, re) -> (expect f) ## not ## toThrow re
-  | Just Truthy a -> (expect a) ## toBeTruthy ()
-  | Not Truthy a -> (expect a) ## not ## toBeTruthy ()
-  | Just Undefined a -> (expect a) ## toBeUndefined ()
-  | Not Undefined a -> (expect a) ## not ## toBeUndefined ()
+  | Ok -> ()
+  | Fail message -> fail message
+  | ArrayContains `Just (a, b) -> (expect a) ## toContain b
+  | ArrayContains `Not (a, b) -> (expect a) ## not ## toContain b
+  | ArrayLength `Just (a, l) -> (expect a) ## toHaveLength l
+  | ArrayLength `Not (a, l) -> (expect a) ## not ## toHaveLength l
+  | ArraySuperset `Just (a, b) -> (expect a) ## toEqual (arrayContaining b)
+  | ArraySuperset `Not (a, b) -> (expect a) ## not ## toEqual (arrayContaining b)
+  | Be `Just (a, b) -> (expect a) ## toBe b
+  | Be `Not (a, b) -> (expect a) ## not ## toBe b
+  | Defined `Just a -> (expect a) ## toBeDefined ()
+  | Defined `Not a -> (expect a) ## not ## toBeDefined ()
+  | Equal `Just (a, b) -> (expect a) ## toEqual b
+  | Equal `Not (a, b) -> (expect a) ## not ## toEqual b
+  | Falsy `Just a -> (expect a) ## toBeFalsy ()
+  | Falsy `Not a -> (expect a) ## not ## toBeFalsy ()
+  | FloatCloseTo `Just (a, b, p) -> (expect a) ## toBeCloseTo b (Js.Undefined.from_opt p)
+  | FloatCloseTo `Not (a, b, p) -> (expect a) ## not ## toBeCloseTo b (Js.Undefined.from_opt p)
+  | GreaterThan `Just (a, b) -> (expect a) ## toBeGreaterThan b
+  | GreaterThan `Not (a, b) -> (expect a) ## not ## toBeGreaterThan b
+  | GreaterThanOrEqual `Just (a, b) -> (expect a) ## toBeGreaterThanOrEqual b
+  | GreaterThanOrEqual `Not (a, b) -> (expect a) ## not ## toBeGreaterThanOrEqual b
+  | LessThan `Just (a, b) -> (expect a) ## toBeLessThan b
+  | LessThan `Not (a, b) -> (expect a) ## not ## toBeLessThan b
+  | LessThanOrEqual `Just (a, b) -> (expect a) ## toBeLessThanOrEqual b
+  | LessThanOrEqual `Not (a, b) -> (expect a) ## not ## toBeLessThanOrEqual b
+  | MatchSnapshot a -> (expect a) ## toMatchSnapshot ()
+  | MatchSnapshotName (a, name) -> (expect a) ## toMatchSnapshot name
+  | Null `Just a -> (expect a) ## toBeNull ()
+  | Null `Not a -> (expect a) ## not ## toBeNull ()
+  | ObjectContains `Just (a, props) -> (expect a) ## toEqual (objectContaining props)
+  | ObjectContains `Not (a, props) -> (expect a) ## not ## toEqual (objectContaining props)
+  | ObjectMatch `Just (a, b) -> (expect a) ## toMatchObject b
+  | ObjectMatch `Not (a, b) -> (expect a) ## not ## toMatchObject b
+  | StringMatch `Just (s, re) -> (expect s) ## toMatch re
+  | StringMatch `Not (s, re) -> (expect s) ## not ## toMatch re
+  | StringContains `Just (a, b) -> (expect a) ## toEqual (stringContaining b)
+  | StringContains `Not (a, b) -> (expect a) ## not ## toEqual (stringContaining b)
+  | Throws `Just f -> (expect f) ## toThrow ()
+  | Throws `Not f -> (expect f) ## not ## toThrow ()
+  | ThrowsException `Just (f, e) -> (expect f) ## toThrow (Js.String.make e)
+  | ThrowsException `Not (f, e) -> (expect f) ## not ## toThrow (Js.String.make e)
+  | ThrowsMatchSnapshot f -> (expect f) ## toThrowErrorMatchingSnapshot ()
+  | ThrowsMessage `Just (f, msg) -> (expect f) ## toThrow msg
+  | ThrowsMessage `Not (f, msg) -> (expect f) ## not ## toThrow msg
+  | ThrowsMessageRe `Just (f, re) -> (expect f) ## toThrow re
+  | ThrowsMessageRe `Not (f, re) -> (expect f) ## not ## toThrow re
+  | Truthy `Just a -> (expect a) ## toBeTruthy ()
+  | Truthy `Not a -> (expect a) ## not ## toBeTruthy ()
+  | Undefined `Just a -> (expect a) ## toBeUndefined ()
+  | Undefined `Not a -> (expect a) ## not ## toBeUndefined ()
 end
 
 module Runner (A : Asserter) = struct
@@ -201,8 +195,8 @@ end
 
 include Runner(LLExpect)
 
-let pass = Just Ok
-let fail message = Just (Fail message)
+let pass = Ok
+let fail message = Fail message
 (*
  * Not implemented:
  * - expect.anything - pointless when there's `option`, `Js.null` etc.
@@ -215,90 +209,84 @@ let fail message = Just (Fail message)
  *)
 
 module Expect = struct
+  type 'a plainPartial = [`Just of 'a]
+  type 'a invertedPartial = [`Not of 'a]
   type 'a partial = 'a modifier
   
   let expect a =
-    Just a
+    `Just a
 
   let expectFn f a =
-    Just (fun () -> f a)
+    `Just (fun () -> f a)
   
-  let toBe b =
-    mapMod (fun a -> Be (a, b))
+  let toBe b p =
+    Be (mapMod (fun a -> (a, b)) p)
 
   (* toHaveBeenCalled* *)
   
-  let toBeCloseTo b =
-    mapMod (fun a -> FloatCloseTo (a, b, None))
+  let toBeCloseTo b p =
+    FloatCloseTo (mapMod (fun a -> (a, b, None)) p)
   
-  let toBeSoCloseTo b ~digits =
-    mapMod (fun a -> FloatCloseTo (a, b, Some digits))
+  let toBeSoCloseTo b ~digits p =
+    FloatCloseTo (mapMod (fun a -> (a, b, Some digits)) p)
 
-  let toBeGreaterThan b =
-    mapMod (fun a -> GreaterThan (a, b))
+  let toBeGreaterThan b p =
+    GreaterThan (mapMod (fun a -> (a, b)) p)
 
-  let toBeGreaterThanOrEqual b =
-    mapMod (fun a -> GreaterThanOrEqual (a, b))
+  let toBeGreaterThanOrEqual b p =
+    GreaterThanOrEqual (mapMod (fun a -> (a, b)) p)
 
-  let toBeLessThan b =
-    mapMod (fun a -> LessThan (a, b))
+  let toBeLessThan b p =
+    LessThan (mapMod (fun a -> (a, b)) p)
 
-  let toBeLessThanOrEqual b =
-    mapMod (fun a -> LessThanOrEqual (a, b))
+  let toBeLessThanOrEqual b p =
+    LessThanOrEqual (mapMod (fun a -> (a, b)) p)
 
   (** replaces expect.arrayContaining *)
-  let toBeSupersetOf b =
-    mapMod (fun a -> ArraySuperset (a, b))
+  let toBeSupersetOf b p =
+    ArraySuperset (mapMod (fun a -> (a, b)) p)
 
-  let toContain b =
-    mapMod (fun a -> ArrayContains (a, b))
+  let toContain b p =
+    ArrayContains (mapMod (fun a -> (a, b)) p)
 
   (** replaces expect.stringContaining *)
-  let toContainString b =
-    mapMod (fun a -> StringContains (a, b))
+  let toContainString b p =
+    StringContains (mapMod (fun a -> (a, b)) p)
 
-  let toEqual b =
-    mapMod (fun a -> Equal (a, b))
+  let toEqual b p =
+    Equal (mapMod (fun a -> (a, b)) p)
 
-  let toHaveLength l =
-    mapMod (fun a -> ArrayLength (a, l))
+  let toHaveLength l p =
+    ArrayLength (mapMod (fun a -> (a, l)) p)
 
-  let toMatch s =
-    mapMod (fun a -> StringMatch (a, Js.Re.fromString s))
+  let toMatch s p =
+    StringMatch (mapMod (fun a -> (a, Js.Re.fromString s)) p)
 
-  let toMatchRe re =
-    mapMod (fun a -> StringMatch (a, re))
+  let toMatchRe re p =
+    StringMatch (mapMod (fun a -> (a, re)) p)
 
-  let toMatchSnapshot =
-    fun a -> mapMod (fun a -> MatchSnapshot a) a
+  let toMatchSnapshot (`Just a) =
+    MatchSnapshot a
 
-  let toMatchSnapshotWithName name =
-    mapMod (fun a -> MatchSnapshotName (a, name))
+  let toMatchSnapshotWithName name (`Just a) =
+    MatchSnapshotName (a, name)
 
-  let toThrow: (unit -> 'a) partial -> unit assertion = function
-    | Just f -> Just (Throws f)
-    | Not f -> Not (Throws f)
+  let toThrow f =
+    Throws (f :> _ modifier)
   
-  let toThrowErrorMatchingSnapshot = function
-    | Just f -> Just (ThrowsMatchSnapshot f)
-    | Not f -> Not (ThrowsMatchSnapshot f)
+  let toThrowErrorMatchingSnapshot (`Just f) =
+    ThrowsMatchSnapshot f
 
-  let toThrowException e = function
-    | Just f -> Just (ThrowsException (f, e))
-    | Not f -> Not (ThrowsException (f, e))
+  let toThrowException e p =
+    ThrowsException (mapMod (fun f -> (f, e)) p)
 
-  let toThrowMessage message = function
-    | Just f -> Just (ThrowsMessage (f, message))
-    | Not f -> Not (ThrowsMessage (f, message))
+  let toThrowMessage message p =
+    ThrowsMessage (mapMod (fun f -> (f, message)) p)
 
-  let toThrowMessageRe re = function
-    | Just f -> Just (ThrowsMessageRe (f, re))
-    | Not f -> Not (ThrowsMessageRe (f, re))
+  let toThrowMessageRe re p =
+    ThrowsMessageRe (mapMod (fun f -> (f, re)) p)
 
-  let not_ = function
-    | Just a -> Not a
-    | Not _ -> raise (Invalid_argument "I suck at GADTs")
-
+  let not_ (`Just a) = `Not a
 
   module Operators = struct
     (** experimental *)
@@ -317,29 +305,19 @@ end
 module ExpectJs = struct
   include Expect
 
-  let toBeDefined =
-    fun a -> mapMod (fun a -> Defined a) a
-
-  let toBeFalsy =
-    fun a -> mapMod (fun a -> Falsy a) a
-
+  let toBeDefined a = Defined (a :> _ modifier)
+  let toBeFalsy a = Falsy (a :> _ modifier)
   (* toBeInstanceOf *)
-
-  let toBeNull =
-    fun a -> mapMod (fun a -> Null a) a
-
-  let toBeTruthy =
-    fun a -> mapMod (fun a -> Truthy a) a
-
-  let toBeUndefined =
-    fun a -> mapMod (fun a -> Undefined a) a
+  let toBeNull a = Null (a :> _ modifier)
+  let toBeTruthy a = Truthy (a :> _ modifier)
+  let toBeUndefined a = Undefined (a :> _ modifier)
 
   (** replaces expect.objectContaining *)
-  let toContainProperties props =
-    mapMod (fun a -> ObjectContains (a, props))
+  let toContainProperties props p =
+    ObjectContains (mapMod (fun a -> (a, props)) p)
 
-  let toMatchObject b =
-    mapMod (fun a -> ObjectMatch (a, b))
+  let toMatchObject b p =
+    ObjectMatch (mapMod (fun a -> (a, b)) p)
 end
 
 module MockJs = struct
