@@ -44,13 +44,13 @@ type assertion =
 
 module type Asserter = sig
   type 'a t
-  val assert_ : 'a t -> unit
+  val affirm : 'a t -> unit
 end
 
 (* internal *)
 module LLExpect : sig
   type 'a t = assertion
-  val assert_ : 'a t -> unit
+  val affirm : 'a t -> unit
 end = struct
   type 'a t = assertion
   type specialMatch
@@ -69,7 +69,7 @@ end = struct
     }
   |}]
 
-  let assert_ = function
+  let affirm = function
   | Ok -> ()
   | Fail message -> fail message
 
@@ -129,31 +129,32 @@ end = struct
 end
 
 module Runner (A : Asserter) = struct
+  let affirm = A.affirm
   external _test : string -> (unit -> unit Js.undefined) -> unit = "test" [@@bs.val]
   external _testAsync : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "test" [@@bs.val]
   external _testPromise : string -> (unit -> 'a Js.Promise.t) -> unit = "test" [@@bs.val]
 
   let test name callback =
     _test name (fun () ->
-      A.assert_ @@ callback ();
+      affirm @@ callback ();
       Js.undefined)
       
   let testAsync name callback =
     _testAsync name (fun finish ->
       callback (fun case ->
-        A.assert_ case;
+        affirm case;
         finish ());
       Js.undefined)
 
   let testPromise name callback =
     _testPromise name (fun () ->
-      callback () |> Js.Promise.then_ (fun a -> a |> A.assert_ |> Js.Promise.resolve))
+      callback () |> Js.Promise.then_ (fun a -> a |> A.affirm |> Js.Promise.resolve))
 
   let testAll name inputs callback =
     inputs |> List.iter (fun input ->
       let name = {j|$name - $input|j} in
       _test name (fun () ->
-        A.assert_ @@ callback input;
+        affirm @@ callback input;
         Js.undefined))
 
   external describe : string -> (unit -> unit) -> unit = "" [@@bs.val]
@@ -170,25 +171,25 @@ module Runner (A : Asserter) = struct
 
     let test name callback =
       _test name (fun () ->
-        A.assert_ @@ callback ();
+        affirm @@ callback ();
         Js.undefined)
 
     let testAsync name callback =
       _testAsync name (fun finish ->
         callback (fun assertion ->
-          A.assert_ assertion;
+          affirm assertion;
           finish ());
         Js.undefined)
 
     let testPromise name callback =
       _testPromise name (fun () ->
-        callback () |> Js.Promise.then_ (fun a -> a |> A.assert_ |> Js.Promise.resolve))
+        callback () |> Js.Promise.then_ (fun a -> a |> affirm |> Js.Promise.resolve))
 
     let testAll name inputs callback =
       inputs |> List.iter (fun input ->
         let name = {j|$name - $input|j} in
         _test name (fun () ->
-          A.assert_ @@ callback input;
+          affirm @@ callback input;
           Js.undefined))
 
     external describe : string -> (unit -> unit) -> unit = "describe.only" [@@bs.val]

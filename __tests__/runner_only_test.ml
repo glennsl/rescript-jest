@@ -1,6 +1,6 @@
 include Jest.Runner(struct
   type _ t = bool
-  let assert_ ok = assert ok
+  let affirm ok = assert ok
 end)
 
 let () =

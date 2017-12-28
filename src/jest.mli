@@ -2,7 +2,7 @@ type assertion
 
 module type Asserter = sig
   type 'a t
-  val assert_ : 'a t -> unit
+  val affirm : 'a t -> unit
 end
 
 module Runner (A : Asserter) : sig
