@@ -7,35 +7,35 @@ let mapMod f = function
 | `Just a -> `Just (f a)
 | `Not a -> `Not (f a)
   
-type _ assertion =
-| Ok : _ assertion
-| Fail : string -> _ assertion
-| ArrayContains : ('a array * 'a) modifier -> 'a assertion
-| ArrayLength : ('a array * int) modifier -> 'a assertion
-| ArraySuperset : ('a array * 'a array) modifier -> 'a assertion
-| Be : ('a * 'a) modifier -> 'a assertion
-| Defined : ('a Js.undefined) modifier -> 'a assertion
-| Equal : ('a * 'a) modifier -> 'a assertion
-| Falsy : 'a modifier -> 'a assertion
-| FloatCloseTo : (float * float * int option) modifier -> _ assertion
-| GreaterThan : ('a * 'a) modifier -> 'a assertion
-| GreaterThanOrEqual : ('a * 'a) modifier -> 'a assertion
-| LessThan : ('a * 'a) modifier -> 'a assertion
-| LessThanOrEqual : ('a * 'a) modifier -> 'a assertion
-| MatchSnapshot : 'a -> 'a assertion
-| MatchSnapshotName : 'a * string -> 'a assertion
-| Null : 'a Js.null modifier -> 'a assertion
-| ObjectContains : ('a Js.t * string array) modifier -> 'a assertion
-| ObjectMatch : (< .. > Js.t * < .. > Js.t) modifier -> _ assertion
-| StringContains : (string * string) modifier -> _ assertion
-| StringMatch : (string * Js.Re.t) modifier -> _ assertion
-| Throws : (unit -> _) modifier -> _ assertion
-| ThrowsException : ((unit -> _) * exn) modifier -> _ assertion
-| ThrowsMatchSnapshot : (unit -> _) -> _ assertion
-| ThrowsMessage : ((unit -> _) * string) modifier -> _ assertion
-| ThrowsMessageRe : ((unit -> _) * Js.Re.t) modifier -> _ assertion
-| Truthy : 'a modifier -> 'a assertion
-| Undefined : 'a Js.undefined modifier -> 'a assertion
+type assertion =
+| Ok : assertion
+| Fail : string -> assertion
+| ArrayContains : ('a array * 'a) modifier -> assertion
+| ArrayLength : ('a array * int) modifier -> assertion
+| ArraySuperset : ('a array * 'a array) modifier -> assertion
+| Be : ('a * 'a) modifier -> assertion
+| Defined : ('a Js.undefined) modifier -> assertion
+| Equal : ('a * 'a) modifier -> assertion
+| Falsy : 'a modifier -> assertion
+| FloatCloseTo : (float * float * int option) modifier -> assertion
+| GreaterThan : ('a * 'a) modifier -> assertion
+| GreaterThanOrEqual : ('a * 'a) modifier -> assertion
+| LessThan : ('a * 'a) modifier -> assertion
+| LessThanOrEqual : ('a * 'a) modifier -> assertion
+| MatchSnapshot : _ -> assertion
+| MatchSnapshotName : _ * string -> assertion
+| Null : _ Js.null modifier -> assertion
+| ObjectContains : (< .. > Js.t * string array) modifier -> assertion
+| ObjectMatch : (< .. > Js.t * < .. > Js.t) modifier -> assertion
+| StringContains : (string * string) modifier -> assertion
+| StringMatch : (string * Js.Re.t) modifier -> assertion
+| Throws : (unit -> _) modifier -> assertion
+| ThrowsException : ((unit -> _) * exn) modifier -> assertion
+| ThrowsMatchSnapshot : (unit -> _) -> assertion
+| ThrowsMessage : ((unit -> _) * string) modifier -> assertion
+| ThrowsMessageRe : ((unit -> _) * Js.Re.t) modifier -> assertion
+| Truthy : 'a modifier -> assertion
+| Undefined : 'a Js.undefined modifier -> assertion
 
 module type Asserter = sig
   type 'a t
@@ -44,10 +44,10 @@ end
 
 (* internal *)
 module LLExpect : sig
-  type 'a t = 'a assertion
+  type 'a t = assertion
   val assert_ : 'a t -> unit
 end = struct
-  type 'a t = 'a assertion
+  type 'a t = assertion
   type specialMatch
 
   external expect : 'a -> < .. > Js.t = "" [@@bs.val]
