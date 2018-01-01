@@ -1,5 +1,5 @@
 {
-  "name": "bs-jest",
+  "name": "@glennsl/bs-jest",
   "bsc-flags": ["-bs-no-version-header", "-bs-super-errors"],
   "sources": [
     {

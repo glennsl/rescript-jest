@@ -1,5 +1,5 @@
 {
-  "name": "bs-jest",
+  "name": "@glennsl/bs-jest",
   "version": "0.3.2",
   "description": "BuckleScript bindings to the Jest testing framework",
   "scripts": {

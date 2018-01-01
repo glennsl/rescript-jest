@@ -70,14 +70,14 @@ See [the tests](https://github.com/glennsl/bs-jest/tree/master/__tests__) for mo
 ## Installation
 
 ```sh
-npm install --save-dev bs-jest
+npm install --save-dev @glennsl/bs-jest
 ```
 
 Then add `bs-jest` to `bs-dev-dependencies` in your `bsconfig.json`:
 ```js
 {
   ...
-  "bs-dev-dependencies": ["bs-jest"]
+  "bs-dev-dependencies": ["@glennsl/bs-jest"]
 }
 ```
 Then add `__tests__` to `sources` in your `bsconfig.json`:
