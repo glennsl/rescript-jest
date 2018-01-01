@@ -2,12 +2,14 @@
 
 [BuckleScript](https://github.com/bucklescript/bucklescript) bindings for [Jest](https://github.com/facebook/jest) - Very very **experimental** (yep, that's one less "very" than before! Progress!) and **WIP**
 
-[![npm](https://img.shields.io/npm/v/bs-jest.svg)](https://npmjs.org/bs-jest)
+[![npm](https://img.shields.io/npm/v/@glennsl/bs-jest.svg)](https://npmjs.org/@glennsl/bs-jest)
 [![Travis](https://img.shields.io/travis/glennsl/bs-jest/master.svg)](https://travis-ci.org/glennsl/bs-jest)
 [![Coveralls](https://img.shields.io/coveralls/glennsl/bs-jest/master.svg)](https://coveralls.io/github/glennsl/bs-jest?branch=master)
 [![Dependencies](https://img.shields.io/david/glennsl/bs-jest.svg)](https://github.com/glennsl/bs-jest/blob/master/package.json)
 [![Issues](https://img.shields.io/github/issues/glennsl/bs-jest.svg)](https://github.com/glennsl/bs-jest/issues)
 [![Last Commit](https://img.shields.io/github/last-commit/glennsl/bs-jest.svg)](https://github.com/glennsl/bs-jest/commits/master)
+
+**NOTE:** _NPM package has moved to `@glennsl/bs-jest`. Remember to update both `package.json` AND `bsconfig.json`._
 
 ## Status
 
@@ -109,6 +111,10 @@ npm install
 Then build and run tests with `npm test`, start watchers for `bsb`and `jest` with `npm run watch:bsb` and `npm run watch:jest` respectively. Install `screen` to be able to use `npm run watch:screen` to run both watchers in a single terminal window.
 
 ## Changes
+
+### 0.3.1
+* Moved repository from `reasonml-community/bs-jest` to `glennsl/bs-jest`
+* Renamed NPM package from `bs-jest` to `@glennsl/bs-jest`
 
 ### 0.3.0
 * Added `toThrowException`
