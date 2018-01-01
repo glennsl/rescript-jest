@@ -27,6 +27,10 @@
     "url": "https://github.com/glennsl/bs-jest/issues"
   },
   "homepage": "https://github.com/glennsl/bs-jest#readme",
+  "files": [
+    "src/",
+    "bsconfig.json"
+  ],
   "devDependencies": {
     "bs-platform": "^1.9.0",
     "coveralls": "^3.0.0",
