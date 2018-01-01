@@ -3,11 +3,11 @@
 [BuckleScript](https://github.com/bucklescript/bucklescript) bindings for [Jest](https://github.com/facebook/jest) - Very very **experimental** (yep, that's one less "very" than before! Progress!) and **WIP**
 
 [![npm](https://img.shields.io/npm/v/bs-jest.svg)](https://npmjs.org/bs-jest)
-[![Travis](https://img.shields.io/travis/reasonml-community/bs-jest/master.svg)](https://travis-ci.org/reasonml-community/bs-jest)
-[![Coveralls](https://img.shields.io/coveralls/reasonml-community/bs-jest/master.svg)](https://coveralls.io/github/reasonml-community/bs-jest?branch=master)
-[![Dependencies](https://img.shields.io/david/reasonml-community/bs-jest.svg)]()
-[![Issues](https://img.shields.io/github/issues/reasonml-community/bs-jest.svg)]()
-[![Last Commit](https://img.shields.io/github/last-commit/reasonml-community/bs-jest.svg)]()
+[![Travis](https://img.shields.io/travis/glennsl/bs-jest/master.svg)](https://travis-ci.org/glennsl/bs-jest)
+[![Coveralls](https://img.shields.io/coveralls/glennsl/bs-jest/master.svg)](https://coveralls.io/github/glennsl/bs-jest?branch=master)
+[![Dependencies](https://img.shields.io/david/glennsl/bs-jest.svg)](https://github.com/glennsl/bs-jest/blob/master/package.json)
+[![Issues](https://img.shields.io/github/issues/glennsl/bs-jest.svg)](https://github.com/glennsl/bs-jest/issues)
+[![Last Commit](https://img.shields.io/github/last-commit/glennsl/bs-jest.svg)](https://github.com/glennsl/bs-jest/commits/master)
 
 ## Status
 
@@ -63,7 +63,7 @@ describe("Expect.Operators", () => {
 
 ```
 
-See [the tests](https://github.com/reasonml-community/bs-jest/tree/master/__tests__) for more examples.
+See [the tests](https://github.com/glennsl/bs-jest/tree/master/__tests__) for more examples.
 
 ## Installation
 
@@ -97,11 +97,11 @@ Put tests in a `__tests__` directory and use the suffix `*test.ml`/`*test.re` (M
 
 ## Documentation
 
-For the moment, please refer to [Jest.mli](https://github.com/reasonml-community/bs-jest/blob/master/src/jest.mli).
+For the moment, please refer to [Jest.mli](https://github.com/glennsl/bs-jest/blob/master/src/jest.mli).
 
 ## Contribute
 ```sh
-git clone https://github.com/reasonml-community/bs-jest.git
+git clone https://github.com/glennsl/bs-jest.git
 cd bs-jest
 npm install
 ```
