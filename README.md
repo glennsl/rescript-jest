@@ -73,7 +73,7 @@ See [the tests](https://github.com/glennsl/bs-jest/tree/master/__tests__) for mo
 npm install --save-dev @glennsl/bs-jest
 ```
 
-Then add `bs-jest` to `bs-dev-dependencies` in your `bsconfig.json`:
+Then add `@glennsl/bs-jest` to `bs-dev-dependencies` in your `bsconfig.json`:
 ```js
 {
   ...
