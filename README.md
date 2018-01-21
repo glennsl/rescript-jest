@@ -21,30 +21,7 @@
 
 ## Example
 
-```ml
-(* OCaml *)
-open Jest
-
-let _ =
-
-describe "Expect" (fun () -> 
-  let open Expect in
-
-  test "toBe" (fun () ->
-    expect (1 + 2) |> toBe 3);
-);
-
-describe "Expect.Operators" (fun () -> 
-  let open Expect in
-  let open! Expect.Operators in
-
-  test "==" (fun () ->
-    expect (1 + 2) == 3);
-);
-```
-
 ```reason
-/* Reason */
 open Jest;
 
 describe("Expect", () => {
