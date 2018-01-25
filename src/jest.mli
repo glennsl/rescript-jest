@@ -14,6 +14,7 @@ module Runner (A : Asserter) : sig
   external describe : string -> (unit -> unit) -> unit = "" [@@bs.val]
 
   external beforeAll : (unit -> unit) -> unit = "" [@@bs.val]
+  val beforeAllAsync : ((_ A.t -> unit) -> unit) -> unit
   external beforeEach : (unit -> unit) -> unit = "" [@@bs.val]
   external afterAll : (unit -> unit) -> unit = "" [@@bs.val]
   external afterEach : (unit -> unit) -> unit = "" [@@bs.val]
@@ -73,7 +74,7 @@ module Expect : sig
     | 'a plainPartial
     | 'a invertedPartial
   ]
-  
+
   val expect : 'a -> 'a plainPartial
   val expectFn : ('a -> 'b) -> 'a -> (unit -> 'b) plainPartial (* EXPERIMENTAL *)
 
@@ -130,11 +131,11 @@ module MockJs : sig
   (** experimental *)
 
   type ('fn, 'args, 'ret) fn
-  
+
   external fn : ('fn, _, _) fn -> 'fn = "%identity"
   val calls : (_, 'args, _) fn -> 'args array
   val instances : (_, _, 'ret) fn -> 'ret array
-  
+
   (** Beware: this actually replaces `mock`, not just `mock.instances` and `mock.calls` *)
   external mockClear : unit = "" [@@bs.send.pipe: _ fn]
   external mockReset : unit = "" [@@bs.send.pipe: _ fn]
