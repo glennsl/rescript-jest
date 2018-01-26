@@ -15,6 +15,7 @@ module Runner (A : Asserter) : sig
 
   external beforeAll : (unit -> unit) -> unit = "" [@@bs.val]
   val beforeAllAsync : ((_ A.t -> unit) -> unit) -> unit
+  val beforeAllPromise : (unit -> _ A.t Js.Promise.t) -> unit
   external beforeEach : (unit -> unit) -> unit = "" [@@bs.val]
   external afterAll : (unit -> unit) -> unit = "" [@@bs.val]
   val afterAllAsync : ((_ A.t -> unit) -> unit) -> unit

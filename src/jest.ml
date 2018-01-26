@@ -167,6 +167,10 @@ module Runner (A : Asserter) = struct
         affirm case;
         finish ());
       Js.undefined)
+  external _beforeAllPromise : (unit -> 'a Js.Promise.t) -> unit = "beforeAll" [@@bs.val]
+  let beforeAllPromise callback =
+    _beforeAllPromise (fun () ->
+      callback () |> Js.Promise.then_ (fun a -> a |> A.affirm |> Js.Promise.resolve))
   external beforeEach : (unit -> unit) -> unit = "" [@@bs.val]
   external afterAll : (unit -> unit) -> unit = "" [@@bs.val]
   external _afterAllAsync : ((unit -> unit) -> unit Js.undefined) -> unit = "afterAll" [@@bs.val]

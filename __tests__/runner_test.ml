@@ -57,6 +57,17 @@ let () =
     test "x is still 4" (fun () -> !x == 4);
   );
 
+  describe "beforeAllPromise" (fun () ->
+    let x = ref 0 in
+
+    beforeAllPromise (fun () ->
+      x := !x + 4;
+    Js.Promise.resolve true);
+
+    test "x is 4" (fun () -> !x == 4);
+    test "x is still 4" (fun () -> !x == 4);
+  );
+
   describe "beforeEach" (fun () ->
     let x = ref 0 in
 
