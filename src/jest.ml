@@ -180,6 +180,10 @@ module Runner (A : Asserter) = struct
         affirm case;
         finish ());
       Js.undefined)
+  external _afterAllPromise : (unit -> 'a Js.Promise.t) -> unit = "afterAll" [@@bs.val]
+  let afterAllPromise callback =
+    _afterAllPromise (fun () ->
+      callback () |> Js.Promise.then_ (fun a -> a |> A.affirm |> Js.Promise.resolve))
   external afterEach : (unit -> unit) -> unit = "" [@@bs.val]
 
   module Only = struct

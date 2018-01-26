@@ -105,6 +105,21 @@ let () =
     );
   );
 
+  describe "afterAllPromise" (fun () ->
+    let x = ref 0 in
+
+    describe "phase 1" (fun () ->
+      afterAllPromise (fun () ->
+        x := !x + 4;
+      Js.Promise.resolve true);
+      test "x is 0" (fun () -> !x == 0)
+    );
+
+    describe "phase 2" (fun () ->
+      test "x is suddenly 4" (fun () -> !x == 4)
+    );
+  );
+
   describe "afterEach" (fun () ->
     let x = ref 0 in
 
