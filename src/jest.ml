@@ -163,10 +163,10 @@ module Runner (A : Asserter) = struct
   external _beforeAllAsync : ((unit -> unit) -> unit Js.undefined) -> unit = "beforeAll" [@@bs.val]
   let beforeAllAsync callback =
     _beforeAllAsync (fun finish ->
-      callback (fun case ->
-        affirm case;
+      callback (fun () ->
         finish ());
-      Js.undefined)
+        Js.undefined
+      )
   external _beforeAllPromise : (unit -> 'a Js.Promise.t) -> unit = "beforeAll" [@@bs.val]
   let beforeAllPromise callback =
     _beforeAllPromise (fun () ->
@@ -176,10 +176,10 @@ module Runner (A : Asserter) = struct
   external _afterAllAsync : ((unit -> unit) -> unit Js.undefined) -> unit = "afterAll" [@@bs.val]
   let afterAllAsync callback =
     _afterAllAsync (fun finish ->
-      callback (fun case ->
-        affirm case;
+      callback (fun () ->
         finish ());
-      Js.undefined)
+        Js.undefined
+      )
   external _afterAllPromise : (unit -> 'a Js.Promise.t) -> unit = "afterAll" [@@bs.val]
   let afterAllPromise callback =
     _afterAllPromise (fun () ->
