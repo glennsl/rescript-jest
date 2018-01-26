@@ -6,6 +6,7 @@ module type Asserter = sig
 end
 
 module Runner (A : Asserter) : sig
+  type timeout = int
   val test : string -> (unit -> _ A.t) -> unit
   val testAsync : string -> ((_ A.t -> unit) -> unit) -> unit
   val testPromise : string -> (unit -> _ A.t Js.Promise.t) -> unit
@@ -14,11 +15,11 @@ module Runner (A : Asserter) : sig
   external describe : string -> (unit -> unit) -> unit = "" [@@bs.val]
 
   external beforeAll : (unit -> unit) -> unit = "" [@@bs.val]
-  val beforeAllAsync : ?timeout:float -> ((unit -> unit) -> unit) -> unit
+  val beforeAllAsync : ?timeout:timeout -> ((unit -> unit) -> unit) -> unit
   val beforeAllPromise : (unit -> _ A.t Js.Promise.t) -> unit
   external beforeEach : (unit -> unit) -> unit = "" [@@bs.val]
   external afterAll : (unit -> unit) -> unit = "" [@@bs.val]
-  val afterAllAsync : ?timeout:float -> ((unit -> unit) -> unit) -> unit
+  val afterAllAsync : ?timeout:timeout -> ((unit -> unit) -> unit) -> unit
   val afterAllPromise : (unit -> _ A.t Js.Promise.t) -> unit
   external afterEach : (unit -> unit) -> unit = "" [@@bs.val]
 

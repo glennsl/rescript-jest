@@ -129,6 +129,7 @@ end = struct
 end
 
 module Runner (A : Asserter) = struct
+  type timeout = int
   let affirm = A.affirm
   external _test : string -> (unit -> unit Js.undefined) -> unit = "test" [@@bs.val]
   external _testAsync : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "test" [@@bs.val]
@@ -167,7 +168,7 @@ module Runner (A : Asserter) = struct
         finish ());
         Js.undefined
       )
-      (Js.Undefined.from_opt timeout)
+    (Js.Undefined.from_opt (Js.Option.map ((fun v -> float_of_int v)[@bs ]) timeout))
   external _beforeAllPromise : (unit -> 'a Js.Promise.t) -> unit = "beforeAll" [@@bs.val]
   let beforeAllPromise callback =
     _beforeAllPromise (fun () ->
@@ -181,7 +182,7 @@ module Runner (A : Asserter) = struct
         finish ());
         Js.undefined
       )
-      (Js.Undefined.from_opt timeout)
+      (Js.Undefined.from_opt (Js.Option.map ((fun v -> float_of_int v)[@bs ]) timeout))
   external _afterAllPromise : (unit -> 'a Js.Promise.t) -> unit = "afterAll" [@@bs.val]
   let afterAllPromise callback =
     _afterAllPromise (fun () ->
