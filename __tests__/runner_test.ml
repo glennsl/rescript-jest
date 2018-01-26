@@ -49,7 +49,10 @@ let () =
   describe "beforeAllAsync" (fun () ->
     let x = ref 0 in
 
-    beforeAllAsync (fun (callback) -> x := !x + 4; callback());
+    beforeAllAsync (fun (finish) ->
+      x := !x + 4;
+      finish (true);
+    );
     test "x is 4" (fun () -> !x == 4);
     test "x is still 4" (fun () -> !x == 4);
   );
