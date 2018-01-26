@@ -160,18 +160,22 @@ module Runner (A : Asserter) = struct
   external describe : string -> (unit -> unit) -> unit = "" [@@bs.val]
 
   external beforeAll : (unit -> unit) -> unit = "" [@@bs.val]
-
   external _beforeAllAsync : ((unit -> unit) -> unit Js.undefined) -> unit = "beforeAll" [@@bs.val]
-
   let beforeAllAsync callback =
     _beforeAllAsync (fun finish ->
       callback (fun case ->
         affirm case;
         finish ());
       Js.undefined)
-
   external beforeEach : (unit -> unit) -> unit = "" [@@bs.val]
   external afterAll : (unit -> unit) -> unit = "" [@@bs.val]
+  external _afterAllAsync : ((unit -> unit) -> unit Js.undefined) -> unit = "afterAll" [@@bs.val]
+  let afterAllAsync callback =
+    _afterAllAsync (fun finish ->
+      callback (fun case ->
+        affirm case;
+        finish ());
+      Js.undefined)
   external afterEach : (unit -> unit) -> unit = "" [@@bs.val]
 
   module Only = struct

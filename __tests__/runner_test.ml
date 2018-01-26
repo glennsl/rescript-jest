@@ -51,7 +51,7 @@ let () =
 
     beforeAllAsync (fun (finish) ->
       x := !x + 4;
-      finish (true);
+      finish true
     );
     test "x is 4" (fun () -> !x == 4);
     test "x is still 4" (fun () -> !x == 4);
@@ -70,6 +70,22 @@ let () =
 
     describe "phase 1" (fun () ->
       afterAll (fun () -> x := !x + 4);
+      test "x is 0" (fun () -> !x == 0)
+    );
+
+    describe "phase 2" (fun () ->
+      test "x is suddenly 4" (fun () -> !x == 4)
+    );
+  );
+
+  describe "afterAllAsync" (fun () ->
+    let x = ref 0 in
+
+    describe "phase 1" (fun () ->
+      afterAllAsync (fun (finish) ->
+        x := !x + 4;
+        finish true
+      );
       test "x is 0" (fun () -> !x == 0)
     );
 

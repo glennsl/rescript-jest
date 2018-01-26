@@ -17,6 +17,7 @@ module Runner (A : Asserter) : sig
   val beforeAllAsync : ((_ A.t -> unit) -> unit) -> unit
   external beforeEach : (unit -> unit) -> unit = "" [@@bs.val]
   external afterAll : (unit -> unit) -> unit = "" [@@bs.val]
+  val afterAllAsync : ((_ A.t -> unit) -> unit) -> unit
   external afterEach : (unit -> unit) -> unit = "" [@@bs.val]
 
   module Only : sig
