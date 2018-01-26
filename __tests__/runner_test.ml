@@ -49,10 +49,7 @@ let () =
   describe "beforeAllAsync" (fun () ->
     let x = ref 0 in
 
-    beforeAllAsync (fun (finish) ->
-      x := !x + 4;
-      finish true
-    );
+    beforeAllAsync (fun (finish) -> x := !x + 4; finish true);
     test "x is 4" (fun () -> !x == 4);
     test "x is still 4" (fun () -> !x == 4);
   );
@@ -60,10 +57,7 @@ let () =
   describe "beforeAllPromise" (fun () ->
     let x = ref 0 in
 
-    beforeAllPromise (fun () ->
-      x := !x + 4;
-    Js.Promise.resolve true);
-
+    beforeAllPromise (fun () -> x := !x + 4; Js.Promise.resolve true);
     test "x is 4" (fun () -> !x == 4);
     test "x is still 4" (fun () -> !x == 4);
   );
@@ -93,10 +87,7 @@ let () =
     let x = ref 0 in
 
     describe "phase 1" (fun () ->
-      afterAllAsync (fun (finish) ->
-        x := !x + 4;
-        finish true
-      );
+      afterAllAsync (fun (finish) -> x := !x + 4; finish true);
       test "x is 0" (fun () -> !x == 0)
     );
 
@@ -109,9 +100,7 @@ let () =
     let x = ref 0 in
 
     describe "phase 1" (fun () ->
-      afterAllPromise (fun () ->
-        x := !x + 4;
-      Js.Promise.resolve true);
+      afterAllPromise (fun () -> x := !x + 4; Js.Promise.resolve true);
       test "x is 0" (fun () -> !x == 0)
     );
 
