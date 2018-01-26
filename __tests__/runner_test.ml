@@ -10,7 +10,7 @@ let () =
 
   Skip.test "test - expect fail" (fun () ->
     false);
-
+  
   testAsync "testAsync" (fun finish ->
     finish true);
 
@@ -32,20 +32,20 @@ let () =
     Js.String.length input == 3);
   testAll "testAll - tuples" [("foo", 3); ("barbaz", 6); ("bananas!", 8)] (fun (input, output) ->
     Js.String.length input == output);
-
+  
   describe "describe" (fun () ->
     test "some aspect" (fun () ->
       true)
   );
-
-  describe "beforeAll" (fun () ->
+  
+  describe "beforeAll" (fun () -> 
     let x = ref 0 in
-
+    
     beforeAll (fun () -> x := !x + 4);
     test "x is 4" (fun () -> !x == 4);
     test "x is still 4" (fun () -> !x == 4);
   );
-
+  
   describe "beforeAllAsync" (fun () ->
     let x = ref 0 in
 
@@ -62,27 +62,27 @@ let () =
     test "x is still 4" (fun () -> !x == 4);
   );
 
-  describe "beforeEach" (fun () ->
+  describe "beforeEach" (fun () -> 
     let x = ref 0 in
-
+    
     beforeEach (fun () -> x := !x + 4);
     test "x is 4" (fun () -> !x == 4);
     test "x is suddenly 8" (fun () -> !x == 8);
   );
-
-  describe "afterAll" (fun () ->
+  
+  describe "afterAll" (fun () -> 
     let x = ref 0 in
-
+    
     describe "phase 1" (fun () ->
       afterAll (fun () -> x := !x + 4);
       test "x is 0" (fun () -> !x == 0)
     );
-
-    describe "phase 2" (fun () ->
+    
+    describe "phase 2" (fun () -> 
       test "x is suddenly 4" (fun () -> !x == 4)
     );
   );
-
+  
   describe "afterAllAsync" (fun () ->
     let x = ref 0 in
 
@@ -109,14 +109,14 @@ let () =
     );
   );
 
-  describe "afterEach" (fun () ->
+  describe "afterEach" (fun () -> 
     let x = ref 0 in
-
+    
     afterEach (fun () -> x := !x + 4);
     test "x is 0" (fun () -> !x == 0);
     test "x is suddenly 4" (fun () -> !x == 4);
   );
-
+  
   describe "Only" (fun () ->
    (* See runner_only_test.ml *)
    ()
@@ -140,3 +140,4 @@ let () =
       test "some aspect" (fun () -> 1 + 2 == 3)
     );
   );
+  

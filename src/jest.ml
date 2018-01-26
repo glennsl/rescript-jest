@@ -6,7 +6,7 @@ type 'a modifier = [
 let mapMod f = function
 | `Just a -> `Just (f a)
 | `Not a -> `Not (f a)
-
+  
 type assertion =
 | Ok : assertion
 | Fail : string -> assertion
@@ -138,7 +138,7 @@ module Runner (A : Asserter) = struct
     _test name (fun () ->
       affirm @@ callback ();
       Js.undefined)
-
+      
   let testAsync name callback =
     _testAsync name (fun finish ->
       callback (fun case ->
@@ -245,21 +245,21 @@ module Expect = struct
   type 'a plainPartial = [`Just of 'a]
   type 'a invertedPartial = [`Not of 'a]
   type 'a partial = 'a modifier
-
+  
   let expect a =
     `Just a
 
   let expectFn f a =
     `Just (fun () -> f a)
-
+  
   let toBe b p =
     Be (mapMod (fun a -> (a, b)) p)
 
   (* toHaveBeenCalled* *)
-
+  
   let toBeCloseTo b p =
     FloatCloseTo (mapMod (fun a -> (a, b, None)) p)
-
+  
   let toBeSoCloseTo b ~digits p =
     FloatCloseTo (mapMod (fun a -> (a, b, Some digits)) p)
 
@@ -306,7 +306,7 @@ module Expect = struct
 
   let toThrow f =
     Throws (f :> _ modifier)
-
+  
   let toThrowErrorMatchingSnapshot (`Just f) =
     ThrowsMatchSnapshot f
 
@@ -357,7 +357,7 @@ module MockJs = struct
   (** experimental *)
 
   type ('fn, 'args, 'ret) fn
-
+  
   (* TODO: "... contains type variables cannot be generalized"
   (** Equiavlent to calling new mock() *)
   let make : ('fn, _, _) fn -> 'fn = [%bs.raw {|
@@ -366,7 +366,7 @@ module MockJs = struct
     }
   |}]
   *)
-
+  
   external fn : ('fn, _, _) fn -> 'fn = "%identity"
   external calls : (_, 'args, _) fn -> 'args array = "" [@@bs.get] [@@bs.scope "mock"]
   let calls self = Js.Array.copy (calls self) (* Awesome, the bloody things are mutated so we need to copy *)
@@ -383,7 +383,7 @@ module MockJs = struct
     function (fn) { fn.mock.instances; }()
   |}]
   *)
-
+  
   (** Beware: this actually replaces `mock`, not just `mock.instances` and `mock.calls` *)
   external mockClear : unit = "" [@@bs.send.pipe: _ fn]
   external mockReset : unit = "" [@@bs.send.pipe: _ fn]
