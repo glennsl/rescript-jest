@@ -129,7 +129,6 @@ end = struct
 end
 
 module Runner (A : Asserter) = struct
-  type timeout = int
   let affirm = A.affirm
   external _test : string -> (unit -> unit Js.undefined) -> unit = "test" [@@bs.val]
   external _testAsync : string -> ((unit -> unit) -> unit Js.undefined) -> unit = "test" [@@bs.val]
@@ -161,28 +160,22 @@ module Runner (A : Asserter) = struct
   external describe : string -> (unit -> unit) -> unit = "" [@@bs.val]
 
   external beforeAll : (unit -> unit) -> unit = "" [@@bs.val]
-  external _beforeAllAsync : ((unit -> unit) -> unit Js.undefined) -> float Js.Undefined.t -> unit = "beforeAll" [@@bs.val]
+  external _beforeAllAsync : ((unit -> unit) -> unit Js.undefined) -> int Js.Undefined.t -> unit = "beforeAll" [@@bs.val]
   let beforeAllAsync ?timeout callback  =
-    _beforeAllAsync (fun finish ->
-      callback (fun () ->
-        finish ());
-        Js.undefined
-      )
-    (Js.Undefined.from_opt (Js.Option.map ((fun v -> float_of_int v)[@bs ]) timeout))
+    _beforeAllAsync
+      (fun finish -> callback (fun () -> finish ()); Js.undefined)
+      (Js.Undefined.from_opt timeout)
   external _beforeAllPromise : (unit -> 'a Js.Promise.t) -> unit = "beforeAll" [@@bs.val]
   let beforeAllPromise callback =
     _beforeAllPromise (fun () ->
       callback () |> Js.Promise.then_ (fun a -> a |> A.affirm |> Js.Promise.resolve))
   external beforeEach : (unit -> unit) -> unit = "" [@@bs.val]
   external afterAll : (unit -> unit) -> unit = "" [@@bs.val]
-  external _afterAllAsync : ((unit -> unit) -> unit Js.undefined) -> float Js.Undefined.t -> unit = "afterAll" [@@bs.val]
+  external _afterAllAsync : ((unit -> unit) -> unit Js.undefined) -> int Js.Undefined.t -> unit = "afterAll" [@@bs.val]
   let afterAllAsync ?timeout callback =
-    _afterAllAsync (fun finish ->
-      callback (fun () ->
-        finish ());
-        Js.undefined
-      )
-      (Js.Undefined.from_opt (Js.Option.map ((fun v -> float_of_int v)[@bs ]) timeout))
+    _afterAllAsync
+      (fun finish -> callback (fun () -> finish ()); Js.undefined)
+      (Js.Undefined.from_opt timeout)
   external _afterAllPromise : (unit -> 'a Js.Promise.t) -> unit = "afterAll" [@@bs.val]
   let afterAllPromise callback =
     _afterAllPromise (fun () ->
