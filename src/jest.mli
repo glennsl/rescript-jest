@@ -14,8 +14,12 @@ module Runner (A : Asserter) : sig
   external describe : string -> (unit -> unit) -> unit = "" [@@bs.val]
 
   external beforeAll : (unit -> unit) -> unit = "" [@@bs.val]
+  val beforeAllAsync : ?timeout:int -> ((unit -> unit) -> unit) -> unit
+  val beforeAllPromise : (unit -> _ A.t Js.Promise.t) -> unit
   external beforeEach : (unit -> unit) -> unit = "" [@@bs.val]
   external afterAll : (unit -> unit) -> unit = "" [@@bs.val]
+  val afterAllAsync : ?timeout:int -> ((unit -> unit) -> unit) -> unit
+  val afterAllPromise : (unit -> _ A.t Js.Promise.t) -> unit
   external afterEach : (unit -> unit) -> unit = "" [@@bs.val]
 
   module Only : sig
