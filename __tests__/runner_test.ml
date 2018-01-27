@@ -47,11 +47,19 @@ let () =
   );
   
   describe "beforeAllAsync" (fun () ->
-    let x = ref 0 in
+    describe "without timeout" (fun () ->
+      let x = ref 0 in
+      beforeAllAsync (fun (finish) -> x := !x + 4; finish ());
+      test "x is 4" (fun () -> !x == 4);
+      test "x is still 4" (fun () -> !x == 4);
+    );
 
-    beforeAllAsync (fun (finish) -> x := !x + 4; finish ());
-    test "x is 4" (fun () -> !x == 4);
-    test "x is still 4" (fun () -> !x == 4);
+    describe "with 100ms timeout" (fun () ->
+      let x = ref 0 in
+      beforeAllAsync ~timeout:100 (fun (finish) -> x := !x + 4; finish ());
+      test "x is 4" (fun () -> !x == 4);
+      test "x is still 4" (fun () -> !x == 4);
+    );
   );
 
   describe "beforeAllPromise" (fun () ->
@@ -84,15 +92,30 @@ let () =
   );
   
   describe "afterAllAsync" (fun () ->
-    let x = ref 0 in
+    describe "without timeout" (fun () ->
+      let x = ref 0 in
 
-    describe "phase 1" (fun () ->
-      afterAllAsync (fun (finish) -> x := !x + 4; finish ());
-      test "x is 0" (fun () -> !x == 0)
+      describe "phase 1" (fun () ->
+        afterAllAsync (fun (finish) -> x := !x + 4; finish ());
+        test "x is 0" (fun () -> !x == 0)
+      );
+
+      describe "phase 2" (fun () ->
+        test "x is suddenly 4" (fun () -> !x == 4)
+      );
     );
 
-    describe "phase 2" (fun () ->
-      test "x is suddenly 4" (fun () -> !x == 4)
+    describe "with 100ms timeout" (fun () ->
+      let x = ref 0 in
+
+      describe "phase 1" (fun () ->
+        afterAllAsync ~timeout:100 (fun (finish) -> x := !x + 4; finish ());
+        test "x is 0" (fun () -> !x == 0)
+      );
+
+      describe "phase 2" (fun () ->
+        test "x is suddenly 4" (fun () -> !x == 4)
+      );
     );
   );
 
