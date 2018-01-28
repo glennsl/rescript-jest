@@ -65,7 +65,7 @@ let () =
   describe "beforeAllPromise" (fun () ->
     let x = ref 0 in
 
-    beforeAllPromise (fun () -> x := !x + 4; Js.Promise.resolve true);
+    beforeAllPromise (fun () -> x := !x + 4; Js.Promise.resolve ());
     test "x is 4" (fun () -> !x == 4);
     test "x is still 4" (fun () -> !x == 4);
   );

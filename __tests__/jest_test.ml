@@ -81,3 +81,67 @@ describe "Fake Timers" (fun () ->
     setImmediate (fun () -> finish pass);
   );
 );
+
+describe "beforeAllAsync" (fun () ->
+  describe "without timeout" (fun () ->
+    let x = ref 0 in
+    beforeAllAsync (fun (finish) -> x := !x + 4; finish ());
+    test "x is 4" (fun () -> expect !x |> toBe 4);
+    test "x is still 4" (fun () -> expect !x |> toBe 4);
+  );
+
+  describe "with 100ms timeout" (fun () ->
+    let x = ref 0 in
+    beforeAllAsync ~timeout:100 (fun (finish) -> x := !x + 4; finish ());
+    test "x is 4" (fun () -> expect !x |> toBe 4);
+    test "x is still 4" (fun () -> expect !x |> toBe 4);
+  );
+);
+
+describe "beforeAllPromise" (fun () ->
+  let x = ref 0 in
+  beforeAllPromise (fun () -> x := !x + 4; Js.Promise.resolve ());
+  test "x is 4" (fun () ->  expect !x |> toBe 4);
+  test "x is still 4" (fun () -> expect !x |> toBe 4);
+);
+
+describe "afterAllAsync" (fun () ->
+  describe "without timeout" (fun () ->
+    let x = ref 0 in
+
+    describe "phase 1" (fun () ->
+      afterAllAsync (fun (finish) -> x := !x + 4; finish ());
+      test "x is 0" (fun () -> expect !x |> toBe 0)
+    );
+
+    describe "phase 2" (fun () ->
+      test "x is suddenly 4" (fun () -> expect !x |> toBe 4)
+    );
+  );
+
+  describe "with 100ms timeout" (fun () ->
+    let x = ref 0 in
+
+    describe "phase 1" (fun () ->
+      afterAllAsync ~timeout:100 (fun (finish) -> x := !x + 4; finish ());
+      test "x is 0" (fun () -> expect !x |> toBe 0)
+    );
+
+    describe "phase 2" (fun () ->
+      test "x is suddenly 4" (fun () -> expect !x |> toBe 4)
+    );
+  );
+);
+
+describe "afterAllPromise" (fun () ->
+  let x = ref 0 in
+
+  describe "phase 1" (fun () ->
+    afterAllPromise (fun () -> x := !x + 4; Js.Promise.resolve true);
+    test "x is 0" (fun () -> expect !x |> toBe 0)
+  );
+
+  describe "phase 2" (fun () ->
+    test "x is suddenly 4" (fun () -> expect !x |> toBe 4)
+  );
+);
