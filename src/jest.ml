@@ -167,8 +167,7 @@ module Runner (A : Asserter) = struct
       (Js.Undefined.from_opt timeout)
   external _beforeAllPromise : (unit -> 'a Js.Promise.t) -> unit = "beforeAll" [@@bs.val]
   let beforeAllPromise callback =
-    _beforeAllPromise (fun () ->
-      callback () |> Js.Promise.then_ (fun a -> a |> A.affirm |> Js.Promise.resolve))
+    _beforeAllPromise (fun () -> callback () |> Js.Promise.resolve)
   external beforeEach : (unit -> unit) -> unit = "" [@@bs.val]
   external afterAll : (unit -> unit) -> unit = "" [@@bs.val]
   external _afterAllAsync : ((unit -> unit) -> unit Js.undefined) -> int Js.Undefined.t -> unit = "afterAll" [@@bs.val]
@@ -178,8 +177,7 @@ module Runner (A : Asserter) = struct
       (Js.Undefined.from_opt timeout)
   external _afterAllPromise : (unit -> 'a Js.Promise.t) -> unit = "afterAll" [@@bs.val]
   let afterAllPromise callback =
-    _afterAllPromise (fun () ->
-      callback () |> Js.Promise.then_ (fun a -> a |> A.affirm |> Js.Promise.resolve))
+    _afterAllPromise (fun () -> callback () |> Js.Promise.resolve)
   external afterEach : (unit -> unit) -> unit = "" [@@bs.val]
 
   module Only = struct
