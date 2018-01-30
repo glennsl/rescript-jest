@@ -160,24 +160,28 @@ module Runner (A : Asserter) = struct
   external describe : string -> (unit -> unit) -> unit = "" [@@bs.val]
 
   external beforeAll : (unit -> unit) -> unit = "" [@@bs.val]
-  external _beforeAllAsync : ((unit -> unit) -> unit Js.undefined) -> int Js.Undefined.t -> unit = "beforeAll" [@@bs.val]
+  external beforeAllAsync : ((unit -> unit) -> unit Js.undefined) -> int Js.Undefined.t -> unit = "beforeAll" [@@bs.val]
   let beforeAllAsync ?timeout callback  =
-    _beforeAllAsync
+    beforeAllAsync
       (fun finish -> callback (fun () -> finish ()); Js.undefined)
       (Js.Undefined.from_opt timeout)
-  external _beforeAllPromise : (unit -> 'a Js.Promise.t) -> unit = "beforeAll" [@@bs.val]
-  let beforeAllPromise callback =
-    _beforeAllPromise (fun () -> callback () |> Js.Promise.resolve)
+  external beforeAllPromise : (unit -> 'a Js.Promise.t) -> int Js.Undefined.t -> unit = "beforeAll" [@@bs.val]
+  let beforeAllPromise ?timeout callback =
+    beforeAllPromise
+      (fun () -> callback () |> Js.Promise.resolve)
+      (Js.Undefined.from_opt timeout)
   external beforeEach : (unit -> unit) -> unit = "" [@@bs.val]
   external afterAll : (unit -> unit) -> unit = "" [@@bs.val]
-  external _afterAllAsync : ((unit -> unit) -> unit Js.undefined) -> int Js.Undefined.t -> unit = "afterAll" [@@bs.val]
+  external afterAllAsync : ((unit -> unit) -> unit Js.undefined) -> int Js.Undefined.t -> unit = "afterAll" [@@bs.val]
   let afterAllAsync ?timeout callback =
-    _afterAllAsync
+    afterAllAsync
       (fun finish -> callback (fun () -> finish ()); Js.undefined)
       (Js.Undefined.from_opt timeout)
-  external _afterAllPromise : (unit -> 'a Js.Promise.t) -> unit = "afterAll" [@@bs.val]
-  let afterAllPromise callback =
-    _afterAllPromise (fun () -> callback () |> Js.Promise.resolve)
+  external afterAllPromise : (unit -> 'a Js.Promise.t) -> int Js.Undefined.t -> unit = "afterAll" [@@bs.val]
+  let afterAllPromise ?timeout callback =
+    afterAllPromise
+      (fun () -> callback () |> Js.Promise.resolve)
+      (Js.Undefined.from_opt timeout)
   external afterEach : (unit -> unit) -> unit = "" [@@bs.val]
 
   module Only = struct
