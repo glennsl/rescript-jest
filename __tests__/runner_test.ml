@@ -60,6 +60,11 @@ let () =
       test "x is 4" (fun () -> !x == 4);
       test "x is still 4" (fun () -> !x == 4);
     );
+
+    Skip.describe "timeout should fail suite" (fun () ->
+      (*beforeAllAsync ~timeout:1 (fun _ ->());*)
+      test "" (fun () -> true) (* runner will crash if there's no tests *)
+    );
   );
 
   describe "beforeAllPromise" (fun () ->
@@ -116,6 +121,11 @@ let () =
       describe "phase 2" (fun () ->
         test "x is suddenly 4" (fun () -> !x == 4)
       );
+    );
+
+    describe "timeout should not fail suite" (fun () ->
+      afterAllAsync ~timeout:1 (fun _ ->());
+      test "" (fun () -> true) (* runner will crash if there's no tests *)
     );
   );
 
