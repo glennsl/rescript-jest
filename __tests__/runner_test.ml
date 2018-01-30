@@ -63,7 +63,7 @@ let () =
 
     Skip.describe "timeout should fail suite" (fun () ->
       (*beforeAllAsync ~timeout:1 (fun _ ->());*)
-      test "" (fun () -> true) (* runner will crash if there's no tests *)
+      test "" (fun () -> true); (* runner will crash if there's no tests *)
     );
   );
 
@@ -86,7 +86,7 @@ let () =
 
     Skip.describe "timeout should fail suite" (fun () ->
       (*beforeAllPromise ~timeout:1 (fun () -> Js.Promise.make (fun ~resolve:_ ~reject:_ -> ()));*)
-      test "" (fun () -> true) (* runner will crash if there's no tests *)
+      test "" (fun () -> true); (* runner will crash if there's no tests *)
     );
   );
 
@@ -103,11 +103,12 @@ let () =
     
     describe "phase 1" (fun () ->
       afterAll (fun () -> x := !x + 4);
-      test "x is 0" (fun () -> !x == 0)
+      test "x is 0" (fun () -> !x == 0);
+      test "x is still 0" (fun () -> !x == 0);
     );
     
     describe "phase 2" (fun () -> 
-      test "x is suddenly 4" (fun () -> !x == 4)
+      test "x is suddenly 4" (fun () -> !x == 4);
     );
   );
   
@@ -117,11 +118,12 @@ let () =
 
       describe "phase 1" (fun () ->
         afterAllAsync (fun (finish) -> x := !x + 4; finish ());
-        test "x is 0" (fun () -> !x == 0)
+        test "x is 0" (fun () -> !x == 0);
+        test "x is still 0" (fun () -> !x == 0);
       );
 
       describe "phase 2" (fun () ->
-        test "x is suddenly 4" (fun () -> !x == 4)
+        test "x is suddenly 4" (fun () -> !x == 4);
       );
     );
 
@@ -130,17 +132,18 @@ let () =
 
       describe "phase 1" (fun () ->
         afterAllAsync ~timeout:100 (fun (finish) -> x := !x + 4; finish ());
-        test "x is 0" (fun () -> !x == 0)
+        test "x is 0" (fun () -> !x == 0);
+        test "x is still 0" (fun () -> !x == 0);
       );
 
       describe "phase 2" (fun () ->
-        test "x is suddenly 4" (fun () -> !x == 4)
+        test "x is suddenly 4" (fun () -> !x == 4);
       );
     );
 
     describe "timeout should not fail suite" (fun () ->
       afterAllAsync ~timeout:1 (fun _ ->());
-      test "" (fun () -> true) (* runner will crash if there's no tests *)
+      test "" (fun () -> true); (* runner will crash if there's no tests *)
     );
   );
 
@@ -150,11 +153,12 @@ let () =
 
       describe "phase 1" (fun () ->
         afterAllPromise (fun () -> x := !x + 4; Js.Promise.resolve true);
-        test "x is 0" (fun () -> !x == 0)
+        test "x is 0" (fun () -> !x == 0);
+        test "x is still 0" (fun () -> !x == 0);
       );
 
       describe "phase 2" (fun () ->
-        test "x is suddenly 4" (fun () -> !x == 4)
+        test "x is suddenly 4" (fun () -> !x == 4);
       );
     );
 
@@ -163,17 +167,18 @@ let () =
 
       describe "phase 1" (fun () ->
         afterAllPromise ~timeout:100 (fun () -> x := !x + 4; Js.Promise.resolve true);
-        test "x is 0" (fun () -> !x == 0)
+        test "x is 0" (fun () -> !x == 0);
+        test "x is still 0" (fun () -> !x == 0);
       );
 
       describe "phase 2" (fun () ->
-        test "x is suddenly 4" (fun () -> !x == 4)
+        test "x is suddenly 4" (fun () -> !x == 4);
       );
     );
 
     describe "timeout should not fail suite" (fun () ->
       afterAllPromise ~timeout:1 (fun () -> Js.Promise.make (fun ~resolve:_ ~reject:_ -> ()));
-      test "" (fun () -> true) (* runner will crash if there's no tests *)
+      test "" (fun () -> true); (* runner will crash if there's no tests *)
     );
   );
 
