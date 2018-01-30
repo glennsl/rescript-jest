@@ -146,6 +146,10 @@ module MockJs : sig
   (** experimental *)
 
   type ('fn, 'args, 'ret) fn
+
+  val new0 : (unit -> 'ret, unit, 'ret) fn -> 'ret
+  val new1 : 'a -> ('a -> 'ret, 'a, 'ret) fn -> 'ret
+  val new2 : 'a -> 'b -> (('a -> 'b -> 'ret) [@bs], 'a * 'b, 'ret) fn -> 'ret
   
   external fn : ('fn, _, _) fn -> 'fn = "%identity"
   val calls : (_, 'args, _) fn -> 'args array

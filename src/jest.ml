@@ -383,14 +383,18 @@ module MockJs = struct
 
   type ('fn, 'args, 'ret) fn
   
-  (* TODO: "... contains type variables cannot be generalized"
-  (** Equiavlent to calling new mock() *)
-  let make : ('fn, _, _) fn -> 'fn = [%bs.raw {|
-    function(self) {
+  [%%bs.raw {|
+    function makeNewMock(self) {
       return new (Function.prototype.bind.apply(self, arguments));
     }
   |}]
-  *)
+
+  external new0 : (unit -> 'ret, unit, 'ret) fn -> 'ret = "makeNewMock" [@@bs.val]
+  let new0 = new0
+  external new1 : ('a -> 'ret, 'a, 'ret) fn -> 'a -> 'ret = "makeNewMock" [@@bs.val]
+  let new1 a self = new1 self a
+  external new2 : (('a -> 'b -> 'ret) [@bs], ('a * 'b), 'ret) fn -> 'a -> 'b -> 'ret = "makeNewMock" [@@bs.val]
+  let new2 a b self = new2 self a b
   
   external fn : ('fn, _, _) fn -> 'fn = "%identity"
   external calls : (_, 'args, _) fn -> 'args array = "" [@@bs.get] [@@bs.scope "mock"]
@@ -400,14 +404,6 @@ module MockJs = struct
   |}] (* there's no such thing as aa 1-ary tuple, so we need to unbox single-element arrays *)
   external instances : (_, _, 'ret) fn -> 'ret array = "" [@@bs.get] [@@bs.scope "mock"] (* TODO: semms this only records "instances" created by `new` *)
   let instances self = Js.Array.copy (instances self) (* Awesome, the bloody things are mutated so we need to copy *)
-  (* "... contains type variables cannot be generalized"
-  let calls : 'args fn -> 'args = [%bs.raw {|
-    function (fn) { fn.mock.calls; }()
-  |}]
-  let instances : _ fn -> 'a = [%bs.raw {|
-    function (fn) { fn.mock.instances; }()
-  |}]
-  *)
   
   (** Beware: this actually replaces `mock`, not just `mock.instances` and `mock.calls` *)
   external mockClear : unit = "" [@@bs.send.pipe: _ fn]

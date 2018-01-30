@@ -349,15 +349,28 @@ describe "fn2" (fun _ ->
   *)
 );
 
-(* TODO: depends on MockJs.make
-describe "MockJs.make" (fun _ ->
-  test "MockJs.make" (fun _ ->
-    let mockFn = JestJs.fn (fun a -> string_of_int a) in
+describe "MockJs.new" (fun _ ->
+  test "MockJs.new0" (fun _ ->
+    let mockFn = JestJs.fn [%raw "function () { this.n = 42; }"] in
     
-    let instance  = mockFn |> MockJs.make 4 in
-    let instances  = mockFn |> MockJs.mock |> MockJs.instances in
+    let instance  = mockFn |> MockJs.new0 in
     
-    expect instances |> toEqual [| instance |]
+    expect instance |> toEqual [%obj { n = 42 }]
+  );
+
+  test "MockJs.new1" (fun _ ->
+    let mockFn = JestJs.fn [%raw "function (n) { this.n = n; }"] in
+    
+    let instance  = mockFn |> MockJs.new1 4 in
+    
+    expect instance |> toEqual [%obj { n = 4 }]
+  );
+
+  test "MockJs.new2" (fun _ ->
+    let mockFn  = JestJs.fn2 [%raw "function (a, b) { this.n = a * b; }"] in
+    
+    let instance  = mockFn |> MockJs.new2 4 7 in
+    
+    expect instance |> toEqual [%obj { n = 28 }]
   );
 );
-*)
