@@ -7,12 +7,14 @@ let () =
   Skip.test "fail" (fun () ->
     fail "");
 
+
   test "test" (fun () ->
     pass);
     
   Skip.test "test - expect fail" (fun () ->
     fail "");
   
+
   testAsync "testAsync" (fun finish ->
     finish pass);
     
@@ -20,6 +22,12 @@ let () =
 
   Skip.testAsync "testAsync - expect fail" (fun finish ->
     finish (fail ""));
+
+  testAsync "testAsync - timeout ok" ~timeout:1 (fun finish ->
+    finish pass);
+    
+  Skip.testAsync "testAsync - timeout fail" ~timeout:1 (fun _ -> ());
+
   
   testPromise "testPromise" (fun () ->
     Js.Promise.resolve pass);
@@ -30,15 +38,24 @@ let () =
   Skip.testPromise "testPromise - expect fail" (fun () ->
     Js.Promise.resolve (fail ""));
 
+  testPromise "testPromise - timeout ok" ~timeout:1 (fun () ->
+    Js.Promise.resolve pass);
+    
+  Skip.testPromise "testPromise - timeout fail" ~timeout:1 (fun () ->
+    Js.Promise.make (fun ~resolve:_ ~reject:_ -> ()));
+
+
   testAll "testAll" ["foo"; "bar"; "baz"] (fun input ->
     if Js.String.length input == 3 then pass else fail "");
   testAll "testAll - tuples" [("foo", 3); ("barbaz", 6); ("bananas!", 8)] (fun (input, output) ->
     if Js.String.length input == output then pass else fail "");
   
+
   describe "describe" (fun () ->
     test "some aspect" (fun () -> pass)
   );
   
+
   describe "beforeAll" (fun () -> 
     let x = ref 0 in
     
@@ -102,6 +119,7 @@ let () =
     );
   );
 
+
   describe "beforeEach" (fun () -> 
     let x = ref 0 in
     
@@ -162,6 +180,7 @@ let () =
       test "" (fun () -> pass); (* runner will crash if there's no tests *)
     );
   ); 
+
 
   describe "afterAll" (fun () -> 
     let x = ref 0 in
@@ -254,6 +273,7 @@ let () =
     );
   );
 
+
   describe "afterEach" (fun () -> 
     let x = ref 0 in
     
@@ -315,19 +335,24 @@ let () =
     );
   );
 
+
   describe "Only" (fun () ->
    (* See globals_only_test.ml *)
    ()
   );
+
 
   describe "Skip" (fun () ->
     Skip.test "Skip.test" (fun () -> pass);
 
     Skip.testAsync "Skip.testAsync" (fun finish ->
       finish pass);
+    Skip.testAsync "Skip.testAsync - timeout" ~timeout:1 (fun _ -> ());
 
     Skip.testPromise "Skip.testPromise" (fun () ->
       Js.Promise.resolve pass);
+    Skip.testPromise "testPromise - timeout" ~timeout:1 (fun () ->
+      Js.Promise.make (fun ~resolve:_ ~reject:_ -> ()));
 
     Skip.testAll "testAll" ["foo"; "bar"; "baz"] (fun input ->
       if Js.String.length input == 3 then pass else fail "");

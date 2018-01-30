@@ -6,8 +6,12 @@ let () =
 
   Only.testAsync "Only.testAsync" (fun finish ->
     finish pass);
+  Only.testAsync "testAsync - timeout ok" ~timeout:1 (fun finish ->
+    finish pass);
 
   Only.testPromise "Only.testPromise" (fun () ->
+    Js.Promise.resolve pass);
+  Only.testPromise "testPromise - timeout ok" ~timeout:1 (fun () ->
     Js.Promise.resolve pass);
 
   Only.testAll "testAll" ["foo"; "bar"; "baz"] (fun input ->

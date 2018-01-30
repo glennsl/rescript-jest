@@ -11,6 +11,7 @@ let () =
   Skip.test "test - expect fail" (fun () ->
     false);
   
+
   testAsync "testAsync" (fun finish ->
     finish true);
 
@@ -18,6 +19,12 @@ let () =
 
   Skip.testAsync "testAsync - expect fail" (fun finish ->
     finish false);
+
+  testAsync "testAsync - timeout ok" ~timeout:1 (fun finish ->
+    finish true);
+    
+  Skip.testAsync "testAsync - timeout fail" ~timeout:1 (fun _ -> ());
+
 
   testPromise "testPromise" (fun () ->
     Js.Promise.resolve true);
@@ -28,11 +35,19 @@ let () =
   Skip.testPromise "testPromise - expect fail" (fun () ->
     Js.Promise.resolve false);
 
+  testPromise "testPromise - timeout ok" ~timeout:1 (fun () ->
+    Js.Promise.resolve true);
+    
+  Skip.testPromise "testPromise - timeout fail" ~timeout:1 (fun () ->
+    Js.Promise.make (fun ~resolve:_ ~reject:_ -> ()));
+
+
   testAll "testAll" ["foo"; "bar"; "baz"] (fun input ->
     Js.String.length input == 3);
   testAll "testAll - tuples" [("foo", 3); ("barbaz", 6); ("bananas!", 8)] (fun (input, output) ->
     Js.String.length input == output);
   
+
   describe "describe" (fun () ->
     test "some aspect" (fun () ->
       true)
@@ -324,9 +339,12 @@ let () =
 
     Skip.testAsync "Skip.testAsync" (fun finish ->
       finish (1 + 2 == 3));
+    Skip.testAsync "Skip.testAsync - timeout" ~timeout:1 (fun _ -> ());
 
     Skip.testPromise "Skip.testPromise" (fun () ->
       Js.Promise.resolve (1 + 2 == 3));
+    Skip.testPromise "testPromise - timeout" ~timeout:1 (fun () ->
+      Js.Promise.make (fun ~resolve:_ ~reject:_ -> ()));
 
     Skip.testAll "testAll" ["foo"; "bar"; "baz"] (fun input ->
       Js.String.length input == 3);

@@ -9,8 +9,12 @@ let () =
 
   Only.testAsync "Only.testAsync" (fun finish ->
     finish true);
+  Only.testAsync "testAsync - timeout ok" ~timeout:1 (fun finish ->
+    finish true);
 
   Only.testPromise "Only.testPromise" (fun () ->
+    Js.Promise.resolve true);
+  Only.testPromise "testPromise - timeout ok" ~timeout:1 (fun () ->
     Js.Promise.resolve true);
 
   Only.testAll "testAll" ["foo"; "bar"; "baz"] (fun input ->
