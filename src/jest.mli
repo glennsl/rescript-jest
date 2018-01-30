@@ -17,10 +17,14 @@ module Runner (A : Asserter) : sig
   val beforeAllAsync : ?timeout:int -> ((unit -> unit) -> unit) -> unit
   val beforeAllPromise : ?timeout:int -> (unit -> 'a Js.Promise.t) -> unit
   external beforeEach : (unit -> unit) -> unit = "" [@@bs.val]
+  val beforeEachAsync : ?timeout:int -> ((unit -> unit) -> unit) -> unit
+  val beforeEachPromise : ?timeout:int -> (unit -> 'a Js.Promise.t) -> unit
   external afterAll : (unit -> unit) -> unit = "" [@@bs.val]
   val afterAllAsync : ?timeout:int -> ((unit -> unit) -> unit) -> unit
   val afterAllPromise : ?timeout:int -> (unit -> 'a Js.Promise.t) -> unit
   external afterEach : (unit -> unit) -> unit = "" [@@bs.val]
+  val afterEachAsync : ?timeout:int -> ((unit -> unit) -> unit) -> unit
+  val afterEachPromise : ?timeout:int -> (unit -> 'a Js.Promise.t) -> unit
 
   module Only : sig
     val test : string -> (unit -> _ A.t) -> unit
@@ -50,10 +54,14 @@ external beforeAll : (unit -> unit) -> unit = "" [@@bs.val]
 val beforeAllAsync : ?timeout:int -> ((unit -> unit) -> unit) -> unit
 val beforeAllPromise : ?timeout:int -> (unit -> 'a Js.Promise.t) -> unit
 external beforeEach : (unit -> unit) -> unit = "" [@@bs.val]
+val beforeEachAsync : ?timeout:int -> ((unit -> unit) -> unit) -> unit
+val beforeEachPromise : ?timeout:int -> (unit -> 'a Js.Promise.t) -> unit
 external afterAll : (unit -> unit) -> unit = "" [@@bs.val]
 val afterAllAsync : ?timeout:int -> ((unit -> unit) -> unit) -> unit
 val afterAllPromise : ?timeout:int -> (unit -> 'a Js.Promise.t) -> unit
 external afterEach : (unit -> unit) -> unit = "" [@@bs.val]
+val afterEachAsync : ?timeout:int -> ((unit -> unit) -> unit) -> unit
+val afterEachPromise : ?timeout:int -> (unit -> 'a Js.Promise.t) -> unit
 
 module Only : sig
   val test : string -> (unit -> assertion) -> unit
