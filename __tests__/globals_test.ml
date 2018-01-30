@@ -43,14 +43,45 @@ let () =
     let x = ref 0 in
     
     beforeAll (fun () -> x := !x + 4);
+
     test "x is 4" (fun () -> if !x == 4 then pass else fail "");
     test "x is still 4" (fun () -> if !x == 4 then pass else fail "");
   );
   
+  describe "beforeAllAsync" (fun () ->
+    describe "without timeout" (fun () ->
+      let x = ref 0 in
+
+      beforeAllAsync (fun (finish) -> x := !x + 4; finish ());
+
+      test "x is 4" (fun () -> if !x == 4 then pass else fail "");
+      test "x is still 4" (fun () -> if !x == 4 then pass else fail "");
+    );
+
+    describe "with 100ms timeout" (fun () ->
+      let x = ref 0 in
+
+      beforeAllAsync ~timeout:100 (fun (finish) -> x := !x + 4; finish ());
+
+      test "x is 4" (fun () -> if !x == 4 then pass else fail "");
+      test "x is still 4" (fun () -> if !x == 4 then pass else fail "");
+    );
+  );
+
+  describe "beforeAllPromise" (fun () ->
+    let x = ref 0 in
+
+    beforeAllPromise (fun () -> x := !x + 4; Js.Promise.resolve ());
+
+    test "x is 4" (fun () -> if !x == 4 then pass else fail "");
+    test "x is still 4" (fun () -> if !x == 4 then pass else fail "");
+  );
+
   describe "beforeEach" (fun () -> 
     let x = ref 0 in
     
     beforeEach (fun () -> x := !x + 4);
+
     test "x is 4" (fun () -> if !x == 4 then pass else fail "");
     test "x is suddenly 8" (fun () -> if !x == 8 then pass else fail "");
   );
@@ -60,14 +91,63 @@ let () =
     
     describe "phase 1" (fun () ->
       afterAll (fun () -> x := !x + 4);
-      test "x is 0" (fun () -> if !x == 0 then pass else fail "")
+
+      test "x is 0" (fun () -> if !x == 0 then pass else fail "");
+      test "x is still 0" (fun () -> if !x == 0 then pass else fail "");
     );
     
     describe "phase 2" (fun () -> 
-      test "x is suddenly 4" (fun () -> if !x == 4 then pass else fail "")
+      test "x is suddenly 4" (fun () -> if !x == 4 then pass else fail "");
     );
   );
   
+  describe "afterAllAsync" (fun () ->
+    describe "without timeout" (fun () ->
+      let x = ref 0 in
+
+      describe "phase 1" (fun () ->
+        afterAllAsync (fun (finish) -> x := !x + 4; finish ());
+
+        test "x is 0" (fun () -> if !x == 0 then pass else fail "");
+        test "x is still 0" (fun () -> if !x == 0 then pass else fail "");
+      );
+
+      describe "phase 2" (fun () ->
+        test "x is suddenly 4" (fun () -> if !x == 4 then pass else fail "");
+      );
+    );
+
+    describe "with 100ms timeout" (fun () ->
+      let x = ref 0 in
+
+      describe "phase 1" (fun () ->
+        afterAllAsync ~timeout:100 (fun (finish) -> x := !x + 4; finish ());
+
+        test "x is 0" (fun () -> if !x == 0 then pass else fail "");
+        test "x is still 0" (fun () -> if !x == 0 then pass else fail "");
+      );
+
+      describe "phase 2" (fun () ->
+        test "x is suddenly 4" (fun () -> if !x == 4 then pass else fail "");
+      );
+    );
+  );
+
+  describe "afterAllPromise" (fun () ->
+    let x = ref 0 in
+
+    describe "phase 1" (fun () ->
+      afterAllPromise (fun () -> x := !x + 4; Js.Promise.resolve true);
+
+      test "x is 0" (fun () -> if !x == 0 then pass else fail "");
+      test "x is still 0" (fun () -> if !x == 0 then pass else fail "");
+    );
+
+    describe "phase 2" (fun () ->
+      test "x is suddenly 4" (fun () -> if !x == 4 then pass else fail "");
+    );
+  );
+
   describe "afterEach" (fun () -> 
     let x = ref 0 in
     
