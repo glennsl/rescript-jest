@@ -50,6 +50,17 @@ describe "inferred_fn" (fun _ ->
 
     expect instances |> toEqual [||]
   );
+
+  test "instances - records created instances" (fun _ ->
+    let mockFn = JestJs.fn [%raw "function (n) { this.n = n; }"] in
+    
+    mockFn |> MockJs.new1 4 |> ignore;
+    mockFn |> MockJs.new1 7 |> ignore;
+
+    let instances  = MockJs.instances mockFn in
+
+    expect instances |> toEqual [| [%obj { n = 4 }]; [%obj { n = 7 }] |]
+  );
   
   test "mockClear - resets calls" (fun _ ->
     let mockFn = JestJs.inferred_fn () in
@@ -175,22 +186,26 @@ describe "inferred_fn" (fun _ ->
   );
   *)
   
-  (* TODO: Not applicable for function calls, should only be available for new calls
   test "mockClear - resets instances" (fun _ ->
-    let mockFn = JestJs.inferred_fn () in
+
+    let mockFn = JestJs.fn [%raw "function (n) { this.n = n; }"] in
     
-    let before  = mockFn |> MockJs.mock |> MockJs.instances in 
-    let _ = (MockJs.fn mockFn (), MockJs.fn mockFn ()) in
-    let inbetween  = mockFn |> MockJs.mock |> MockJs.instances in
-    MockJs.mockClear mockFn; (* doesn't do anything? *)
-    let after  = mockFn |> MockJs.mock |> MockJs.instances in
+    let before  = mockFn |> MockJs.instances in 
+
+    mockFn |> MockJs.new1 4 |> ignore;
+    mockFn |> MockJs.new1 7 |> ignore;
+
+    let inbetween  = mockFn |> MockJs.instances in
+
+    MockJs.mockClear mockFn;
+
+    let after  = mockFn |> MockJs.instances in
     
     expect
       (before, inbetween, after)
     |> toEqual
-      ([||], [| Js.Undefined.empty; Js.Undefined.empty |], [||])
+      ([||], [| [%obj { n = 4 }]; [%obj { n = 7 }] |], [||])
   );
-  *)
 );
   
 describe "fn" (fun _ ->
@@ -353,7 +368,7 @@ describe "MockJs.new" (fun _ ->
   test "MockJs.new0" (fun _ ->
     let mockFn = JestJs.fn [%raw "function () { this.n = 42; }"] in
     
-    let instance  = mockFn |> MockJs.new0 in
+    let instance = mockFn |> MockJs.new0 in
     
     expect instance |> toEqual [%obj { n = 42 }]
   );
@@ -361,7 +376,7 @@ describe "MockJs.new" (fun _ ->
   test "MockJs.new1" (fun _ ->
     let mockFn = JestJs.fn [%raw "function (n) { this.n = n; }"] in
     
-    let instance  = mockFn |> MockJs.new1 4 in
+    let instance = mockFn |> MockJs.new1 4 in
     
     expect instance |> toEqual [%obj { n = 4 }]
   );
@@ -369,7 +384,7 @@ describe "MockJs.new" (fun _ ->
   test "MockJs.new2" (fun _ ->
     let mockFn  = JestJs.fn2 [%raw "function (a, b) { this.n = a * b; }"] in
     
-    let instance  = mockFn |> MockJs.new2 4 7 in
+    let instance = mockFn |> MockJs.new2 4 7 in
     
     expect instance |> toEqual [%obj { n = 28 }]
   );
