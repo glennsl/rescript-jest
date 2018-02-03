@@ -1,6 +1,6 @@
 # bs-jest
 
-[BuckleScript](https://github.com/bucklescript/bucklescript) bindings for [Jest](https://github.com/facebook/jest) - Very very **experimental** (yep, that's one less "very" than before! Progress!) and **WIP**
+[BuckleScript](https://github.com/bucklescript/bucklescript) bindings for [Jest](https://github.com/facebook/jest)
 
 [![npm](https://img.shields.io/npm/v/@glennsl/bs-jest.svg)](https://npmjs.org/@glennsl/bs-jest)
 [![Travis](https://img.shields.io/travis/glennsl/bs-jest/master.svg)](https://travis-ci.org/glennsl/bs-jest)
@@ -12,6 +12,8 @@
 **NOTE:** _NPM package has moved to `@glennsl/bs-jest`. Remember to update both `package.json` AND `bsconfig.json`._
 
 ## Status
+
+Most of what's commonly used is very stable. But the more js-y parts should be considered sexperimental, such as mocking and some of the expects that don't transfer well, or just don't make sense for testing idiomatic Reason/OCaml code but could be useful for testing js interop.
 
 * [Global](https://facebook.github.io/jest/docs/en/api.html): Fully implemented and tested, apart from `require.*`
 * [Expect](https://facebook.github.io/jest/docs/en/expect.html): Mostly implemented. Functionality that makes sense only for JS interop have been moved to `ExpectJs`. Some functionality does not make sense in a typed language, or is not possible to implement sensibly in ML.
