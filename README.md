@@ -104,8 +104,8 @@ Then build and run tests with `npm test`, start watchers for `bsb`and `jest` wit
 ### 0.4.0
 * Added `MockJs.new0`, `new1` and `new2`
 * Added `timeout` argument to `testAsync` and `testPromise` functions
-* Added `beforeEachAsync`, `beforeEachPromise`, `afterEachAsync` and afterEachPromise`
-* Added `beforeAllAsync`, `beforeAllPromise`, `afterAllAsync` and afterAllPromise`
+* Added `beforeEachAsync`, `beforeEachPromise`, `afterEachAsync` and `afterEachPromise`
+* Added `beforeAllAsync`, `beforeAllPromise`, `afterAllAsync` and `afterAllPromise`
 
 ### 0.3.1
 * Moved repository from `reasonml-community/bs-jest` to `glennsl/bs-jest`
