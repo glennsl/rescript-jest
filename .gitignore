@@ -1,7 +1,7 @@
 node_modules/
 .merlin
 .bsb.lock
-lib/*
-!lib/js
+lib/
+!__snapshots__
 coverage
 .coveralls.yml
