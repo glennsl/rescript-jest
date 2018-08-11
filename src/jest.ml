@@ -139,7 +139,7 @@ module Runner (A : Asserter) = struct
       affirm @@ callback ();
       Js.undefined)
       
-  let testAsync ?timeout name callback =
+  let testAsync name ?timeout callback =
     _testAsync name (fun finish ->
       callback (fun case ->
         affirm case;
@@ -147,7 +147,7 @@ module Runner (A : Asserter) = struct
       Js.undefined)
       (Js.Undefined.fromOption timeout)
 
-  let testPromise ?timeout name callback =
+  let testPromise name ?timeout callback =
     _testPromise name (fun () ->
       callback () |> Js.Promise.then_ (fun a -> a |> A.affirm |> Js.Promise.resolve))
       (Js.Undefined.fromOption timeout)
@@ -219,7 +219,7 @@ module Runner (A : Asserter) = struct
         affirm @@ callback ();
         Js.undefined)
 
-    let testAsync ?timeout name callback =
+    let testAsync name ?timeout callback =
       _testAsync name (fun finish ->
         callback (fun assertion ->
           affirm assertion;
@@ -227,7 +227,7 @@ module Runner (A : Asserter) = struct
         Js.undefined)
         (Js.Undefined.fromOption timeout)
 
-    let testPromise ?timeout name callback =
+    let testPromise name ?timeout callback =
       _testPromise name (fun () ->
         callback () |> Js.Promise.then_ (fun a -> a |> affirm |> Js.Promise.resolve))
         (Js.Undefined.fromOption timeout)
@@ -244,9 +244,18 @@ module Runner (A : Asserter) = struct
 
   module Skip = struct
     external test : string -> (unit -> 'a A.t) -> unit = "it.skip" [@@bs.val]
-    external testAsync : ?timeout:int -> string -> (('a A.t -> unit) -> unit) -> unit = "it.skip" [@@bs.val]
-    external testPromise : ?timeout:int -> string -> (unit -> 'a A.t Js.Promise.t) -> unit = "it.skip" [@@bs.val]
-    external testAll : string -> 'a list -> ('a -> 'b A.t) -> unit = "it.skip" [@@bs.val]
+    external testAsync : string -> (('a A.t -> unit) -> unit) -> unit = "it.skip" [@@bs.val]
+    let testAsync name ?timeout:_ callback =
+      testAsync name callback
+    external testPromise : string -> (unit -> 'a A.t Js.Promise.t) -> unit = "it.skip" [@@bs.val]
+    let testPromise name ?timeout:_ callback =
+      testPromise name callback
+    let testAll name inputs callback =
+      inputs |> List.iter (fun input ->
+        let name = {j|$name - $input|j} in
+        _test name (fun () ->
+          affirm @@ callback input;
+          Js.undefined))
     external describe : string -> (unit -> unit) -> unit = "describe.skip" [@@bs.val]
   end
 end

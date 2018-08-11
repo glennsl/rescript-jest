@@ -7,8 +7,8 @@ end
 
 module Runner (A : Asserter) : sig
   val test : string -> (unit -> _ A.t) -> unit
-  val testAsync : ?timeout:int -> string -> ((_ A.t -> unit) -> unit) -> unit
-  val testPromise : ?timeout:int -> string -> (unit -> _ A.t Js.Promise.t) -> unit
+  val testAsync : string -> ?timeout:int -> ((_ A.t -> unit) -> unit) -> unit
+  val testPromise : string -> ?timeout:int -> (unit -> _ A.t Js.Promise.t) -> unit
   val testAll : string -> 'a list -> ('a -> _ A.t) -> unit
 
   external describe : string -> (unit -> unit) -> unit = "" [@@bs.val]
@@ -28,24 +28,24 @@ module Runner (A : Asserter) : sig
 
   module Only : sig
     val test : string -> (unit -> _ A.t) -> unit
-    val testAsync : ?timeout:int -> string -> ((_ A.t -> unit) -> unit) -> unit
-    val testPromise : ?timeout:int -> string -> (unit -> _ A.t Js.Promise.t) -> unit
+    val testAsync : string -> ?timeout:int -> ((_ A.t -> unit) -> unit) -> unit
+    val testPromise : string -> ?timeout:int -> (unit -> _ A.t Js.Promise.t) -> unit
     val testAll : string -> 'a list -> ('a -> _ A.t) -> unit
     external describe : string -> (unit -> unit) -> unit = "describe.only" [@@bs.val]
   end
 
   module Skip : sig
-    external test : string -> (unit -> _ A.t) -> unit = "it.skip" [@@bs.val]
-    external testAsync : ?timeout:int -> string -> ((_ A.t -> unit) -> unit) -> unit = "it.skip" [@@bs.val]
-    external testPromise : ?timeout:int -> string -> (unit -> _ A.t Js.Promise.t) -> unit = "it.skip" [@@bs.val]
+    val test : string -> (unit -> _ A.t) -> unit
+    val testAsync : string -> ?timeout:int -> ((_ A.t -> unit) -> unit) -> unit
+    val testPromise : string -> ?timeout:int -> (unit -> _ A.t Js.Promise.t) -> unit
     val testAll : string -> 'a list -> ('a -> _ A.t) -> unit
-    external describe : string -> (unit -> unit) -> unit = "describe.skip" [@@bs.val]
+    val describe : string -> (unit -> unit) -> unit
   end
 end
 
 val test : string -> (unit -> assertion) -> unit
-val testAsync : ?timeout:int -> string -> ((assertion -> unit) -> unit) -> unit
-val testPromise : ?timeout:int -> string -> (unit -> assertion Js.Promise.t) -> unit
+val testAsync : string -> ?timeout:int -> ((assertion -> unit) -> unit) -> unit
+val testPromise : string -> ?timeout:int -> (unit -> assertion Js.Promise.t) -> unit
 val testAll : string -> 'a list -> ('a -> assertion) -> unit
 
 external describe : string -> (unit -> unit) -> unit = "" [@@bs.val]
@@ -65,18 +65,18 @@ val afterEachPromise : ?timeout:int -> (unit -> 'a Js.Promise.t) -> unit
 
 module Only : sig
   val test : string -> (unit -> assertion) -> unit
-  val testAsync : ?timeout:int -> string -> ((assertion -> unit) -> unit) -> unit
-  val testPromise : ?timeout:int -> string -> (unit -> assertion Js.Promise.t) -> unit
+  val testAsync : string -> ?timeout:int -> ((assertion -> unit) -> unit) -> unit
+  val testPromise : string -> ?timeout:int -> (unit -> assertion Js.Promise.t) -> unit
   val testAll : string -> 'a list -> ('a -> assertion) -> unit
   external describe : string -> (unit -> unit) -> unit = "describe.only" [@@bs.val]
 end
 
 module Skip : sig
-  external test : string -> (unit -> assertion) -> unit = "it.skip" [@@bs.val]
-  external testAsync : ?timeout:int -> string -> ((assertion -> unit) -> unit) -> unit = "it.skip" [@@bs.val]
-  external testPromise : ?timeout:int -> string -> (unit -> assertion Js.Promise.t) -> unit = "it.skip" [@@bs.val]
-  external testAll : string -> 'a list -> ('a -> assertion) -> unit = "it.skip" [@@bs.val]
-  external describe : string -> (unit -> unit) -> unit = "describe.skip" [@@bs.val]
+  val test : string -> (unit -> assertion) -> unit
+  val testAsync : string -> ?timeout:int -> ((assertion -> unit) -> unit) -> unit
+  val testPromise : string -> ?timeout:int -> (unit -> assertion Js.Promise.t) -> unit
+  val testAll : string -> 'a list -> ('a -> assertion) -> unit
+  val describe : string -> (unit -> unit) -> unit
 end
 
 val pass : assertion
