@@ -101,6 +101,9 @@ Then build and run tests with `npm test`, start watchers for `bsb`and `jest` wit
 
 ## Changes
 
+### 0.4.3
+* Removed some optimizations on skipped tests that Jest 23 suddenly started objecting to (#30)
+
 ### 0.4.0
 * Added `MockJs.new0`, `new1` and `new2`
 * Added `timeout` argument to `testAsync` and `testPromise` functions
