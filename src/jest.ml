@@ -253,9 +253,7 @@ module Runner (A : Asserter) = struct
     let testAll name inputs callback =
       inputs |> List.iter (fun input ->
         let name = {j|$name - $input|j} in
-        _test name (fun () ->
-          affirm @@ callback input;
-          Js.undefined))
+        test name (fun () -> callback input))
     external describe : string -> (unit -> unit) -> unit = "describe.skip" [@@bs.val]
   end
 end
