@@ -46,7 +46,8 @@ let () =
     Js.String.length input == 3);
   testAll "testAll - tuples" [("foo", 3); ("barbaz", 6); ("bananas!", 8)] (fun (input, output) ->
     Js.String.length input == output);
-  
+
+  Skip.testAll "testAll - expect fail" ["foo"; "bar"; "baz"] (fun _ -> false);
 
   describe "describe" (fun () ->
     test "some aspect" (fun () ->

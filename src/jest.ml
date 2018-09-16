@@ -243,7 +243,11 @@ module Runner (A : Asserter) = struct
   end
 
   module Skip = struct
-    external test : string -> (unit -> 'a A.t) -> unit = "it.skip" [@@bs.val]
+    external _test : string -> (unit -> unit Js.undefined) -> unit = "it.skip" [@@bs.val]
+    let test name callback =
+      _test name (fun () -> 
+        affirm @@ callback ();
+        Js.undefined)
     external testAsync : string -> (('a A.t -> unit) -> unit) -> unit = "it.skip" [@@bs.val]
     let testAsync name ?timeout:_ callback =
       testAsync name callback
