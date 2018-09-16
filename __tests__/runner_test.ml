@@ -335,24 +335,23 @@ let () =
   );
 
   describe "Skip" (fun () ->
-    Skip.test "Skip.test" (fun () -> 1 + 2 == 3);
+    Skip.test "Skip.test" (fun () -> false);
 
     Skip.testAsync "Skip.testAsync" (fun finish ->
-      finish (1 + 2 == 3));
+      finish false);
     Skip.testAsync "Skip.testAsync - timeout" ~timeout:1 (fun _ -> ());
 
     Skip.testPromise "Skip.testPromise" (fun () ->
-      Js.Promise.resolve (1 + 2 == 3));
+      Js.Promise.resolve false);
     Skip.testPromise "testPromise - timeout" ~timeout:1 (fun () ->
-      Js.Promise.make (fun ~resolve:_ ~reject:_ -> ()));
+      Js.Promise.make (fun ~resolve ~reject:_ -> (resolve false)[@bs]));
 
-    Skip.testAll "testAll" ["foo"; "bar"; "baz"] (fun input ->
-      Js.String.length input == 3);
-    Skip.testAll "testAll - tuples" [("foo", 3); ("barbaz", 6); ("bananas!", 8)] (fun (input, output) ->
-      Js.String.length input == output);
+    Skip.testAll "testAll" ["foo"; "bar"; "baz"] (fun _ ->
+      false);
+    Skip.testAll "testAll - tuples" [("foo", 3); ("barbaz", 6); ("bananas!", 8)] (fun (_, _) ->
+      false);
 
     Skip.describe "Skip.describe" (fun () ->
-      test "some aspect" (fun () -> 1 + 2 == 3)
+      test "some aspect" (fun () -> false)
     );
   );
-  
