@@ -101,6 +101,9 @@ Then build and run tests with `npm test`, start watchers for `bsb`and `jest` wit
 
 ## Changes
 
+### 0.4.5
+* Made uncurrying explicit to fix a breaking change in implicit uncurrying from `bs-platform` 4.0.7 (Thanks Bob!)
+
 ### 0.4.3
 * Removed some optimizations on skipped tests that Jest 23 suddenly started objecting to (#30)
 
