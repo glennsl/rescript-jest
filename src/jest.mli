@@ -39,7 +39,7 @@ module Runner (A : Asserter) : sig
     val testAsync : string -> ?timeout:int -> ((_ A.t -> unit) -> unit) -> unit
     val testPromise : string -> ?timeout:int -> (unit -> _ A.t Js.Promise.t) -> unit
     val testAll : string -> 'a list -> ('a -> _ A.t) -> unit
-    external describe : string -> (unit -> unit [@bs.uncurry]) -> unit = "describe.skip" [@@bs.val]
+    val describe : string -> (unit -> unit) -> unit
   end
 end
 
