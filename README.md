@@ -101,6 +101,9 @@ Then build and run tests with `npm test`, start watchers for `bsb`and `jest` wit
 
 ## Changes
 
+### 0.4.7
+* Added `Expect.not__` for transitional compatibility with Reason syntax change of "unkeywording" `not` by mangling it into `not_`, and `not_` into `not__` and so on.
+
 ### 0.4.6
 * Made uncurrying explicit for `afterAllPromise` too.
 
