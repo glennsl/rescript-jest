@@ -114,7 +114,9 @@ module Expect : sig
   val toThrowException : exn -> [< (unit -> _) partial] -> assertion
   val toThrowMessage : string -> [< (unit -> _) partial] -> assertion
   val toThrowMessageRe : Js.Re.t -> [< (unit -> _) partial] -> assertion
+
   val not_ : 'a plainPartial -> 'a invertedPartial
+  val not__ : 'a plainPartial -> 'a invertedPartial
 
   module Operators : sig
     (** experimental *)

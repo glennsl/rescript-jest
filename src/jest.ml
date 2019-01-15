@@ -352,6 +352,7 @@ module Expect = struct
     ThrowsMessageRe (mapMod (fun f -> (f, re)) p)
 
   let not_ (`Just a) = `Not a
+  let not__ = not_ (* For Reason syntax compatibility. TODO: deprecate and remove *)
 
   module Operators = struct
     (** experimental *)
