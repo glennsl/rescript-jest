@@ -50,6 +50,18 @@ describe "Fake Timers" (fun () ->
     
     expect (before, inbetween, !flag) = (false, false, true)
   );
+
+  test "advanceTimersByTime" (fun () ->
+    let flag = ref false in
+    Jest.useFakeTimers ();
+    setTimeout(fun () -> flag := true) 1500;
+    let before = !flag in
+    Jest.advanceTimersByTime 1000;
+    let inbetween = !flag in
+    Jest.advanceTimersByTime 1000;
+    
+    expect (before, inbetween, !flag) = (false, false, true)
+  );
   
   test "runOnlyPendingTimers" (fun () ->
     let count = ref 0 in
