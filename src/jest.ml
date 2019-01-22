@@ -429,6 +429,7 @@ module Jest = struct
   external runAllTimers : unit -> unit = "jest.runAllTimers" [@@bs.val]
   external runAllImmediates : unit -> unit = "jest.runAllImmediates" [@@bs.val]
   external runTimersToTime : int -> unit = "jest.runTimersToTime" [@@bs.val]
+  external advanceTimersByTime : int -> unit = "jest.advanceTimersByTime" [@@bs.val]
   external runOnlyPendingTimers : unit -> unit = "jest.runOnlyPendingTimers" [@@bs.val]
   external useFakeTimers : unit -> unit = "jest.useFakeTimers" [@@bs.val]
   external useRealTimers : unit -> unit = "jest.useRealTimers" [@@bs.val]
