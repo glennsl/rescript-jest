@@ -8,9 +8,9 @@ describe("Reason Syntax", () => {
   test("toBe", () =>
       expect(1 + 2) |> toBe(3));
 
-  test("not toBe", () =>
-      expect(1 + 2) |> not |> toBe(4));
-
   test("not_ toBe", () =>
       expect(1 + 2) |> not_ |> toBe(4));
+
+  test("not__ toBe", () =>
+      expect(1 + 2) |> not__ |> toBe(4));
 });
