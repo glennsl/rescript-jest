@@ -101,6 +101,12 @@ Then build and run tests with `npm test`, start watchers for `bsb`and `jest` wit
 
 ## Changes
 
+### 0.4.8
+* Updated jest to 24.3.1
+* Fixed jest warnings not to return anything from `describe` callbacks by explicitly returning `undefined` (otherwise BuckleScript will return something else like `()`, which is represented as `0`)
+* Fixed several newly uncovered uncurrying issues caused by surprise breaking changes in BuckleScript (Thanks again, Bob!)
+* Added `Jest.advanceTimersByTime`, which is basically just an alias of `Jest.runTimersToTime`
+
 ### 0.4.7
 * Added `Expect.not__` for transitional compatibility with Reason syntax change of "unkeywording" `not` by mangling it into `not_`, and `not_` into `not__` and so on.
 
