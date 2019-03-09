@@ -11,7 +11,7 @@ module Runner (A : Asserter) : sig
   val testPromise : string -> ?timeout:int -> (unit -> _ A.t Js.Promise.t) -> unit
   val testAll : string -> 'a list -> ('a -> _ A.t) -> unit
 
-  external describe : string -> (unit -> unit [@bs.uncurry]) -> unit = "" [@@bs.val]
+  val describe : string -> (unit -> unit) -> unit
 
   external beforeAll : (unit -> unit [@bs.uncurry]) -> unit = "" [@@bs.val]
   val beforeAllAsync : ?timeout:int -> ((unit -> unit) -> unit) -> unit
@@ -31,7 +31,7 @@ module Runner (A : Asserter) : sig
     val testAsync : string -> ?timeout:int -> ((_ A.t -> unit) -> unit) -> unit
     val testPromise : string -> ?timeout:int -> (unit -> _ A.t Js.Promise.t) -> unit
     val testAll : string -> 'a list -> ('a -> _ A.t) -> unit
-    external describe : string -> (unit -> unit [@bs.uncurry]) -> unit = "describe.only" [@@bs.val]
+    val describe : string -> (unit -> unit) -> unit
   end
 
   module Skip : sig
@@ -48,7 +48,7 @@ val testAsync : string -> ?timeout:int -> ((assertion -> unit) -> unit) -> unit
 val testPromise : string -> ?timeout:int -> (unit -> assertion Js.Promise.t) -> unit
 val testAll : string -> 'a list -> ('a -> assertion) -> unit
 
-external describe : string -> (unit -> unit [@bs.uncurry]) -> unit = "" [@@bs.val]
+val describe : string -> (unit -> unit) -> unit
 
 external beforeAll : (unit -> unit [@bs.uncurry]) -> unit = "" [@@bs.val]
 val beforeAllAsync : ?timeout:int -> ((unit -> unit) -> unit) -> unit
@@ -68,7 +68,7 @@ module Only : sig
   val testAsync : string -> ?timeout:int -> ((assertion -> unit) -> unit) -> unit
   val testPromise : string -> ?timeout:int -> (unit -> assertion Js.Promise.t) -> unit
   val testAll : string -> 'a list -> ('a -> assertion) -> unit
-  external describe : string -> (unit -> unit [@bs.uncurry]) -> unit = "describe.only" [@@bs.val]
+  val describe : string -> (unit -> unit) -> unit
 end
 
 module Skip : sig

@@ -159,7 +159,9 @@ module Runner (A : Asserter) = struct
         affirm @@ callback input;
         Js.undefined))
 
-  external describe : string -> (unit -> unit [@bs.uncurry]) -> unit = "" [@@bs.val]
+  external describe : string -> (unit -> unit Js.undefined [@bs.uncurry]) -> unit = "" [@@bs.val]
+  let describe label f =
+    describe label (fun () -> f (); Js.undefined)
 
   external beforeAll : (unit -> unit [@bs.uncurry]) -> unit = "" [@@bs.val]
   external beforeAllAsync : ((unit -> unit) -> unit Js.undefined) -> int Js.Undefined.t -> unit = "beforeAll" [@@bs.val]
@@ -239,7 +241,9 @@ module Runner (A : Asserter) = struct
           affirm @@ callback input;
           Js.undefined))
 
-    external describe : string -> (unit -> unit [@bs.uncurry]) -> unit = "describe.only" [@@bs.val]
+    external describe : string -> (unit -> unit Js.undefined [@bs.uncurry]) -> unit = "describe.only" [@@bs.val]
+    let describe label f =
+      describe label (fun () -> f (); Js.undefined)
   end
 
   module Skip = struct
@@ -254,7 +258,9 @@ module Runner (A : Asserter) = struct
       inputs |> List.iter (fun input ->
         let name = {j|$name - $input|j} in
         test name (fun () -> callback input))
-    external describe : string -> (unit -> unit [@bs.uncurry]) -> unit = "describe.skip" [@@bs.val]
+    external describe : string -> (unit -> unit Js.undefined [@bs.uncurry]) -> unit = "describe.skip" [@@bs.val]
+    let describe label f =
+      describe label (fun () -> f (); Js.undefined)
   end
 end
 
