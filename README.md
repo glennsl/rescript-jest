@@ -90,6 +90,10 @@ At first sight this may still seem very limiting, and if you write very imperati
 
 For the moment, please refer to [Jest.mli](https://github.com/glennsl/bs-jest/blob/master/src/jest.mli).
 
+## Extensions
+
+* [bs-jest-dom](https://redex.github.io/package/bs-jest-dom/) - Custom matchers to test the state of the DOM
+
 ## Contribute
 ```sh
 git clone https://github.com/glennsl/bs-jest.git
