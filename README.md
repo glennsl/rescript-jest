@@ -63,13 +63,66 @@ Then add `__tests__` to `sources` in your `bsconfig.json`:
 ```js
 "sources": [
   {
-    "dir": "src"
+    "dir": "src/app",
+    "subdirs": true
   },
   {
-    "dir": "__tests__",
-    "type": "dev"
+    "dir": "src/__tests__",
+    "type": "dev",
+    "subdirs": true
   }
 ]
+```
+
+Then your project structure would look like this:
+
+```
+src/
+├── app/
+│   ├── MyComponent.re
+├── __tests__/
+│   ├── MyComponent_test.re
+
+
+(NOTE: no .re files in the root of src, if you put them there they will not be built)
+```
+
+### For Create React App
+
+
+> **⚠️ WARNING: ⚠️**  The following You run the danger of having your test files be included in your production bundle if you (by acident) reference them anywhere in your code. Otherwise they should be shaken out by Webpack or whatever bundler you're using. 
+> 
+> **However, we strongly recomend to instead have two distinctly seperate folders for tests and application code** this allows the compiler to enforce that development-only files don't get built with production ones (in this case tests).
+
+
+Create React App requires your tests to be in the `src` folder and encourages you tests next to their testing files. You _can_ do this with the following: `bsconfig.json`
+
+```js
+"sources": [
+  {
+    "dir": "src",
+    "subdirs": true
+  }
+]
+```
+
+Then you would write put your tests in a folder like this:
+
+```
+src/
+├── MyComponent.re
+├── __tests__
+│   ├── MyComponent_test.re
+```
+
+NOTE that the following is invalid, because putting extra dots in filenames is not a valid module name in OCaml ([files are modules](https://reasonml.github.io/docs/en/module#every-re-file-is-a-module))
+
+```
+NOT VALID! DO NOT DO!
+
+src/
+├── MyComponent.re
+├── MyComponent.test.re 👈🏻 ERROR!
 ```
 
 ## Usage
