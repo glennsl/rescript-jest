@@ -63,11 +63,11 @@ Then add `__tests__` to `sources` in your `bsconfig.json`:
 ```js
 "sources": [
   {
-    "dir": "src/app",
+    "dir": "app",
     "subdirs": true
   },
   {
-    "dir": "src/__tests__",
+    "dir": "__tests__",
     "type": "dev",
     "subdirs": true
   }
@@ -78,10 +78,10 @@ Then your project structure would look like this:
 
 ```
 src/
-├── app/
-│   ├── MyComponent.re
-├── __tests__/
-│   ├── MyComponent_test.re
+├── MyComponent.re
+__tests__/
+├── MyComponent_test.re
+README.md
 
 
 (NOTE: no .re files in the root of src, if you put them there they will not be built)
@@ -113,6 +113,7 @@ src/
 ├── MyComponent.re
 ├── __tests__
 │   ├── MyComponent_test.re
+README.md
 ```
 
 ## Usage
