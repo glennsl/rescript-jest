@@ -32,7 +32,7 @@
     "bsconfig.json"
   ],
   "devDependencies": {
-    "bs-platform": "^4.0.18",
+    "bs-platform": "^5.0.4",
     "coveralls": "^3.0.3",
     "nyc": "^13.3.0"
   },
