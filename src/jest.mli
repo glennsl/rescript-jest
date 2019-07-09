@@ -41,10 +41,6 @@ module Runner (A : Asserter) : sig
     val testAll : string -> 'a list -> ('a -> _ A.t) -> unit
     val describe : string -> (unit -> unit) -> unit
   end
-
-  module Todo : sig
-    val test : string -> unit
-  end
 end
 
 val test : string -> (unit -> assertion) -> unit
