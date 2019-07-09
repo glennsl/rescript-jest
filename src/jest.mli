@@ -41,6 +41,10 @@ module Runner (A : Asserter) : sig
     val testAll : string -> 'a list -> ('a -> _ A.t) -> unit
     val describe : string -> (unit -> unit) -> unit
   end
+
+  module Todo : sig
+    val test : string -> unit
+  end
 end
 
 val test : string -> (unit -> assertion) -> unit
@@ -77,6 +81,10 @@ module Skip : sig
   val testPromise : string -> ?timeout:int -> (unit -> assertion Js.Promise.t) -> unit
   val testAll : string -> 'a list -> ('a -> assertion) -> unit
   val describe : string -> (unit -> unit) -> unit
+end
+
+module Todo : sig
+  val test : string -> unit
 end
 
 val pass : assertion
