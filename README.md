@@ -105,6 +105,9 @@ Then build and run tests with `npm test`, start watchers for `bsb`and `jest` wit
 
 ## Changes
 
+### 0.4.9
+* Added `Todo.test`
+
 ### 0.4.8
 * Updated jest to 24.3.1
 * Fixed jest warnings not to return anything from `describe` callbacks by explicitly returning `undefined` (otherwise BuckleScript will return something else like `()`, which is represented as `0`)
