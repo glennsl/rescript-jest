@@ -79,6 +79,10 @@ module Skip : sig
   val describe : string -> (unit -> unit) -> unit
 end
 
+module Todo : sig
+  val test : string -> unit
+end
+
 val pass : assertion
 val fail : string -> assertion
 

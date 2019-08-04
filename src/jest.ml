@@ -262,6 +262,10 @@ module Runner (A : Asserter) = struct
     let describe label f =
       describe label (fun () -> f (); Js.undefined)
   end
+
+  module Todo = struct
+    external test : string -> unit = "it.todo" [@@bs.val]
+  end
 end
 
 include Runner(LLExpect)
