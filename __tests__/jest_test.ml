@@ -2,8 +2,8 @@ open Jest
 open Expect
 open! Expect.Operators
 
-external setTimeout : (unit -> unit) -> int -> unit = "" [@@bs.val]
-external setImmediate : (unit -> unit) -> unit = "" [@@bs.val]
+external setTimeout : (unit -> unit) -> int -> unit = "setTimeout" [@@bs.val]
+external setImmediate : (unit -> unit) -> unit = "setImmediate" [@@bs.val]
 external nextTick : (unit -> unit) -> unit = "process.nextTick" [@@bs.val]
 
 let () = 

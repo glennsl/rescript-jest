@@ -13,16 +13,16 @@ module Runner (A : Asserter) : sig
 
   val describe : string -> (unit -> unit) -> unit
 
-  external beforeAll : (unit -> unit [@bs.uncurry]) -> unit = "" [@@bs.val]
+  external beforeAll : (unit -> unit [@bs.uncurry]) -> unit = "beforeAll" [@@bs.val]
   val beforeAllAsync : ?timeout:int -> ((unit -> unit) -> unit) -> unit
   val beforeAllPromise : ?timeout:int -> (unit -> 'a Js.Promise.t) -> unit
-  external beforeEach : (unit -> unit [@bs.uncurry]) -> unit = "" [@@bs.val]
+  external beforeEach : (unit -> unit [@bs.uncurry]) -> unit = "beforeEach" [@@bs.val]
   val beforeEachAsync : ?timeout:int -> ((unit -> unit) -> unit) -> unit
   val beforeEachPromise : ?timeout:int -> (unit -> 'a Js.Promise.t) -> unit
-  external afterAll : (unit -> unit [@bs.uncurry]) -> unit = "" [@@bs.val]
+  external afterAll : (unit -> unit [@bs.uncurry]) -> unit = "afterAll" [@@bs.val]
   val afterAllAsync : ?timeout:int -> ((unit -> unit) -> unit) -> unit
   val afterAllPromise : ?timeout:int -> (unit -> 'a Js.Promise.t) -> unit
-  external afterEach : (unit -> unit [@bs.uncurry]) -> unit = "" [@@bs.val]
+  external afterEach : (unit -> unit [@bs.uncurry]) -> unit = "afterEach" [@@bs.val]
   val afterEachAsync : ?timeout:int -> ((unit -> unit) -> unit) -> unit
   val afterEachPromise : ?timeout:int -> (unit -> 'a Js.Promise.t) -> unit
 
@@ -50,16 +50,16 @@ val testAll : string -> 'a list -> ('a -> assertion) -> unit
 
 val describe : string -> (unit -> unit) -> unit
 
-external beforeAll : (unit -> unit [@bs.uncurry]) -> unit = "" [@@bs.val]
+external beforeAll : (unit -> unit [@bs.uncurry]) -> unit = "beforeAll" [@@bs.val]
 val beforeAllAsync : ?timeout:int -> ((unit -> unit) -> unit) -> unit
 val beforeAllPromise : ?timeout:int -> (unit -> 'a Js.Promise.t) -> unit
-external beforeEach : (unit -> unit [@bs.uncurry]) -> unit = "" [@@bs.val]
+external beforeEach : (unit -> unit [@bs.uncurry]) -> unit = "beforeEach" [@@bs.val]
 val beforeEachAsync : ?timeout:int -> ((unit -> unit) -> unit) -> unit
 val beforeEachPromise : ?timeout:int -> (unit -> 'a Js.Promise.t) -> unit
-external afterAll : (unit -> unit [@bs.uncurry]) -> unit = "" [@@bs.val]
+external afterAll : (unit -> unit [@bs.uncurry]) -> unit = "afterAll" [@@bs.val]
 val afterAllAsync : ?timeout:int -> ((unit -> unit) -> unit) -> unit
 val afterAllPromise : ?timeout:int -> (unit -> 'a Js.Promise.t) -> unit
-external afterEach : (unit -> unit [@bs.uncurry]) -> unit = "" [@@bs.val]
+external afterEach : (unit -> unit [@bs.uncurry]) -> unit = "afterEach" [@@bs.val]
 val afterEachAsync : ?timeout:int -> ((unit -> unit) -> unit) -> unit
 val afterEachPromise : ?timeout:int -> (unit -> 'a Js.Promise.t) -> unit
 
@@ -162,13 +162,13 @@ module MockJs : sig
   val instances : (_, _, 'ret) fn -> 'ret array
 
   (** Beware: this actually replaces `mock`, not just `mock.instances` and `mock.calls` *)
-  external mockClear : unit = "" [@@bs.send.pipe: _ fn]
-  external mockReset : unit = "" [@@bs.send.pipe: _ fn]
-  external mockImplementation : 'fn -> 'self = "" [@@bs.send.pipe: ('fn, _, _) fn as 'self]
-  external mockImplementationOnce : 'fn -> 'self = "" [@@bs.send.pipe: ('fn, _, _) fn as 'self]
-  external mockReturnThis : unit = "" [@@bs.send.pipe: (_, _, 'ret) fn] (* not type safe, we don't know what `this` actually is *)
-  external mockReturnValue : 'ret -> 'self = "" [@@bs.send.pipe: (_, _, 'ret) fn as 'self]
-  external mockReturnValueOnce : 'ret -> 'self = "" [@@bs.send.pipe: (_, _, 'ret) fn as 'self]
+  external mockClear : unit = "mockClear" [@@bs.send.pipe: _ fn]
+  external mockReset : unit = "mockReset" [@@bs.send.pipe: _ fn]
+  external mockImplementation : 'fn -> 'self = "mockImplementation" [@@bs.send.pipe: ('fn, _, _) fn as 'self]
+  external mockImplementationOnce : 'fn -> 'self = "mockImplementationOnce" [@@bs.send.pipe: ('fn, _, _) fn as 'self]
+  external mockReturnThis : unit = "mockReturnThis" [@@bs.send.pipe: (_, _, 'ret) fn] (* not type safe, we don't know what `this` actually is *)
+  external mockReturnValue : 'ret -> 'self = "mockReturnValue" [@@bs.send.pipe: (_, _, 'ret) fn as 'self]
+  external mockReturnValueOnce : 'ret -> 'self = "mockReturnValueOnce" [@@bs.send.pipe: (_, _, 'ret) fn as 'self]
 end
 
 module Jest : sig
