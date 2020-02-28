@@ -2,9 +2,9 @@ open Jest
 open ExpectJs
 
 (* TODO: move to BS std lib *)
-external bind : ('a -> 'b) -> 'c -> 'a -> ('a -> 'b) = "" [@@bs.send]
+external bind : ('a -> 'b) -> 'c -> 'a -> ('a -> 'b) = "bind" [@@bs.send]
 external bindThis : ('a -> 'b [@bs]) -> 'c -> ('a -> 'b [@bs]) = "bind" [@@bs.send]
-external call : ('a -> 'b [@bs]) -> 'c -> 'a -> 'b = "" [@@bs.send]
+external call : ('a -> 'b [@bs]) -> 'c -> 'a -> 'b = "call" [@@bs.send]
 let call self arg = call self () arg
 external callThis : ('a -> 'b [@bs]) -> 'c -> 'a -> 'b = "call" [@@bs.send]
 external call2 : ('a -> 'b -> 'c [@bs]) -> (_ [@bs.as 0]) -> 'a -> 'b -> 'c = "call" [@@bs.send]
