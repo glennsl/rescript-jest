@@ -105,6 +105,9 @@ Then build and run tests with `npm test`, start watchers for `bsb`and `jest` wit
 
 ## Changes
 
+### 0.5.0
+* Updated to Jest 25.1.0
+
 ### 0.4.9
 * Added `Todo.test`
 
