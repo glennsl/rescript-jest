@@ -29,6 +29,7 @@ type assertion =
 | ThrowsMessage : ((unit -> _) * string) modifier -> assertion
 | ThrowsMessageRe : ((unit -> _) * Js.Re.t) modifier -> assertion
 
+| MatchInlineSnapshot : _ * string -> assertion
 | MatchSnapshot : _ -> assertion
 | MatchSnapshotName : _ * string -> assertion
 | ThrowsMatchSnapshot : (unit -> _) -> assertion
@@ -107,6 +108,7 @@ end = struct
   | ThrowsMessageRe `Just (f, re) -> (expect f) ## toThrow re
   | ThrowsMessageRe `Not (f, re) -> (expect f) ## not ## toThrow re
 
+  | MatchInlineSnapshot (a, inlineSnapshot) -> (expect a) ## toMatchInlineSnapshot inlineSnapshot
   | MatchSnapshot a -> (expect a) ## toMatchSnapshot ()
   | MatchSnapshotName (a, name) -> (expect a) ## toMatchSnapshot name
   | ThrowsMatchSnapshot f -> (expect f) ## toThrowErrorMatchingSnapshot ()
@@ -336,6 +338,9 @@ module Expect = struct
 
   let toMatch s p =
     StringMatch (mapMod (fun a -> (a, Js.Re.fromString s)) p)
+
+  let toMatchInlineSnapshot inlineSnapshot (`Just a) =
+    MatchInlineSnapshot (a, inlineSnapshot)
 
   let toMatchRe re p =
     StringMatch (mapMod (fun a -> (a, re)) p)

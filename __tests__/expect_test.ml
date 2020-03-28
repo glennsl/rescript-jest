@@ -42,6 +42,8 @@ describe "Expect" (fun () ->
   test "toThrowMessageRe" (fun () ->
     expect (fun () -> assert false) |> toThrowMessageRe [%re "/Assert_failure/"]);
 
+  test "toMatchInlineSnapshot" (fun () ->
+    expect "foo" |> toMatchInlineSnapshot "\"foo\"");
   test "toMatchSnapshot" (fun () ->
     expect "foo" |> toMatchSnapshot);
   test "toMatchSnapshotWithName" (fun () ->
