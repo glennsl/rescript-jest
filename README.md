@@ -105,6 +105,9 @@ Then build and run tests with `npm test`, start watchers for `bsb`and `jest` wit
 
 ## Changes
 
+### 0.5.1
+* Added `Expect.toMatchInlineSnapshot`
+
 ### 0.5.0
 * Updated to Jest 25.1.0
 
