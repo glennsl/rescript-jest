@@ -110,6 +110,7 @@ module Expect : sig
   val toEqual : 'a -> [< 'a partial] -> assertion
   val toHaveLength : int -> [< 'a array partial] -> assertion
   val toMatch : string -> [< string partial] -> assertion
+  val toMatchInlineSnapshot : string -> _ plainPartial -> assertion
   val toMatchRe : Js.Re.t -> [< string partial] -> assertion
   val toMatchSnapshot : _ plainPartial -> assertion
   val toMatchSnapshotWithName : string -> _ plainPartial -> assertion
