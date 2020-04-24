@@ -94,6 +94,10 @@ For the moment, please refer to [Jest.mli](https://github.com/glennsl/bs-jest/bl
 
 * [bs-jest-dom](https://redex.github.io/package/bs-jest-dom/) - Custom matchers to test the state of the DOM
 
+## Troubleshooting
+
+If you encounter the error `SyntaxError: Cannot use import statement outside a module`, it may be that you are mixing `es6` and `commonjs` modules in your project. Please take a look at [#63](https://github.com/glennsl/bs-jest/issues/63) for ideas on how to fix this.
+
 ## Contribute
 ```sh
 git clone https://github.com/glennsl/bs-jest.git
