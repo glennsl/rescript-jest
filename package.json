@@ -35,9 +35,10 @@
   "devDependencies": {
     "bs-platform": "^7.2.2",
     "coveralls": "^3.0.9",
+    "jest": "^25.5.4",
     "nyc": "^15.0.0"
   },
-  "dependencies": {
-    "jest": "^25.1.0"
+  "peerDependencies": {
+    "jest": ">=24"
   }
 }
