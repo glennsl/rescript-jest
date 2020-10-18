@@ -75,6 +75,8 @@ describe "Expect" (fun () ->
     expect [| "a"; "b"; "c" |] |> not_ |> toBeSupersetOf [| "a"; "d" |]);
   test "not toContain" (fun () ->
     expect [| "a"; "b"; "c" |] |> not_ |> toContain "d");
+  test "not toContainEqual" (fun () ->
+    expect [| {value = "a"}; {value = "b"}; {value = "c"} |] |> not_ |> toContainEqual {value = "d"});
   test "not toContainString" (fun () ->
     expect "banana" |> not_ |> toContainString "nanan");
   test "not toHaveLength" (fun () ->
