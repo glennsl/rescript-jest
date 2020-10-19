@@ -12,6 +12,7 @@ type assertion =
 | Fail : string -> assertion
 
 | ArrayContains : ('a array * 'a) modifier -> assertion
+| ArrayContainsEqual : ('a array * 'a) modifier -> assertion
 | ArrayLength : ('a array * int) modifier -> assertion
 | ArraySuperset : ('a array * 'a array) modifier -> assertion
 | Be : ('a * 'a) modifier -> assertion
@@ -76,6 +77,8 @@ end = struct
 
   | ArrayContains `Just (a, b) -> (expect a) ## toContain b
   | ArrayContains `Not (a, b) -> (expect a) ## not ## toContain b
+  | ArrayContainsEqual `Just (a, b) -> (expect a) ## toContainEqual b
+  | ArrayContainsEqual `Not (a, b) -> (expect a) ## not ## toContainEqual b
   | ArrayLength `Just (a, l) -> (expect a) ## toHaveLength l
   | ArrayLength `Not (a, l) -> (expect a) ## not ## toHaveLength l
   | ArraySuperset `Just (a, b) -> (expect a) ## toEqual (arrayContaining b)
@@ -325,6 +328,9 @@ module Expect = struct
 
   let toContain b p =
     ArrayContains (mapMod (fun a -> (a, b)) p)
+
+  let toContainEqual b p =
+    ArrayContainsEqual (mapMod (fun a -> (a, b)) p)
 
   (** replaces expect.stringContaining *)
   let toContainString b p =

@@ -106,6 +106,7 @@ module Expect : sig
   val toBeLessThanOrEqual : 'a -> [< 'a partial] -> assertion
   val toBeSupersetOf : 'a array -> [< 'a array partial] -> assertion
   val toContain : 'a -> [< 'a array partial] -> assertion
+  val toContainEqual : 'a -> [< 'a array partial] -> assertion
   val toContainString : string -> [< string partial] -> assertion
   val toEqual : 'a -> [< 'a partial] -> assertion
   val toHaveLength : int -> [< 'a array partial] -> assertion
