@@ -1,6 +1,6 @@
 {
   "name": "@glennsl/bs-jest",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "BuckleScript bindings to the Jest testing framework",
   "scripts": {
     "build": "bsb -make-world",
