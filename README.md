@@ -109,6 +109,10 @@ Then build and run tests with `npm test`, start watchers for `bsb`and `jest` wit
 
 ## Changes
 
+### 0.6
+* Added `Expect.toContainEqual`
+* Updated to Jest 26.5.2
+
 ### 0.5.1
 * Added `Expect.toMatchInlineSnapshot`
 
