@@ -104,8 +104,8 @@ end = struct
 
   | Throws `Just f -> (expect f) ## toThrow ()
   | Throws `Not f -> (expect f) ## not ## toThrow ()
-  | ThrowsException `Just (f, e) -> (expect f) ## toThrow (Js.String.make e)
-  | ThrowsException `Not (f, e) -> (expect f) ## not ## toThrow (Js.String.make e)
+  | ThrowsException `Just (f, e) -> (expect f) ## toThrow (Js.Json.stringifyAny e)
+  | ThrowsException `Not (f, e) -> (expect f) ## not ## toThrow (Js.Json.stringifyAny e)
   | ThrowsMessage `Just (f, msg) -> (expect f) ## toThrow msg
   | ThrowsMessage `Not (f, msg) -> (expect f) ## not ## toThrow msg
   | ThrowsMessageRe `Just (f, re) -> (expect f) ## toThrow re

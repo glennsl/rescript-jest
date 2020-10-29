@@ -112,6 +112,8 @@ Then build and run tests with `npm test`, start watchers for `bsb`and `jest` wit
 ### 0.6
 * Added `Expect.toContainEqual`
 * Updated to Jest 26.5.2
+* Upgraded bs-platform to 8.3.1
+* Remvoed `toThrowException`, `toThrowMessage` and `toThrowMessageRe` as they relied on assumptions about BuckleScript internals that no longer hold.
 
 ### 0.5.1
 * Added `Expect.toMatchInlineSnapshot`
