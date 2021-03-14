@@ -15,11 +15,11 @@
 
 Most of what's commonly used is very stable. But the more js-y parts should be considered experimental, such as mocking and some of the expects that don't transfer well, or just don't make sense for testing idiomatic Reason/OCaml code but could be useful for testing js interop.
 
-* [Global](https://facebook.github.io/jest/docs/en/api.html): Fully implemented and tested, apart from `require.*`
-* [Expect](https://facebook.github.io/jest/docs/en/expect.html): Mostly implemented. Functionality that makes sense only for JS interop have been moved to `ExpectJs`. Some functionality does not make sense in a typed language, or is not possible to implement sensibly in ML.
-* [Mock Functions](https://facebook.github.io/jest/docs/en/mock-function-api.html): Experimental and unsafe implementation, very much in flux. The Jest bindings will most likely be relegated to the `MockJs` module as it's very quirky to use with native code. A separate native from-scratch implementation might suddenly appear as `Mock`.
-* [The Jest Object](https://facebook.github.io/jest/docs/en/jest-object.html): Fake timers are fully implemented and tested. Mock functionality has been moved to `JestJs`. It's mostly implemented, but experimental and largely untested.
-* __Snapshotting__: Expect functions exist and work, but there's currently no way to implement custom snapshot serializers.
+- [Global](https://facebook.github.io/jest/docs/en/api.html): Fully implemented and tested, apart from `require.*`
+- [Expect](https://facebook.github.io/jest/docs/en/expect.html): Mostly implemented. Functionality that makes sense only for JS interop have been moved to `ExpectJs`. Some functionality does not make sense in a typed language, or is not possible to implement sensibly in ML.
+- [Mock Functions](https://facebook.github.io/jest/docs/en/mock-function-api.html): Experimental and unsafe implementation, very much in flux. The Jest bindings will most likely be relegated to the `MockJs` module as it's very quirky to use with native code. A separate native from-scratch implementation might suddenly appear as `Mock`.
+- [The Jest Object](https://facebook.github.io/jest/docs/en/jest-object.html): Fake timers are fully implemented and tested. Mock functionality has been moved to `JestJs`. It's mostly implemented, but experimental and largely untested.
+- **Snapshotting**: Expect functions exist and work, but there's currently no way to implement custom snapshot serializers.
 
 ## Example
 
@@ -53,13 +53,16 @@ npm install --save-dev @glennsl/bs-jest
 ```
 
 Then add `@glennsl/bs-jest` to `bs-dev-dependencies` in your `bsconfig.json`:
+
 ```js
 {
   ...
   "bs-dev-dependencies": ["@glennsl/bs-jest"]
 }
 ```
+
 Then add `__tests__` to `sources` in your `bsconfig.json`:
+
 ```js
 "sources": [
   {
@@ -80,11 +83,11 @@ One very important difference from Jest is that assertions are not imperative. T
 
 At first sight this may still seem very limiting, and if you write very imperative code it really is, but I'd argue the real problem then is the imperative code. There are however some workarounds that can alleviate this:
 
-* Compare multiple values by wrapping them in a tuple: `expect((this, that)) |> toBe((3, 4))`
-* Use the `testAll` function to generate tests based on a list of data
-* Use `describe` and/or `beforeAll` to do setup for a group of tests. Code written in OCaml/Reason is immutable by default. Take advantage of it.
-* Write a helper function if you find yourself repeating code. That's what functions are for, after all. You can even write a helper function to generate tests.
-* If you're still struggling, make an issue on GitHub or bring it up in Discord. We'll either figure out a good way to do it with what we already have, or realize that something actually is missing and add it.
+- Compare multiple values by wrapping them in a tuple: `expect((this, that)) |> toBe((3, 4))`
+- Use the `testAll` function to generate tests based on a list of data
+- Use `describe` and/or `beforeAll` to do setup for a group of tests. Code written in OCaml/Reason is immutable by default. Take advantage of it.
+- Write a helper function if you find yourself repeating code. That's what functions are for, after all. You can even write a helper function to generate tests.
+- If you're still struggling, make an issue on GitHub or bring it up in Discord. We'll either figure out a good way to do it with what we already have, or realize that something actually is missing and add it.
 
 ## Documentation
 
@@ -92,13 +95,14 @@ For the moment, please refer to [Jest.mli](https://github.com/glennsl/bs-jest/bl
 
 ## Extensions
 
-* [bs-jest-dom](https://redex.github.io/package/bs-jest-dom/) - Custom matchers to test the state of the DOM
+- [bs-jest-dom](https://redex.github.io/package/bs-jest-dom/) - Custom matchers to test the state of the DOM
 
 ## Troubleshooting
 
 If you encounter the error `SyntaxError: Cannot use import statement outside a module`, it may be that you are mixing `es6` and `commonjs` modules in your project. Please take a look at [#63](https://github.com/glennsl/bs-jest/issues/63) for ideas on how to fix this.
 
 ## Contribute
+
 ```sh
 git clone https://github.com/glennsl/bs-jest.git
 cd bs-jest
@@ -114,54 +118,67 @@ Then build and run tests with `npm test`, start watchers for `bsb`and `jest` wit
 - [BREAKING] Actually removed `toThrowException`, `toThrowMessage` and `toThrowMessageRe` as they relied on assumptions about BuckleScript internals that no longer hold.
 
 ### 0.6
-* Added `Expect.toContainEqual`
-* Updated to Jest 26.5.2
-* Upgraded bs-platform to 8.3.1
+
+- Added `Expect.toContainEqual`
+- Updated to Jest 26.5.2
+- Upgraded bs-platform to 8.3.1
 
 ### 0.5.1
-* Added `Expect.toMatchInlineSnapshot`
+
+- Added `Expect.toMatchInlineSnapshot`
 
 ### 0.5.0
-* Updated to Jest 25.1.0
+
+- Updated to Jest 25.1.0
 
 ### 0.4.9
-* Added `Todo.test`
+
+- Added `Todo.test`
 
 ### 0.4.8
-* Updated jest to 24.3.1
-* Fixed jest warnings not to return anything from `describe` callbacks by explicitly returning `undefined` (otherwise BuckleScript will return something else like `()`, which is represented as `0`)
-* Fixed several newly uncovered uncurrying issues caused by surprise breaking changes in BuckleScript (Thanks again, Bob!)
-* Added `Jest.advanceTimersByTime`, which is basically just an alias of `Jest.runTimersToTime`
+
+- Updated jest to 24.3.1
+- Fixed jest warnings not to return anything from `describe` callbacks by explicitly returning `undefined` (otherwise BuckleScript will return something else like `()`, which is represented as `0`)
+- Fixed several newly uncovered uncurrying issues caused by surprise breaking changes in BuckleScript (Thanks again, Bob!)
+- Added `Jest.advanceTimersByTime`, which is basically just an alias of `Jest.runTimersToTime`
 
 ### 0.4.7
-* Added `Expect.not__` for transitional compatibility with Reason syntax change of "unkeywording" `not` by mangling it into `not_`, and `not_` into `not__` and so on.
+
+- Added `Expect.not__` for transitional compatibility with Reason syntax change of "unkeywording" `not` by mangling it into `not_`, and `not_` into `not__` and so on.
 
 ### 0.4.6
-* Made uncurrying explicit for `afterAllPromise` too.
+
+- Made uncurrying explicit for `afterAllPromise` too.
 
 ### 0.4.5
-* Made uncurrying explicit to fix a breaking change in implicit uncurrying from `bs-platform` 4.0.7 (Thanks Bob!)
+
+- Made uncurrying explicit to fix a breaking change in implicit uncurrying from `bs-platform` 4.0.7 (Thanks Bob!)
 
 ### 0.4.3
-* Removed some optimizations on skipped tests that Jest 23 suddenly started objecting to (#30)
+
+- Removed some optimizations on skipped tests that Jest 23 suddenly started objecting to (#30)
 
 ### 0.4.0
-* Added `MockJs.new0`, `new1` and `new2`
-* Added `timeout` argument to `testAsync` and `testPromise` functions
-* Added `beforeEachAsync`, `beforeEachPromise`, `afterEachAsync` and `afterEachPromise`
-* Added `beforeAllAsync`, `beforeAllPromise`, `afterAllAsync` and `afterAllPromise`
+
+- Added `MockJs.new0`, `new1` and `new2`
+- Added `timeout` argument to `testAsync` and `testPromise` functions
+- Added `beforeEachAsync`, `beforeEachPromise`, `afterEachAsync` and `afterEachPromise`
+- Added `beforeAllAsync`, `beforeAllPromise`, `afterAllAsync` and `afterAllPromise`
 
 ### 0.3.1
-* Moved repository from `reasonml-community/bs-jest` to `glennsl/bs-jest`
-* Renamed NPM package from `bs-jest` to `@glennsl/bs-jest`
+
+- Moved repository from `reasonml-community/bs-jest` to `glennsl/bs-jest`
+- Renamed NPM package from `bs-jest` to `@glennsl/bs-jest`
 
 ### 0.3.0
-* Added `toThrowException`
-* Fixed an issue with custom Runner implementation shadowing the global `test` function from jest
-* Fixed a typo in the js boundary of `not_ |> toBeLessThanEqual`
+
+- Added `toThrowException`
+- Fixed an issue with custom Runner implementation shadowing the global `test` function from jest
+- Fixed a typo in the js boundary of `not_ |> toBeLessThanEqual`
 
 ### 0.2.0
-* Removed deprecations
-* Added `testAll`, `Only.testAll`, `Skip.testAll` that generates tests from a list of inputs
-* Fixed type signature of `fail`
-* Added `expectFn`
+
+- Removed deprecations
+- Added `testAll`, `Only.testAll`, `Skip.testAll` that generates tests from a list of inputs
+- Fixed type signature of `fail`
+- Added `expectFn`
