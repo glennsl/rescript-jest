@@ -26,9 +26,6 @@ type assertion =
 | StringMatch : (string * Js.Re.t) modifier -> assertion
 
 | Throws : (unit -> _) modifier -> assertion
-| ThrowsException : ((unit -> _) * exn) modifier -> assertion
-| ThrowsMessage : ((unit -> _) * string) modifier -> assertion
-| ThrowsMessageRe : ((unit -> _) * Js.Re.t) modifier -> assertion
 
 | MatchInlineSnapshot : _ * string -> assertion
 | MatchSnapshot : _ -> assertion
@@ -104,12 +101,6 @@ end = struct
 
   | Throws `Just f -> (expect f) ## toThrow ()
   | Throws `Not f -> (expect f) ## not ## toThrow ()
-  | ThrowsException `Just (f, e) -> (expect f) ## toThrow (Js.Json.stringifyAny e)
-  | ThrowsException `Not (f, e) -> (expect f) ## not ## toThrow (Js.Json.stringifyAny e)
-  | ThrowsMessage `Just (f, msg) -> (expect f) ## toThrow msg
-  | ThrowsMessage `Not (f, msg) -> (expect f) ## not ## toThrow msg
-  | ThrowsMessageRe `Just (f, re) -> (expect f) ## toThrow re
-  | ThrowsMessageRe `Not (f, re) -> (expect f) ## not ## toThrow re
 
   | MatchInlineSnapshot (a, inlineSnapshot) -> (expect a) ## toMatchInlineSnapshot inlineSnapshot
   | MatchSnapshot a -> (expect a) ## toMatchSnapshot ()
@@ -362,15 +353,6 @@ module Expect = struct
 
   let toThrowErrorMatchingSnapshot (`Just f) =
     ThrowsMatchSnapshot f
-
-  let toThrowException e p =
-    ThrowsException (mapMod (fun f -> (f, e)) p)
-
-  let toThrowMessage message p =
-    ThrowsMessage (mapMod (fun f -> (f, message)) p)
-
-  let toThrowMessageRe re p =
-    ThrowsMessageRe (mapMod (fun f -> (f, re)) p)
 
   let not_ (`Just a) = `Not a
   let not__ = not_ (* For Reason syntax compatibility. TODO: deprecate and remove *)
