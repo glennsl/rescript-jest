@@ -118,7 +118,7 @@ If you encounter the error `SyntaxError: Cannot use import statement outside a m
     "transformIgnorePatterns": ["<rootDir>/node_modules/(?!(rescript|@glennsl/bs-jest)/)"]
   }
   ```
-  - The property `"transformIgnorePatterns"` is an array of strings. Either you do some regex or organize them in an array. **Please make sure all folders in `node_modules` involving compiled .res/.ml/.re files and the like such as `rescript` or `@glennsl/bs-jest` are included in the aforementioned array.**
+  - The property `"transformIgnorePatterns"` is an array of strings. Either you do some regex or organize them in an array. **Please make sure all folders in `node_modules` involving compiled .res/.ml/.re files and the like such as `rescript` or `@glennsl/bs-jest` are mentioned in the aforementioned array.**
 
 This problem is also addressed in [Issue #63](https://github.com/glennsl/bs-jest/issues/63).
 
