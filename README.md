@@ -99,7 +99,28 @@ For the moment, please refer to [Jest.mli](https://github.com/glennsl/bs-jest/bl
 
 ## Troubleshooting
 
-If you encounter the error `SyntaxError: Cannot use import statement outside a module`, it may be that you are mixing `es6` and `commonjs` modules in your project. Please take a look at [#63](https://github.com/glennsl/bs-jest/issues/63) for ideas on how to fix this.
+If you encounter the error `SyntaxError: Cannot use import statement outside a module`, it may be that you are mixing `es6` and `commonjs` modules in your project. For example, this can happen when you are building a React project since React builds are always in ES6. To fix this, please do the following:
+
+  - Make sure your `bsconfig.json` compiles `"es6"` or `"es6-global"`:
+  ```json
+    "package-specs": {
+      "module": "es6",
+    }
+  ```
+  - Install [esbuild-jest](https://github.com/aelbore/esbuild-jest) through `yarn` or `npm` as a `devDependency`.
+  - Build your Rescript project with deps: `rescript build -with-deps`.
+  - Add this to your Jest config (or `jest` of your `package.json`):
+  ```json
+  {
+    "transform": {
+      "^.+\\.jsx?$": "esbuild-jest"
+    },
+    "transformIgnorePatterns": ["<rootDir>/node_modules/(?!(rescript|@glennsl/bs-jest)/)"]
+  }
+  ```
+  - The property `"transformIgnorePatterns"` is an array of strings. Either you do some regex or organize them in an array. **Please make sure all folders in `node_modules` involving compiled .res/.ml/.re files and the like such as `rescript` or `@glennsl/bs-jest` are included in the aforementioned array.**
+
+This problem is also addressed in [Issue #63](https://github.com/glennsl/bs-jest/issues/63).
 
 ## Contribute
 
