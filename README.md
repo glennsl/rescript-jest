@@ -44,6 +44,40 @@ describe("Expect.Operators", () => {
 
 ```
 
+`testAsync` example with ReactTestUtils `actAsync` for effectfull component assertion:
+
+```reason
+open Jest;
+
+describe("ReactTestUtils actAsync", () => {
+  open Expect;
+  open Js.Promise;
+  open ReactTestUtils;
+
+  let container = ref(None);
+  beforeEach(prepareContainer(container));
+  afterEach(cleanupContainer(container));
+
+  let effectfulComponent = <p>{"Hello async Jest" |> React.string}</p>
+
+  // use testAsync to get a `finish` callback for final assertion
+  testAsync("actAsync", finish => {
+    let container = getContainer(container);
+    // actAsync returns a promise for all effects evaluation
+    actAsync(_ =>
+      // Convert ReactDOMRe.render to a promise
+      resolve(ReactDOMRe.render(effectfulComponent, container))
+    ) |> then_(_ =>
+      // Call finish with assertion on final container
+      finish(expect(
+        container
+        ->DOM.findBySelectorAndTextContent("p", "Hello async Jest")
+        ->Belt.Option.isSome) |> toBe(true)) |> resolve
+    ) |> ignore;
+  });
+});
+```
+
 See [the tests](https://github.com/glennsl/bs-jest/tree/master/__tests__) for more examples.
 
 ## Installation
