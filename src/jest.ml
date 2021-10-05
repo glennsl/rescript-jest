@@ -190,10 +190,7 @@ module Runner (A : Asserter) = struct
       (fun finish -> callback (fun () -> finish () [@bs]); Js.undefined)
       (Js.Undefined.fromOption timeout)
   external afterAllPromise : (unit -> 'a Js.Promise.t [@bs.uncurry]) -> int Js.Undefined.t -> unit = "afterAll" [@@bs.val]
-  let afterAllPromise ?timeout callback =
-    afterAllPromise
-      (fun () -> callback () |> Js.Promise.resolve)
-      (Js.Undefined.fromOption timeout)
+  let afterAllPromise ?timeout callback = afterAllPromise (fun () -> callback () |> Js.Promise.resolve) (Js.Undefined.fromOption timeout)
 
   external afterEach : (unit -> unit [@bs.uncurry]) -> unit = "afterEach" [@@bs.val]
   external afterEachAsync : ((unit -> unit [@bs]) -> unit Js.undefined) -> int Js.Undefined.t -> unit = "afterEach" [@@bs.val]

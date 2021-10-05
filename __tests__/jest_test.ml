@@ -29,7 +29,8 @@ describe "Fake Timers" (fun () ->
     expect (before, !flag) = (false, true)
   );
   
-  test "runAllImmediates" (fun () ->
+  (** RunAllImmediates cannot depend on setImmediate because it does not works with with modern (Jest 27)timers *)
+  Skip.test "runAllImmediates " (fun () ->
     let flag = ref false in
     Jest.useFakeTimers ();
     setImmediate (fun () -> flag := true);
@@ -44,9 +45,9 @@ describe "Fake Timers" (fun () ->
     Jest.useFakeTimers ();
     setTimeout (fun () -> flag := true) 1500;
     let before = !flag in
-    Jest.runTimersToTime 1000;
+    Jest.advanceTimersByTime 1000; (** Jest 27 does not implement runTimersToTime()  *)
     let inbetween = !flag in
-    Jest.runTimersToTime 1000;
+    Jest.advanceTimersByTime 1000; (** Jest 27 does not implement runTimersToTime()  *)
     
     expect (before, inbetween, !flag) = (false, false, true)
   );
