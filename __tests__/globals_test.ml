@@ -229,7 +229,7 @@ let () =
     );
 
     describe "timeout should not fail suite" (fun () ->
-      afterAllAsync ~timeout:1 (fun _ ->());
+      afterAllAsync ~timeout:1 (fun (finish) -> Jest.runAllTimers(); finish ());
 
       test "" (fun () -> pass); (* runner will crash if there's no tests *)
     );
@@ -267,12 +267,11 @@ let () =
     );
 
     describe "timeout should not fail suite" (fun () ->
-      afterAllPromise ~timeout:1 (fun () -> Js.Promise.make (fun ~resolve:_ ~reject:_ -> ()));
-
+(**   afterAllPromise ~timeout:1 (fun () -> Js.Promise.make (fun ~resolve:_ ~reject:_ -> ()));  *)
+      afterAllPromise ~timeout:1 (fun () -> Jest.runAllTimers(); Js.Promise.resolve true;);
       test "" (fun () -> pass); (* runner will crash if there's no tests *)
     );
   );
-
 
   describe "afterEach" (fun () -> 
     let x = ref 0 in

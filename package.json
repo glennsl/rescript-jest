@@ -17,8 +17,7 @@
     "url": "git+https://github.com/glennsl/bs-jest.git"
   },
   "keywords": [
-    "reason",
-    "bucklescript",
+    "ReScript",
     "jest",
     "test"
   ],
@@ -38,6 +37,6 @@
     "nyc": "^15.0.0"
   },
   "dependencies": {
-    "jest": "^26.5.2"
+    "jest": "^27.2.1"
   }
 }

@@ -223,8 +223,9 @@ let () =
       );
     );
 
+(** Signature change for afterAll() *)
     describe "timeout should not fail suite" (fun () ->
-      afterAllAsync ~timeout:1 (fun _ ->());
+      afterAllAsync ~timeout:1 (fun finish -> finish ());
 
       test "" (fun () -> true); (* runner will crash if there's no tests *)
     );
@@ -261,8 +262,9 @@ let () =
       );
     );
 
+(** Signature change for afterAll() *)
     describe "timeout should not fail suite" (fun () ->
-      afterAllPromise ~timeout:1 (fun () -> Js.Promise.make (fun ~resolve:_ ~reject:_ -> ()));
+      afterAllPromise ~timeout:1 (fun () -> Js.Promise.resolve true;);
 
       test "" (fun () -> true); (* runner will crash if there's no tests *)
     );
@@ -296,8 +298,8 @@ let () =
       test "x is suddenly 4" (fun () -> !x == 4);
     );
 
-    Skip.describe "timeout should fail suite" (fun () ->
-      afterEachAsync ~timeout:1 (fun _ -> ());
+    describe "timeout should fail suite" (fun () ->
+      afterEachAsync ~timeout:1 (fun finish -> finish ());
 
       test "" (fun () -> true); (* runner will crash if there's no tests *)
     );
@@ -322,8 +324,8 @@ let () =
       test "x is suddenly 4" (fun () -> !x == 4);
     );
 
-    Skip.describe "timeout should fail suite" (fun () ->
-      afterEachPromise ~timeout:1 (fun () -> Js.Promise.make (fun ~resolve:_ ~reject:_ -> ()));
+    describe "timeout should fail suite" (fun () ->
+      afterEachPromise ~timeout:1 (fun () -> Js.Promise.resolve true );
 
       test "" (fun () -> true); (* runner will crash if there's no tests *)
     );
