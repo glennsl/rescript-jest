@@ -1,7 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`Expect toMatchSnapshot 1`] = `"foo"`;
-
-exports[`Expect toMatchSnapshotWithName: bar 1`] = `"foo"`;
-
-exports[`Expect toThrowErrorMatchingSnapshot 1`] = `"foo error"`;
