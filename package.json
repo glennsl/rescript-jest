@@ -3,9 +3,9 @@
   "version": "0.7.0",
   "description": "BuckleScript bindings to the Jest testing framework",
   "scripts": {
-    "build": "bsb -make-world",
-    "clean": "bsb -clean-world",
-    "start": "bsb -make-world -w",
+    "build": "rescript build -with-deps",
+    "clean": "rescript clean",
+    "start": "rescript build -w",
     "test": "yarn build && jest",
     "test-ci": "yarn build && jest --coverage --coverageDirectory='coverage'",
     "watch:bsb": "bsb -make-world -w",
@@ -32,7 +32,7 @@
     "bsconfig.json"
   ],
   "devDependencies": {
-    "bs-platform": "^8.3.1"
+    "rescript": "^9.1.4"
   },
   "dependencies": {
     "jest": "^27.2.1"

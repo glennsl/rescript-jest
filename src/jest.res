@@ -87,8 +87,8 @@ module LLExpect: {
     | Be(#Not(a, b)) => expect(a)["not"]["toBe"](b)
     | Equal(#Just(a, b)) => expect(a)["toEqual"](b)
     | Equal(#Not(a, b)) => expect(a)["not"]["toEqual"](b)
-    | FloatCloseTo(#Just(a, b, p)) => expect(a)["toBeCloseTo"](b, Js.Undefined.fromOption(p))
-    | FloatCloseTo(#Not(a, b, p)) => expect(a)["not"]["toBeCloseTo"](b, Js.Undefined.fromOption(p))
+    | FloatCloseTo(#Just(a, b, p)) => expect(a)["toBeCloseTo"](. b, Js.Undefined.fromOption(p))
+    | FloatCloseTo(#Not(a, b, p)) => expect(a)["not"]["toBeCloseTo"](. b, Js.Undefined.fromOption(p))
     | GreaterThan(#Just(a, b)) => expect(a)["toBeGreaterThan"](b)
     | GreaterThan(#Not(a, b)) => expect(a)["not"]["toBeGreaterThan"](b)
     | GreaterThanOrEqual(#Just(a, b)) => expect(a)["toBeGreaterThanOrEqual"](b)
@@ -106,7 +106,7 @@ module LLExpect: {
     | Throws(#Not(f)) => expect(f)["not"]["toThrow"]()
 
     | MatchInlineSnapshot(a, inlineSnapshot) => expect(a)["toMatchInlineSnapshot"](inlineSnapshot)
-    | MatchSnapshot(a) => expect(a)["toMatchSnapshot"]()
+    | MatchSnapshot(a) => expect(a)["toMatchSnapshot"](. a)
     | MatchSnapshotName(a, name) => expect(a)["toMatchSnapshot"](name)
     | ThrowsMatchSnapshot(f) => expect(f)["toThrowErrorMatchingSnapshot"]()
 
@@ -261,7 +261,7 @@ module Runner = (A: Asserter) => {
 
     let test = (name, callback) =>
       _test(name, () => {
-        \"@@"(affirm, callback())
+        affirm(callback())
         Js.undefined
       })
 
@@ -289,7 +289,7 @@ module Runner = (A: Asserter) => {
       inputs |> List.iter(input => {
         let name = j`$name - $input`
         _test(name, () => {
-          \"@@"(affirm, callback(input))
+          affirm(callback(input))
           Js.undefined
         })
       })
@@ -357,9 +357,9 @@ module Expect = {
 
   /* toHaveBeenCalled* */
 
-  let toBeCloseTo = (b, p) => FloatCloseTo(mapMod(a => (a, b, None), p))
+  let toBeCloseTo = (. b, p) => FloatCloseTo(mapMod(a => (a, b, None), p))
 
-  let toBeSoCloseTo = (b, ~digits, p) => FloatCloseTo(mapMod(a => (a, b, Some(digits)), p))
+  let toBeSoCloseTo = (. b, ~digits, p) => FloatCloseTo(mapMod(a => (a, b, Some(digits)), p))
 
   let toBeGreaterThan = (b, p) => GreaterThan(mapMod(a => (a, b), p))
 
@@ -465,20 +465,14 @@ module MockJs = {
     Js.Array.copy(instances(self)) /* Awesome, the bloody things are mutated so we need to copy */
 
   @ocaml.doc(" Beware: this actually replaces `mock`, not just `mock.instances` and `mock.calls` ")
-  @bs.send.pipe(: fn<_>)
-  external mockClear: unit = "mockClear"
+  @bs.send.pipe(: fn<_>) external mockClear: unit = "mockClear"
   @bs.send.pipe(: fn<_>) external mockReset: unit = "mockReset"
-  @bs.send.pipe(: fn<'fn, _, _> as 'self)
-  external mockImplementation: 'fn => 'self = "mockImplementation"
-  @bs.send.pipe(: fn<'fn, _, _> as 'self)
-  external mockImplementationOnce: 'fn => 'self = "mockImplementationOnce"
-  @bs.send.pipe(: fn<_, _, 'ret>)
-  external mockReturnThis: unit =
+  @bs.send.pipe(: fn<'fn, _, _> as 'self) external mockImplementation: 'fn => 'self = "mockImplementation"
+  @bs.send.pipe(: fn<'fn, _, _> as 'self) external mockImplementationOnce: 'fn => 'self = "mockImplementationOnce"
+  @bs.send.pipe(: fn<_, _, 'ret>) external mockReturnThis: unit =
     "mockReturnThis" /* not type safe, we don't know what `this` actually is */
-  @bs.send.pipe(: fn<_, _, 'ret> as 'self)
-  external mockReturnValue: 'ret => 'self = "mockReturnValue"
-  @bs.send.pipe(: fn<_, _, 'ret> as 'self)
-  external mockReturnValueOnce: 'ret => 'self = "mockReturnValueOnce"
+  @bs.send.pipe(: fn<_, _, 'ret> as 'self) external mockReturnValue: 'ret => 'self = "mockReturnValue"
+  @bs.send.pipe(: fn<_, _, 'ret> as 'self) external mockReturnValueOnce: 'ret => 'self = "mockReturnValueOnce"
 }
 
 module Jest = {

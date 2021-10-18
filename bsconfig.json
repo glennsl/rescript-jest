@@ -1,5 +1,6 @@
 {
   "name": "@glennsl/bs-jest",
+  "namespace": true,
   "bsc-flags": ["-bs-no-version-header", "-bs-super-errors"],
   "suffix": ".bs.js",
   "package-specs": {
@@ -14,5 +15,8 @@
       "dir": "__tests__",
       "type": "dev"
     }
-  ]
+  ],
+  "warnings": {
+    "number": "-44"
+  }
 }
