@@ -99,8 +99,8 @@ module Expect: {
   let expectFn: ('a => 'b, 'a) => plainPartial<unit => 'b> /* EXPERIMENTAL */
 
   let toBe: ('a, [< partial<'a>]) => assertion
-  let toBeCloseTo: (float, [< partial<float>]) => assertion
-  let toBeSoCloseTo: (float, ~digits: int, [< partial<float>]) => assertion
+  let toBeCloseTo: (. float, [< partial<float>]) => assertion
+  let toBeSoCloseTo: (. float, ~digits: int, [< partial<float>]) => assertion
   let toBeGreaterThan: ('a, [< partial<'a>]) => assertion
   let toBeGreaterThanOrEqual: ('a, [< partial<'a>]) => assertion
   let toBeLessThan: ('a, [< partial<'a>]) => assertion
@@ -162,20 +162,14 @@ module MockJs: {
   let instances: fn<_, _, 'ret> => array<'ret>
 
   @ocaml.doc(" Beware: this actually replaces `mock`, not just `mock.instances` and `mock.calls` ")
-  @bs.send.pipe(: fn<_>)
-  external mockClear: unit = "mockClear"
+  @bs.send.pipe(: fn<_>) external mockClear: unit = "mockClear"
   @bs.send.pipe(: fn<_>) external mockReset: unit = "mockReset"
-  @bs.send.pipe(: fn<'fn, _, _> as 'self)
-  external mockImplementation: 'fn => 'self = "mockImplementation"
-  @bs.send.pipe(: fn<'fn, _, _> as 'self)
-  external mockImplementationOnce: 'fn => 'self = "mockImplementationOnce"
-  @bs.send.pipe(: fn<_, _, 'ret>)
-  external mockReturnThis: unit =
+  @bs.send.pipe(: fn<'fn, _, _> as 'self) external mockImplementation: 'fn => 'self = "mockImplementation"
+  @bs.send.pipe(: fn<'fn, _, _> as 'self) external mockImplementationOnce: 'fn => 'self = "mockImplementationOnce"
+  @bs.send.pipe(: fn<_, _, 'ret>) external mockReturnThis: unit =
     "mockReturnThis" /* not type safe, we don't know what `this` actually is */
-  @bs.send.pipe(: fn<_, _, 'ret> as 'self)
-  external mockReturnValue: 'ret => 'self = "mockReturnValue"
-  @bs.send.pipe(: fn<_, _, 'ret> as 'self)
-  external mockReturnValueOnce: 'ret => 'self = "mockReturnValueOnce"
+  @bs.send.pipe(: fn<_, _, 'ret> as 'self) external mockReturnValue: 'ret => 'self = "mockReturnValue"
+  @bs.send.pipe(: fn<_, _, 'ret> as 'self)  external mockReturnValueOnce: 'ret => 'self = "mockReturnValueOnce"
 }
 
 module Jest: {
