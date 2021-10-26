@@ -33,8 +33,8 @@ let () = {
     )
 
     test("not toBe", () => expect(1 + 2) |> not_ |> toBe(4))
-    test("not toBeCloseTo", () =>  toBeCloseTo(. 3., expect(1. +. 2.)))
-    test("not toBeSoCloseTo", () => toBeSoCloseTo(. 3.123, ~digits=3, expect(1. +. 2.123)))
+    test("not toBeCloseTo", () =>  toBeCloseTo(. 3001., not_(expect(1. +. 2.))))
+    test("not toBeSoCloseTo", () => toBeSoCloseTo(. 3.124, ~digits=3, not_(expect(1. +. 2.123))))
     test("not toBeGreaterThan", () => expect(4) |> not_ |> toBeGreaterThan(4))
     test("not toBeGreaterThanOrEqual", () => expect(4) |> not_ |> toBeGreaterThanOrEqual(5))
     test("not toBeLessThan", () => expect(4) |> not_ |> toBeLessThan(4))

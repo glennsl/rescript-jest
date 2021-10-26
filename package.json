@@ -8,7 +8,7 @@
     "start": "rescript build -w",
     "test": "yarn build && jest",
     "test-ci": "yarn build && jest --coverage --coverageDirectory='coverage'",
-    "watch:bsb": "bsb -make-world -w",
+    "watch:bsb": "rescript build -with-deps -w",
     "watch:jest": "jest --coverage --watchAll",
     "watch:screen": "screen -c .screenrc"
   },

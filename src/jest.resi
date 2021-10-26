@@ -162,14 +162,13 @@ module MockJs: {
   let instances: fn<_, _, 'ret> => array<'ret>
 
   @ocaml.doc(" Beware: this actually replaces `mock`, not just `mock.instances` and `mock.calls` ")
-  @bs.send.pipe(: fn<_>) external mockClear: unit = "mockClear"
-  @bs.send.pipe(: fn<_>) external mockReset: unit = "mockReset"
-  @bs.send.pipe(: fn<'fn, _, _> as 'self) external mockImplementation: 'fn => 'self = "mockImplementation"
-  @bs.send.pipe(: fn<'fn, _, _> as 'self) external mockImplementationOnce: 'fn => 'self = "mockImplementationOnce"
-  @bs.send.pipe(: fn<_, _, 'ret>) external mockReturnThis: unit =
-    "mockReturnThis" /* not type safe, we don't know what `this` actually is */
-  @bs.send.pipe(: fn<_, _, 'ret> as 'self) external mockReturnValue: 'ret => 'self = "mockReturnValue"
-  @bs.send.pipe(: fn<_, _, 'ret> as 'self)  external mockReturnValueOnce: 'ret => 'self = "mockReturnValueOnce"
+  @send external mockClear: fn<'fn, 'a, 'b> => unit = "mockClear"
+  @send external mockReset: fn<'fn, 'a, 'b> => unit = "mockReset"
+  @send external mockImplementation: (fn<'fn, 'a, 'b> as 'self, 'fn) => 'self = "mockImplementation"
+  @send external mockImplementationOnce: (fn<'fn, _, _> as 'self, 'fn) => 'self = "mockImplementationOnce"
+  @send external mockReturnThis: fn<_, _, 'ret> => 'ret = "mockReturnThis" /* not type safe, we don't know what `this` actually is */
+  @send external mockReturnValue: (fn<_, _, 'ret> as 'self) => 'ret => 'self = "mockReturnValue"
+  @send external mockReturnValueOnce: (fn<_, _, 'ret> as 'self) => 'ret => 'self = "mockReturnValueOnce"
 }
 
 module Jest: {

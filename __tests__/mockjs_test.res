@@ -2,12 +2,12 @@ open Jest
 open ExpectJs
 
 /* TODO: move to BS std lib */
-@bs.send external bind: ('a => 'b, 'c, 'a, 'a) => 'b = "bind"
-@bs.send external bindThis: ((. 'a) => 'b, 'c, . 'a) => 'b = "bind"
-@bs.send external call: ((. 'a) => 'b, 'c, 'a) => 'b = "call"
+@send external bind: ('a => 'b, 'c, 'a, 'a) => 'b = "bind"
+@send external bindThis: ((. 'a) => 'b, 'c, . 'a) => 'b = "bind"
+@send external call: ((. 'a) => 'b, 'c, 'a) => 'b = "call"
 let call = (self, arg) => call(self, (), arg)
-@bs.send external callThis: ((. 'a) => 'b, 'c, 'a) => 'b = "call"
-@bs.send external call2: ((. 'a, 'b) => 'c, @as(0) _, 'a, 'b) => 'c = "call"
+@send external callThis: ((. 'a) => 'b, 'c, 'a) => 'b = "call"
+@send external call2: ((. 'a, 'b) => 'c, @as(0) _, 'a, 'b) => 'c = "call"
 
 let _ = {
   describe("inferred_fn", _ => {
@@ -68,7 +68,7 @@ let _ = {
       let before = mockFn |> MockJs.calls
       let _ = (call(fn, 1), call(fn, 2))
       let inbetween = mockFn |> MockJs.calls
-      MockJs.mockClear(mockFn)
+      mockFn -> MockJs.mockClear
       let after = mockFn |> MockJs.calls
 
       expect((before, inbetween, after)) |> toEqual(([], [1, 2], []))
@@ -81,7 +81,7 @@ let _ = {
       let before = mockFn |> MockJs.calls
       let _ = (call(fn, 1), call(fn, 2))
       let inbetween = mockFn |> MockJs.calls
-      MockJs.mockReset(mockFn)
+      mockFn -> MockJs.mockReset
       let after = mockFn |> MockJs.calls
 
       expect((before, inbetween, after)) |> toEqual(([], [1, 2], []))
@@ -89,11 +89,13 @@ let _ = {
 
     test("mockReset - resets implementations", _ => {
       let mockFn = JestJs.inferred_fn()
-      mockFn |> MockJs.mockReturnValue(Js.Undefined.return(128)) |> ignore
+      mockFn
+      -> MockJs.mockReturnValue(Js.Undefined.return(128))
+      -> ignore
       let fn = MockJs.fn(mockFn)
 
       let before = call(fn, ())
-      MockJs.mockReset(mockFn)
+      mockFn -> MockJs.mockReset
       let after = call(fn, ())
 
       expect((before, after)) |> toEqual((Js.Undefined.return(128), Js.Undefined.empty))
@@ -104,7 +106,9 @@ let _ = {
       let fn = MockJs.fn(mockFn)
 
       let before = call(fn, 10)
-      mockFn |> MockJs.mockImplementation((. a) => Js.Undefined.return(string_of_int(a))) |> ignore
+      mockFn
+      -> MockJs.mockImplementation((. a) => Js.Undefined.return(string_of_int(a)))
+      -> ignore
 
       expect((before, call(fn, 18), call(fn, 24))) |> toEqual((
         Js.Undefined.empty,
@@ -119,11 +123,11 @@ let _ = {
 
       let before = call(fn, 10)
       mockFn
-      |> MockJs.mockImplementationOnce((. a) => Js.Undefined.return(string_of_int(a)))
-      |> ignore
+      -> MockJs.mockImplementationOnce((. a) => Js.Undefined.return(string_of_int(a)))
+      -> ignore
       mockFn
-      |> MockJs.mockImplementationOnce((. a) => Js.Undefined.return(string_of_int(a * 2)))
-      |> ignore
+      -> MockJs.mockImplementationOnce((. a) => Js.Undefined.return(string_of_int(a * 2)))
+      -> ignore
 
       expect((before, call(fn, 18), call(fn, 24), call(fn, 12))) |> toEqual((
         Js.Undefined.empty,
@@ -139,7 +143,9 @@ let _ = {
       let fn = bindThis(mockFn |> MockJs.fn, this)
 
       let before = call(fn, ())
-      mockFn |> MockJs.mockReturnThis |> ignore
+      mockFn
+      -> MockJs.mockReturnThis
+      -> ignore
 
       expect((before, call(fn, ()), call(fn, ()))) |> toEqual((
         Js.Undefined.empty,
@@ -153,7 +159,9 @@ let _ = {
       let fn = MockJs.fn(mockFn)
 
       let before = call(fn, 10)
-      mockFn |> MockJs.mockReturnValue(Js.Undefined.return(146)) |> ignore
+      mockFn
+      -> MockJs.mockReturnValue(Js.Undefined.return(146))
+      -> ignore
 
       expect((before, call(fn, 18), call(fn, 24))) |> toEqual((
         Js.Undefined.empty,
@@ -167,8 +175,12 @@ let _ = {
       let fn = MockJs.fn(mockFn)
 
       let before = call(fn, 10)
-      mockFn |> MockJs.mockReturnValueOnce(Js.Undefined.return(29)) |> ignore
-      mockFn |> MockJs.mockReturnValueOnce(Js.Undefined.return(41)) |> ignore
+      mockFn
+      -> MockJs.mockReturnValueOnce(Js.Undefined.return(29))
+      -> ignore
+      mockFn
+      -> MockJs.mockReturnValueOnce(Js.Undefined.return(41))
+      -> ignore
 
       expect((before, call(fn, 18), call(fn, 24), call(fn, 12))) |> toEqual((
         Js.Undefined.empty,
@@ -197,7 +209,7 @@ let _ = {
 
       let inbetween = mockFn |> MockJs.instances
 
-      MockJs.mockClear(mockFn)
+      mockFn -> MockJs.mockClear
 
       let after = mockFn |> MockJs.instances
 
@@ -223,13 +235,13 @@ let _ = {
       expect(calls) |> toEqual([74, 89435])
     })
 
-    Skip.test("mockClear - resets calls", _ => {
+    test("mockClear - resets calls", _ => {
       let mockFn = JestJs.fn(a => string_of_int(a))
 
       let before = mockFn |> MockJs.calls
       let _ = (MockJs.fn(mockFn, 1), MockJs.fn(mockFn, 2))
       let inbetween = mockFn |> MockJs.calls
-      MockJs.mockClear(mockFn)
+      mockFn -> MockJs.mockClear
       let after = mockFn |> MockJs.calls
 
       expect((before, inbetween, after)) |> toEqual(([], [1, 2], []))
@@ -242,20 +254,22 @@ let _ = {
       let before = mockFn |> MockJs.calls
       let _ = (fn(1), fn(2))
       let inbetween = mockFn |> MockJs.calls
-      MockJs.mockReset(mockFn)
+      mockFn -> MockJs.mockReset
       let after = mockFn |> MockJs.calls
 
       expect((before, inbetween, after)) |> toEqual(([], [1, 2], []))
     })
 
     /* TODO: Actually removes the original imlementation too, causing it to return undefined, which usually won't be a valid return value for the function type it mocks */
-    Skip.test("mockReset - resets implementations", _ => {
+    Skip.test("mockReset - resets implementations - skipped for now as this removes the original implementation too causing an undefnied to be returned", _ => {
       let mockFn = JestJs.fn(a => string_of_int(a))
-      mockFn |> MockJs.mockReturnValue("128") |> ignore
+      mockFn
+      -> MockJs.mockReturnValue("128")
+      -> ignore
       let fn = MockJs.fn(mockFn)
 
       let before = fn(0)
-      MockJs.mockReset(mockFn)
+      mockFn -> MockJs.mockReset
       let after = fn(1)
 
       expect((before, after)) |> toEqual(("128", "1"))
@@ -266,7 +280,9 @@ let _ = {
       let fn = MockJs.fn(mockFn)
 
       let before = fn(10)
-      mockFn |> MockJs.mockImplementation(a => string_of_int(a * 2)) |> ignore
+      mockFn
+      -> MockJs.mockImplementation(a => string_of_int(a * 2))
+      -> ignore
 
       expect((before, fn(18), fn(24))) |> toEqual(("10", "36", "48"))
     })
@@ -276,8 +292,12 @@ let _ = {
       let fn = MockJs.fn(mockFn)
 
       let before = fn(10)
-      mockFn |> MockJs.mockImplementationOnce(a => string_of_int(a * 3)) |> ignore
-      mockFn |> MockJs.mockImplementationOnce(a => string_of_int(a * 2)) |> ignore
+      mockFn 
+      -> MockJs.mockImplementationOnce(a => string_of_int(a * 3))
+      -> ignore
+      mockFn
+      -> MockJs.mockImplementationOnce(a => string_of_int(a * 2))
+      -> ignore
 
       expect((before, fn(18), fn(24), fn(12))) |> toEqual(("10", "54", "48", "12"))
     })
@@ -303,7 +323,9 @@ let _ = {
       let fn = MockJs.fn(mockFn)
 
       let before = fn(10)
-      mockFn |> MockJs.mockReturnValue("146") |> ignore
+      mockFn
+      -> MockJs.mockReturnValue("146")
+      -> ignore
 
       expect((before, fn(18), fn(24))) |> toEqual(("10", "146", "146"))
     })
@@ -313,8 +335,12 @@ let _ = {
       let fn = MockJs.fn(mockFn)
 
       let before = fn(10)
-      mockFn |> MockJs.mockReturnValueOnce("29") |> ignore
-      mockFn |> MockJs.mockReturnValueOnce("41") |> ignore
+      mockFn
+      -> MockJs.mockReturnValueOnce("29")
+      -> ignore
+      mockFn
+      -> MockJs.mockReturnValueOnce("41")
+      -> ignore
 
       expect((before, fn(18), fn(24), fn(12))) |> toEqual(("10", "29", "41", "12"))
     })
