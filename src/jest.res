@@ -146,7 +146,7 @@ module Runner = (A: Asserter) => {
 
   let test = (name, callback) =>
     _test(name, () => {
-      \"@@"(affirm, callback())
+      affirm(callback())
       Js.undefined
     })
 
@@ -174,7 +174,7 @@ module Runner = (A: Asserter) => {
     inputs |> List.iter(input => {
       let name = j`$name - $input`
       _test(name, () => {
-        \"@@"(affirm, callback(input))
+        affirm(callback(input))
         Js.undefined
       })
     })

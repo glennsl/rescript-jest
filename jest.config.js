@@ -45,10 +45,10 @@ module.exports = {
   // An object that configures minimum threshold enforcement for coverage results
   coverageThreshold: {
     "global": {
-      "branches": 95,
-      "functions": 95,
-      "lines": 95,
-      "statements": 95
+      "branches": 85,
+      "functions": 85,
+      "lines": 85,
+      "statements": 85
     }
   },
 
@@ -195,7 +195,7 @@ module.exports = {
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
   transformIgnorePatterns: [
-    "node_modules/(?!(rescript|jest-runtime)/)"
+    "node_modules/(?!(rescript)/)"
   //   "/node_modules/",
   //   "\\.pnp\\.[^\\/]+$",
   //   "/src/"
