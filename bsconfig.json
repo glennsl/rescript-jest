@@ -2,9 +2,9 @@
   "name": "@glennsl/bs-jest",
   "namespace": true,
   "bsc-flags": ["-bs-no-version-header", "-bs-super-errors"],
-  "suffix": ".bs.js",
+  "suffix": ".mjs",
   "package-specs": {
-    "module": "commonjs",
+    "module": "es6",
     "in-source": true
   },
   "sources": [
