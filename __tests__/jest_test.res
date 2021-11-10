@@ -27,9 +27,9 @@ let () = describe("Fake Timers", () => {
     expect((before, flag.contents)) == (false, true)
   })
 
-  Skip.test("runAllImmediates ", () => {
+  test("runAllImmediates ", () => {
     let flag = ref(false)
-    Jest.useFakeTimers()
+    Jest.useFakeTimers(~implementation=#legacy, ())
     setImmediate(() => flag := true)
     let before = flag.contents
     Jest.runAllImmediates()
@@ -39,7 +39,7 @@ let () = describe("Fake Timers", () => {
 
   test("runTimersToTime", () => {
     let flag = ref(false)
-    Jest.useFakeTimers()
+    Jest.useFakeTimers(~implementation=#legacy, ())
     setTimeout(() => flag := true, 1500)
     let before = flag.contents
     Jest.advanceTimersByTime(1000)
@@ -51,7 +51,7 @@ let () = describe("Fake Timers", () => {
 
   test("advanceTimersByTime", () => {
     let flag = ref(false)
-    Jest.useFakeTimers()
+    Jest.useFakeTimers(~implementation=#legacy, ())
     setTimeout(() => flag := true, 1500)
     let before = flag.contents
     Jest.advanceTimersByTime(1000)
@@ -63,7 +63,7 @@ let () = describe("Fake Timers", () => {
 
   test("runOnlyPendingTimers", () => {
     let count = ref(0)
-    Jest.useFakeTimers()
+    Jest.useFakeTimers(~implementation=#legacy, ())
     let rec recursiveTimeout = () => {
       count := count.contents + 1
       setTimeout(recursiveTimeout, 1500)
@@ -71,10 +71,10 @@ let () = describe("Fake Timers", () => {
     recursiveTimeout()
     let before = count.contents
     Jest.runOnlyPendingTimers()
-    let inbetween = count.contents
+    let inBetween = count.contents
     Jest.runOnlyPendingTimers()
 
-    expect((before, inbetween, count.contents)) == (1, 2, 3)
+    expect((before, inBetween, count.contents)) == (1, 2, 3)
   })
 
   test("clearAllTimers", () => {
@@ -89,7 +89,7 @@ let () = describe("Fake Timers", () => {
   })
 
   testAsync("clearAllTimers", finish => {
-    Jest.useFakeTimers()
+    Jest.useFakeTimers(~implementation=#legacy, ())
     Jest.useRealTimers()
     setImmediate(() => finish(pass))
   })

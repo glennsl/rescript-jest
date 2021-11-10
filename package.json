@@ -1,11 +1,11 @@
 {
-  "name": "rescript-jest",
+  "name": "@glennsl/rescript-jest",
   "version": "0.8.0",
-  "description": "Rescript bindings to the Jest testing framework derived from GLenn Sloate's bs-jest package",
-  "author": "RatoonCorp",
+  "description": "Rescript bindings to the Jest testing framework",
+  "author": "glennsl",
   "license": "MIT",
   "scripts": {
-    "build": "rescript build -with-deps",
+    "build": "rescript build",
     "clean": "rescript clean",
     "start": "rescript build -w",
     "jest": "jest",
@@ -17,17 +17,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sacarr/rescript-jest/"
+    "url": "git+https://github.com/glennsl/bs-jest.git"
   },
   "keywords": [
-    "ReScript",
+    "Rescript",
     "jest",
     "test"
   ],
   "bugs": {
-    "url": "https://github.com/sacarr/rescript-jest/"
+    "url": "https://github.com/glennsl/bs-jest/issues"
   },
-  "homepage": "https://github.com/sacarr/rescript-jest/#readme-rescript",
+  "homepage": "https://github.com/glennsl/bs-jest#readme",
   "files": [
     "src/",
     "bsconfig.json"
@@ -39,6 +39,8 @@
     "rescript": "^9.1.4"
   },
   "dependencies": {
+    "@ryyppy/rescript-promise": "^2.1.0",
     "jest": "^27.3.1"
-  }
+  },
+  "packageManager": "yarn@3.1.0"
 }

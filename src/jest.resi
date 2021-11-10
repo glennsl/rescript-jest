@@ -172,6 +172,7 @@ module MockJs: {
 }
 
 module Jest: {
+  type fakeTimerImplementation = [ #legacy | #modern ]
   @val external clearAllTimers: unit => unit = "jest.clearAllTimers"
   @val external runAllTicks: unit => unit = "jest.runAllTicks"
   @val external runAllTimers: unit => unit = "jest.runAllTimers"
@@ -179,7 +180,9 @@ module Jest: {
   @val external runTimersToTime: int => unit = "jest.runTimersToTime"
   @val external advanceTimersByTime: int => unit = "jest.advanceTimersByTime"
   @val external runOnlyPendingTimers: unit => unit = "jest.runOnlyPendingTimers"
-  @val external useFakeTimers: unit => unit = "jest.useFakeTimers"
+  @val external _useFakeTimers: unit => unit = "jest.useFakeTimers"
+  @val external __useFakeTimers: fakeTimerImplementation => unit = "jest.useFakeTimers"
+  let useFakeTimers: (~implementation: fakeTimerImplementation=?, ()) => ()
   @val external useRealTimers: unit => unit = "jest.useRealTimers"
 }
 

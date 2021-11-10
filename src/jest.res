@@ -217,10 +217,8 @@ module Runner = (A: Asserter) => {
     beforeEachPromise(() => callback() |> Js.Promise.resolve, Js.Undefined.fromOption(timeout))
 
   @val external afterAll: (@uncurry (unit => unit)) => unit = "afterAll"
-  @val
-  external afterAllAsync: (((. unit) => unit) => Js.undefined<unit>, Js.Undefined.t<int>) => unit =
-    "afterAll"
-  let afterAllAsync = (~timeout=?, callback) => afterAllAsync(finish => {
+  @val external afterAllAsync: (((. unit) => unit) => Js.undefined<unit>, Js.Undefined.t<int>) => unit = "afterAll"
+    let afterAllAsync = (~timeout=?, callback) => afterAllAsync(finish => {
       callback(() => finish(.))
       Js.undefined
     }, Js.Undefined.fromOption(timeout))
@@ -475,6 +473,7 @@ module MockJs = {
 }
 
 module Jest = {
+  type fakeTimerImplementation = [ #legacy | #modern ]
   @val external clearAllTimers: unit => unit = "jest.clearAllTimers"
   @val external runAllTicks: unit => unit = "jest.runAllTicks"
   @val external runAllTimers: unit => unit = "jest.runAllTimers"
@@ -482,7 +481,14 @@ module Jest = {
   @val external runTimersToTime: int => unit = "jest.runTimersToTime"
   @val external advanceTimersByTime: int => unit = "jest.advanceTimersByTime"
   @val external runOnlyPendingTimers: unit => unit = "jest.runOnlyPendingTimers"
-  @val external useFakeTimers: unit => unit = "jest.useFakeTimers"
+  @val external _useFakeTimers: unit => unit = "jest.useFakeTimers"
+  @val external __useFakeTimers: fakeTimerImplementation => unit = "jest.useFakeTimers"
+  let useFakeTimers = (~implementation: option<fakeTimerImplementation>=?, ()) => {
+    switch implementation {
+    | None => _useFakeTimers()
+    | Some(implString) => __useFakeTimers(implString)
+    }
+  }
   @val external useRealTimers: unit => unit = "jest.useRealTimers"
 }
 
