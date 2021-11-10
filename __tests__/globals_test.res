@@ -425,10 +425,9 @@ let () = {
     describe("timeout should not fail suite", () => {
       Jest.useFakeTimers()
       afterAllAsync(~timeout=1, finish => {
-        Jest.runAllTimers()
         finish()
       })
-
+      Jest.runAllTimers()
       test("", () => pass) /* runner will crash if there's no tests */
     })
   })
@@ -507,11 +506,11 @@ let () = {
     })
 
     describe("timeout should not fail suite", () => {
-      Jest.useFakeTimers()
+      Jest.useFakeTimers(())
       afterAllPromise(~timeout=1, () => {
-        Jest.runAllTimers()
         Js.Promise.resolve(true)
       })
+      Jest.runAllTimers()
       test("", () => pass) /* runner will crash if there's no tests */
     })
   })

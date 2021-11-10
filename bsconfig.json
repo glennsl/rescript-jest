@@ -1,10 +1,11 @@
 {
-  "name": "rescript-jest",
+  "name": "@glennsl/rescript-jest",
   "namespace": true,
   "bsc-flags": ["-bs-no-version-header", "-bs-super-errors"],
-  "suffix": ".mjs",
+  "bs-dependencies": ["@ryyppy/rescript-promise"],
+  "suffix": ".bs.js",
   "package-specs": {
-    "module": "es6",
+    "module": "commonjs",
     "in-source": true
   },
   "sources": [

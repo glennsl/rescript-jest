@@ -184,7 +184,7 @@ let () = {
       test("", () => true) /* runner will crash if there's no tests */
     })
   })
-
+  
   describe("afterAll", () => {
     let x = ref(0)
 
@@ -197,7 +197,7 @@ let () = {
 
     describe("phase 2", () => test("x is suddenly 4", () => x.contents === 4))
   })
-
+  
   describe("afterAllAsync", () => {
     describe("without timeout", () => {
       let x = ref(0)
@@ -214,10 +214,10 @@ let () = {
 
       describe("phase 2", () => test("x is suddenly 4", () => x.contents === 4))
     })
-
+    
     describe("with 100ms timeout", () => {
       let x = ref(0)
-
+      
       describe("phase 1", () => {
         afterAllAsync(~timeout=100, finish => {
           x := x.contents + 4
@@ -230,14 +230,22 @@ let () = {
 
       describe("phase 2", () => test("x is suddenly 4", () => x.contents === 4))
     })
-
+    
     describe("timeout should not fail suite", () => {
-      afterAllAsync(~timeout=1, finish => finish())
-
-      test("", () => true) /* runner will crash if there's no tests */
+      Jest.Jest.useFakeTimers(())
+      let x = ref(0)
+      describe("x is 0", () => {
+        afterAllAsync(~timeout=1, finish => {
+          x.contents = 5
+          finish()
+        })
+        test("before afterAllAsync x was 0", () => x.contents === 0 )
+      })
+      Jest.Jest.runAllTimers()
+      test("afterAllAsync x is now 5", () => x.contents === 5 )
     })
   })
-
+  
   describe("afterAllPromise", () => {
     describe("without timeout", () => {
       let x = ref(0)
@@ -271,10 +279,28 @@ let () = {
       describe("phase 2", () => test("x is suddenly 4", () => x.contents === 4))
     })
 
-    describe("timeout should not fail suite", () => {
-      afterAllPromise(~timeout=1, () => Js.Promise.resolve(true))
+    describe("afterAllPromise timeout should not fail suite", () => {
+      Jest.Jest.useFakeTimers(())
+      let x = ref(0)
+      describe("x is 0", () => {
+        afterAllPromise(~timeout=1, () => {
+          Js.Promise.make((~resolve, ~reject) => {
+            resolve(. "Promise")
+            reject(. Js.Exn.raiseError("Failure"))
+          })
+          -> Js.Promise.then_(_ => {
+            x.contents = 5
+            Js.Promise.resolve(`${string_of_int(x.contents)}`)
+          }, _)
+          -> Js.Promise.catch(_ => {
+            Js.Promise.reject(Js.Exn.raiseError(`Failure: x is ${string_of_int(x.contents)}`))
+          }, _)
+        })
+        Jest.Jest.runAllTimers()
+        test("before afterAllPromise x was 0", () => x.contents === 0)
+      })
+      test("afterAllPromise x is now 5", () => x.contents === 5)
 
-      test("", () => true) /* runner will crash if there's no tests */
     })
   })
 
@@ -312,10 +338,14 @@ let () = {
       test("x is suddenly 4", () => x.contents === 4)
     })
 
-    describe("timeout should fail suite", () => {
-      afterEachAsync(~timeout=1, finish => finish())
-
-      test("", () => true) /* runner will crash if there's no tests */
+    describe("timeout should not fail suite", () => {
+      Jest.Jest.useFakeTimers(())
+      afterEachAsync(~timeout=1, finish => {
+        finish()
+        -> ignore
+      })
+      Jest.Jest.runAllTimers()
+      test("timeout did not fail suite", () => true)
     })
   })
 
@@ -344,10 +374,16 @@ let () = {
       test("x is suddenly 4", () => x.contents === 4)
     })
 
-    describe("timeout should fail suite", () => {
-      afterEachPromise(~timeout=1, () => Js.Promise.resolve(true))
-
-      test("", () => true) /* runner will crash if there's no tests */
+    describe("timeout should not fail suite", () => {
+      Jest.Jest.useFakeTimers(())
+      afterEachPromise(~timeout=1, () => {
+        Js.Promise.make((~resolve, ~reject) => {
+          resolve(. "Resolved")
+          reject(. Js.Exn.raiseError("Failure"))
+        })
+      })
+      Jest.Jest.runAllTimers()
+      test("timeout did not fail suite", () => true)
     })
   })
 
