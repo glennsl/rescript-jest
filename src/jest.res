@@ -166,18 +166,18 @@ module Runner = (A: Asserter) => {
   let testPromise = (name, ~timeout=?, callback) =>
     _testPromise(
       name,
-      () => callback() |> Js.Promise.then_(a => a |> A.affirm |> Js.Promise.resolve),
+      () => Js.Promise.then_(a => a -> A.affirm -> Js.Promise.resolve, callback()),
       Js.Undefined.fromOption(timeout),
     )
 
   let testAll = (name, inputs, callback) =>
-    inputs |> List.iter(input => {
+    List.iter(input => {
       let name = j`$name - $input`
       _test(name, () => {
         affirm(callback(input))
         Js.undefined
       })
-    })
+    }, inputs)
 
   @val external describe: (string, @uncurry (unit => Js.undefined<unit>)) => unit = "describe"
   let describe = (label, f) =>
@@ -198,7 +198,7 @@ module Runner = (A: Asserter) => {
   external beforeAllPromise: (@uncurry (unit => Js.Promise.t<'a>), Js.Undefined.t<int>) => unit =
     "beforeAll"
   let beforeAllPromise = (~timeout=?, callback) =>
-    beforeAllPromise(() => callback() |> Js.Promise.resolve, Js.Undefined.fromOption(timeout))
+    beforeAllPromise(() => Js.Promise.resolve(callback()), Js.Undefined.fromOption(timeout))
 
   @val external beforeEach: (@uncurry (unit => unit)) => unit = "beforeEach"
   @val
@@ -214,7 +214,7 @@ module Runner = (A: Asserter) => {
   external beforeEachPromise: (@uncurry (unit => Js.Promise.t<'a>), Js.Undefined.t<int>) => unit =
     "beforeEach"
   let beforeEachPromise = (~timeout=?, callback) =>
-    beforeEachPromise(() => callback() |> Js.Promise.resolve, Js.Undefined.fromOption(timeout))
+    beforeEachPromise(() => Js.Promise.resolve(callback()), Js.Undefined.fromOption(timeout))
 
   @val external afterAll: (@uncurry (unit => unit)) => unit = "afterAll"
   @val external afterAllAsync: (((. unit) => unit) => Js.undefined<unit>, Js.Undefined.t<int>) => unit = "afterAll"
@@ -226,7 +226,7 @@ module Runner = (A: Asserter) => {
   external afterAllPromise: (@uncurry (unit => Js.Promise.t<'a>), Js.Undefined.t<int>) => unit =
     "afterAll"
   let afterAllPromise = (~timeout=?, callback) =>
-    afterAllPromise(() => callback() |> Js.Promise.resolve, Js.Undefined.fromOption(timeout))
+    afterAllPromise(() => Js.Promise.resolve(callback()), Js.Undefined.fromOption(timeout))
 
   @val external afterEach: (@uncurry (unit => unit)) => unit = "afterEach"
   @val
@@ -240,7 +240,7 @@ module Runner = (A: Asserter) => {
   external afterEachPromise: (@uncurry (unit => Js.Promise.t<'a>), Js.Undefined.t<int>) => unit =
     "afterEach"
   let afterEachPromise = (~timeout=?, callback) =>
-    afterEachPromise(() => callback() |> Js.Promise.resolve, Js.Undefined.fromOption(timeout))
+    afterEachPromise(() => Js.Promise.resolve(callback()), Js.Undefined.fromOption(timeout))
 
   module Only = {
     @val external _test: (string, @uncurry (unit => Js.undefined<unit>)) => unit = "it.only"
@@ -279,18 +279,18 @@ module Runner = (A: Asserter) => {
     let testPromise = (name, ~timeout=?, callback) =>
       _testPromise(
         name,
-        () => callback() |> Js.Promise.then_(a => a |> affirm |> Js.Promise.resolve),
+        () => Js.Promise.then_(a => a -> affirm -> Js.Promise.resolve, callback()),
         Js.Undefined.fromOption(timeout),
       )
 
     let testAll = (name, inputs, callback) =>
-      inputs |> List.iter(input => {
+      List.iter(input => {
         let name = j`$name - $input`
         _test(name, () => {
           affirm(callback(input))
           Js.undefined
         })
-      })
+      }, inputs)
 
     @val
     external describe: (string, @uncurry (unit => Js.undefined<unit>)) => unit = "describe.only"
@@ -309,10 +309,10 @@ module Runner = (A: Asserter) => {
     external testPromise: (string, @uncurry (unit => Js.Promise.t<A.t<'a>>)) => unit = "it.skip"
     let testPromise = (name, ~timeout as _=?, callback) => testPromise(name, callback)
     let testAll = (name, inputs, callback) =>
-      inputs |> List.iter(input => {
+      List.iter(input => {
         let name = j`$name - $input`
         test(name, () => callback(input))
-      })
+      }, inputs)
     @val
     external describe: (string, @uncurry (unit => Js.undefined<unit>)) => unit = "describe.skip"
     let describe = (label, f) =>
@@ -351,64 +351,43 @@ module Expect = {
 
   let expectFn = (f, a) => #Just(() => f(a))
 
-  let toBe = (b, p) => Be(mapMod(a => (a, b), p))
-
+  let toBe = (b, p) => Be(mapMod(a => (a, p), b))
   /* toHaveBeenCalled* */
-
-  let toBeCloseTo = (. b, p) => FloatCloseTo(mapMod(a => (a, b, None), p))
-
-  let toBeSoCloseTo = (. b, ~digits, p) => FloatCloseTo(mapMod(a => (a, b, Some(digits)), p))
-
-  let toBeGreaterThan = (b, p) => GreaterThan(mapMod(a => (a, b), p))
-
-  let toBeGreaterThanOrEqual = (b, p) => GreaterThanOrEqual(mapMod(a => (a, b), p))
-
-  let toBeLessThan = (b, p) => LessThan(mapMod(a => (a, b), p))
-
-  let toBeLessThanOrEqual = (b, p) => LessThanOrEqual(mapMod(a => (a, b), p))
-
+  let toBeCloseTo = (. b, p) => FloatCloseTo(mapMod(a => (a, p, None), b))
+  let toBeSoCloseTo = (. b, ~digits, p) => FloatCloseTo(mapMod(a => (a, p, Some(digits)), b))
+  let toBeGreaterThan = (b, p) => GreaterThan(mapMod(a => (a, p), b))
+  let toBeGreaterThanOrEqual = (b, p) => GreaterThanOrEqual(mapMod(a => (a, p), b))
+  let toBeLessThan = (b, p) => LessThan(mapMod(a => (a, p), b))
+  let toBeLessThanOrEqual = (b, p) => LessThanOrEqual(mapMod(a => (a, p), b))
   @ocaml.doc(" replaces expect.arrayContaining ")
-  let toBeSupersetOf = (b, p) => ArraySuperset(mapMod(a => (a, b), p))
-
-  let toContain = (b, p) => ArrayContains(mapMod(a => (a, b), p))
-
-  let toContainEqual = (b, p) => ArrayContainsEqual(mapMod(a => (a, b), p))
-
+  let toBeSupersetOf = (b, p) => ArraySuperset(mapMod(a => (a, p), b))
+  let toContain = (b, p) => ArrayContains(mapMod(a => (a, p), b))
+  let toContainEqual = (b, p) => ArrayContainsEqual(mapMod(a => (a, p), b))
   @ocaml.doc(" replaces expect.stringContaining ")
-  let toContainString = (b, p) => StringContains(mapMod(a => (a, b), p))
-
-  let toEqual = (b, p) => Equal(mapMod(a => (a, b), p))
-
-  let toHaveLength = (l, p) => ArrayLength(mapMod(a => (a, l), p))
-
-  let toMatch = (s, p) => StringMatch(mapMod(a => (a, Js.Re.fromString(s)), p))
-
-  let toMatchInlineSnapshot = (inlineSnapshot, #Just(a)) => MatchInlineSnapshot(a, inlineSnapshot)
-
-  let toMatchRe = (re, p) => StringMatch(mapMod(a => (a, re), p))
-
+  let toContainString = (b, p) => StringContains(mapMod(a => (a, p), b))
+  let toEqual = (b, p) => Equal(mapMod(a => (a, p), b))
+  let toHaveLength = (l, p) => ArrayLength(mapMod(a => (a, p), l))
+  let toMatch = (p, s) => StringMatch(mapMod(a => (a, Js.Re.fromString(s)), p))
+  let toMatchInlineSnapshot = (#Just(a), inlineSnapshot) => MatchInlineSnapshot(a, inlineSnapshot)
+  let toMatchRe = (re, p) => StringMatch(mapMod(a => (a, p), re))
   let toMatchSnapshot = (#Just(a)) => MatchSnapshot(a)
-
-  let toMatchSnapshotWithName = (name, #Just(a)) => MatchSnapshotName(a, name)
-
+  let toMatchSnapshotWithName = (#Just(a), name) => MatchSnapshotName(a, name)
   let toThrow = f => Throws((f :> modifier<_>))
-
   let toThrowErrorMatchingSnapshot = (#Just(f)) => ThrowsMatchSnapshot(f)
-
   let not_ = (#Just(a)) => #Not(a)
   let not__ = not_ /* For Reason syntax compatibility. TODO: deprecate and remove */
 
   module Operators = {
     @@ocaml.text(" experimental ")
 
-    let \"==" = (a, b) => toBe(b, a)
-    let \">" = (a, b) => toBeGreaterThan(b, a)
-    let \">=" = (a, b) => toBeGreaterThanOrEqual(b, a)
-    let \"<" = (a, b) => toBeLessThan(b, a)
-    let \"<=" = (a, b) => toBeLessThanOrEqual(b, a)
-    let \"=" = (a, b) => toEqual(b, a)
-    let \"<>" = (a, b) => a |> not_ |> toEqual(b)
-    let \"!=" = (a, b) => a |> not_ |> toBe(b)
+    let \"==" = (a, b) => toBe(a, b)
+    let \">" = (a, b) => toBeGreaterThan(a, b)
+    let \">=" = (a, b) => toBeGreaterThanOrEqual(a, b)
+    let \"<" = (a, b) => toBeLessThan(a, b)
+    let \"<=" = (a, b) => toBeLessThanOrEqual(a, b)
+    let \"=" = (a, b) => toEqual(a, b)
+    let \"<>" = (a, b) => a -> not_ -> toEqual(b)
+    let \"!=" = (a, b) => a -> not_ -> toBe(b)
   }
 }
 
@@ -423,9 +402,9 @@ module ExpectJs = {
   let toBeUndefined = a => Undefined((a :> modifier<_>))
 
   @ocaml.doc(" replaces expect.objectContaining ")
-  let toContainProperties = (props, p) => ObjectContains(mapMod(a => (a, props), p))
+  let toContainProperties = (props, p) => ObjectContains(mapMod(a => (a, p), props))
 
-  let toMatchObject = (b, p) => ObjectMatch(mapMod(a => (a, b), p))
+  let toMatchObject = (b, p) => ObjectMatch(mapMod(a => (a, p), b))
 }
 
 module MockJs = {
@@ -442,20 +421,19 @@ module MockJs = {
   @val external new0: fn<unit => 'ret, unit, 'ret> => 'ret = "makeNewMock"
   let new0 = new0
   @val external new1: (fn<'a => 'ret, 'a, 'ret>, 'a) => 'ret = "makeNewMock"
-  let new1 = (a, self) => new1(self, a)
+  let new1 = (self, a) => new1(self, a)
   @val external new2: (fn<(. 'a, 'b) => 'ret, ('a, 'b), 'ret>, 'a, 'b) => 'ret = "makeNewMock"
-  let new2 = (a, b, self) => new2(self, a, b)
+  let new2 = (self, a, b) => new2(self, a, b)
 
   external fn: fn<'fn, _, _> => 'fn = "%identity"
   @get @scope("mock") external calls: fn<_, 'args, _> => array<'args> = "calls"
   let calls = self =>
     Js.Array.copy(calls(self)) /* Awesome, the bloody things are mutated so we need to copy */
   let calls = self =>
-    calls(self) |> Array.map(
+    Array.map(
       %raw(`
     function (args) { return args.length === 1 ? args[0] : args }
-  `),
-    ) /* there's no such thing as aa 1-ary tuple, so we need to unbox single-element arrays */
+  `),calls(self)) /* there's no such thing as aa 1-ary tuple, so we need to unbox single-element arrays */
   @get @scope("mock")
   external instances: fn<_, _, 'ret> => array<'ret> =
     "instances" /* TODO: semms this only records "instances" created by `new` */

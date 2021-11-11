@@ -98,24 +98,24 @@ module Expect: {
   let expect: 'a => plainPartial<'a>
   let expectFn: ('a => 'b, 'a) => plainPartial<unit => 'b> /* EXPERIMENTAL */
 
-  let toBe: ('a, [< partial<'a>]) => assertion
-  let toBeCloseTo: (. float, [< partial<float>]) => assertion
-  let toBeSoCloseTo: (. float, ~digits: int, [< partial<float>]) => assertion
-  let toBeGreaterThan: ('a, [< partial<'a>]) => assertion
-  let toBeGreaterThanOrEqual: ('a, [< partial<'a>]) => assertion
-  let toBeLessThan: ('a, [< partial<'a>]) => assertion
-  let toBeLessThanOrEqual: ('a, [< partial<'a>]) => assertion
-  let toBeSupersetOf: (array<'a>, [< partial<array<'a>>]) => assertion
-  let toContain: ('a, [< partial<array<'a>>]) => assertion
-  let toContainEqual: ('a, [< partial<array<'a>>]) => assertion
-  let toContainString: (string, [< partial<string>]) => assertion
-  let toEqual: ('a, [< partial<'a>]) => assertion
-  let toHaveLength: (int, [< partial<array<'a>>]) => assertion
-  let toMatch: (string, [< partial<string>]) => assertion
-  let toMatchInlineSnapshot: (string, plainPartial<_>) => assertion
-  let toMatchRe: (Js.Re.t, [< partial<string>]) => assertion
+  let toBe: ([< partial<'a>], 'a) => assertion
+  let toBeCloseTo: (. [< partial<float>], float) => assertion
+  let toBeSoCloseTo: (. [< partial<float>], ~digits: int, float) => assertion
+  let toBeGreaterThan: ([< partial<'a>], 'a) => assertion
+  let toBeGreaterThanOrEqual: ([< partial<'a>], 'a) => assertion
+  let toBeLessThan: ([< partial<'a>], 'a) => assertion
+  let toBeLessThanOrEqual: ([< partial<'a>], 'a) => assertion
+  let toBeSupersetOf: ([< partial<array<'a>>], array<'a>) => assertion
+  let toContain: ([< partial<array<'a>>], 'a) => assertion
+  let toContainEqual: ([< partial<array<'a>>], 'a) => assertion
+  let toContainString: ([< partial<string>], string) => assertion
+  let toEqual: ([< partial<'a>], 'a) => assertion
+  let toHaveLength: ([< partial<array<'a>>], int) => assertion
+  let toMatch: ([< partial<string>], string) => assertion
+  let toMatchInlineSnapshot: (plainPartial<_>, string) => assertion
+  let toMatchRe: ([< partial<string>], Js.Re.t) => assertion
   let toMatchSnapshot: plainPartial<_> => assertion
-  let toMatchSnapshotWithName: (string, plainPartial<_>) => assertion
+  let toMatchSnapshotWithName: (plainPartial<_>, string) => assertion
   let toThrow: [< partial<unit => _>] => assertion
   let toThrowErrorMatchingSnapshot: plainPartial<unit => _> => assertion
 
@@ -144,8 +144,8 @@ module ExpectJs: {
   let toBeNull: [< partial<Js.null<_>>] => assertion
   let toBeTruthy: [< partial<_>] => assertion
   let toBeUndefined: [< partial<Js.undefined<_>>] => assertion
-  let toContainProperties: (array<string>, [< partial<{..}>]) => assertion
-  let toMatchObject: ({..}, [< partial<{..}>]) => assertion
+  let toContainProperties: ([< partial<{..}>], array<string>) => assertion
+  let toMatchObject: ([< partial<{..}>], {..}) => assertion
 }
 
 module MockJs: {
@@ -154,8 +154,8 @@ module MockJs: {
   type fn<'fn, 'args, 'ret>
 
   let new0: fn<unit => 'ret, unit, 'ret> => 'ret
-  let new1: ('a, fn<'a => 'ret, 'a, 'ret>) => 'ret
-  let new2: ('a, 'b, fn<(. 'a, 'b) => 'ret, ('a, 'b), 'ret>) => 'ret
+  let new1: (fn<'a => 'ret, 'a, 'ret>, 'a) => 'ret
+  let new2: (fn<(. 'a, 'b) => 'ret, ('a, 'b), 'ret>, 'a, 'b) => 'ret
 
   external fn: fn<'fn, _, _> => 'fn = "%identity"
   let calls: fn<_, 'args, _> => array<'args>
