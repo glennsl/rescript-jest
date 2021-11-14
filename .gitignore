@@ -1,4 +1,6 @@
 # Package Manager
+.yarnrc.yml
+
 .yarn/*
 !.yarn/patches
 !.yarn/plugins

@@ -1,6 +1,6 @@
 # bs-jest
 
-[BuckleScript](https://github.com/bucklescript/bucklescript) bindings for [Jest](https://github.com/facebook/jest)
+[Recript](https://github.com/rescript-lang) bindings for [Jest](https://github.com/facebook/jest)
 
 [![npm](https://img.shields.io/npm/v/@glennsl/bs-jest.svg)](https://npmjs.org/@glennsl/bs-jest)
 [![Travis](https://img.shields.io/travis/glennsl/bs-jest/master.svg)](https://travis-ci.org/glennsl/bs-jest)
@@ -9,28 +9,83 @@
 [![Issues](https://img.shields.io/github/issues/glennsl/bs-jest.svg)](https://github.com/glennsl/bs-jest/issues)
 [![Last Commit](https://img.shields.io/github/last-commit/glennsl/bs-jest.svg)](https://github.com/glennsl/bs-jest/commits/master)
 
-**NOTE:** _NPM package has moved to `@glennsl/bs-jest`. Remember to update both `package.json` AND `bsconfig.json`._
+**NOTE:** _NPM package has moved to `@glennsl/rescript-jest`. Remember to update both `package.json` AND `bsconfig.json`._
 
 ## Status
+
+### rescript-Jest
+- bs-jest is rebranded as rescript-jest
+- rescript-jest depends on Rescript 9.1.4, Jest 27.3.1 and @ryyppy/rescript-promise 2.1.0
+- Babel modules have been added as dev dependencies to make generated bs-jest bindings available in ES6 module format
+- toBeCloseTo() and toBeSoCloseTO() bindings uncurried (see [rescript compiler maintainers](https://github.com/rescript-lang/rescript-compiler/issues/5326))
+- Deprecated BuckleScript `@bs.send.pipe` bindings were converted to rescript `@send` bindings.
+- rescript-jest API uses data-first semantics.
+- usefakeTimers() binding updated to address changes in the Jest fake timer API (useFakeTimer(~implementation=[#legacy|#modern], ()))
+- Babel and Jest config files are included illustrating how to transform ES6 modules for Jest
+- Updated tests
+
+To generate ES6 bindings for your project, update bsconfig.json
+
+```js
+    "suffix": ".mjs",
+  "package-specs": {
+    "module": "ES6",
+    "in-source": true
+  },
+```
+Then add @babel/core, @babel/present-env and babel-jest packages to your project.  Also, add babel.config.js
+
+```js
+module.exports = {
+    presets: [
+        ['@babel/preset-env', 
+            {targets: {node: 'current'}}
+        ]
+    ],
+    "plugins": []
+}
+```
+
+Finally, add minimal jest.config.js
+
+```js
+module.exports = {
+  moduleFileExtensions: [
+    "js",
+    "mjs",
+  ],
+testMatch: [
+    "**/__tests__/**/*_test.mjs",
+    "**/__tests__/**/*_test.bs.js",
+  ],
+    transform: {
+    "^.+\.m?js$": "babel-jest"
+  },
+    transformIgnorePatterns: [
+    "node_modules/(?!(rescript)/)"
+  ],    
+```
+
+Update testMatch, transform and transformIgnorePatterns settings depending on where your tests are stored, and other dependenies of your project that may need to be transformed to ES6 format.
 
 Most of what's commonly used is very stable. But the more js-y parts should be considered experimental, such as mocking and some of the expects that don't transfer well, or just don't make sense for testing idiomatic Reason/OCaml code but could be useful for testing js interop.
 
 - [Global](https://facebook.github.io/jest/docs/en/api.html): Fully implemented and tested, apart from `require.*`
-- [Expect](https://facebook.github.io/jest/docs/en/expect.html): Mostly implemented. Functionality that makes sense only for JS interop have been moved to `ExpectJs`. Some functionality does not make sense in a typed language, or is not possible to implement sensibly in ML.
+- [Expect](https://facebook.github.io/jest/docs/en/expect.html): Mostly implemented. Functionality that makes sense only for JS interop have been moved to `ExpectJs`. Some functionality does not make sense in a typed language, or is not possible to implement sensibly in Rescript.
 - [Mock Functions](https://facebook.github.io/jest/docs/en/mock-function-api.html): Experimental and unsafe implementation, very much in flux. The Jest bindings will most likely be relegated to the `MockJs` module as it's very quirky to use with native code. A separate native from-scratch implementation might suddenly appear as `Mock`.
 - [The Jest Object](https://facebook.github.io/jest/docs/en/jest-object.html): Fake timers are fully implemented and tested. Mock functionality has been moved to `JestJs`. It's mostly implemented, but experimental and largely untested.
 - **Snapshotting**: Expect functions exist and work, but there's currently no way to implement custom snapshot serializers.
 
 ## Example
 
-```reason
+```rescript
 open Jest;
 
 describe("Expect", () => {
   open Expect;
 
   test("toBe", () =>
-    expect(1 + 2) |> toBe(3))
+    expect(1 + 2) -> toBe(3))
 });
 
 describe("Expect.Operators", () => {
@@ -49,7 +104,7 @@ See [the tests](https://github.com/glennsl/bs-jest/tree/master/__tests__) for mo
 ## Installation
 
 ```sh
-npm install --save-dev @glennsl/bs-jest
+yarn install --save-dev @glennsl/bs-jest
 ```
 
 Then add `@glennsl/bs-jest` to `bs-dev-dependencies` in your `bsconfig.json`:
@@ -77,21 +132,21 @@ Then add `__tests__` to `sources` in your `bsconfig.json`:
 
 ## Usage
 
-Put tests in a `__tests__` directory and use the suffix `*test.ml`/`*test.re` (Make sure to use valid module names. e.g. `<name>_test.re` is valid while `<name>.test.re` is not). When compiled they will be put in a `__tests__` directory under `lib`, with a `*test.js` suffix, ready to be picked up when you run `jest`. If you're not already familiar with [Jest](https://github.com/facebook/jest), see [the Jest documentation](https://facebook.github.io/jest/).
+Put tests in a `__tests__` directory and use the suffix `*test.res`/ (Make sure to use valid module names. e.g. `<name>_test.res` is valid while `<name>.test.res` is not). When compiled they will be put in a `__tests__` directory under `lib`, with a `*test.bs.js` suffix, ready to be picked up when you run `jest`. If you're not already familiar with [Jest](https://github.com/facebook/jest), see [the Jest documentation](https://facebook.github.io/jest/).
 
-One very important difference from Jest is that assertions are not imperative. That is, `expect(1 + 2) |> toBe(3)`, for example, will not "execute" the assertion then and there. It will instead return an `assertion` value which must be returned from the test function. Only after the test function has completed will the returned assertion be checked. Any other assertions will be ignored, but unless you explicitly ignore them, it will produce compiler warnings about unused values. **This means there can be at most one assertion per test**. But it also means there must be at least one assertion per test. You can't forget an assertion in a branch, and think the test passes when in fact it doesn't even test anything. It will also force you to write simple tests that are easy to understand and refactor, and will give you more information about what's wrong when something does go wrong.
+One very important difference from Jest is that assertions are not imperative. That is, `expect(1 + 2) -> toBe(3)`, for example, will not "execute" the assertion then and there. It will instead return an `assertion` value which must be returned from the test function. Only after the test function has completed will the returned assertion be checked. Any other assertions will be ignored, but unless you explicitly ignore them, it will produce compiler warnings about unused values. **This means there can be at most one assertion per test**. But it also means there must be at least one assertion per test. You can't forget an assertion in a branch, and think the test passes when in fact it doesn't even test anything. It will also force you to write simple tests that are easy to understand and refactor, and will give you more information about what's wrong when something does go wrong.
 
 At first sight this may still seem very limiting, and if you write very imperative code it really is, but I'd argue the real problem then is the imperative code. There are however some workarounds that can alleviate this:
 
-- Compare multiple values by wrapping them in a tuple: `expect((this, that)) |> toBe((3, 4))`
+- Compare multiple values by wrapping them in a tuple: `expect((this, that)) -> toBe((3, 4))`
 - Use the `testAll` function to generate tests based on a list of data
-- Use `describe` and/or `beforeAll` to do setup for a group of tests. Code written in OCaml/Reason is immutable by default. Take advantage of it.
+- Use `describe` and/or `beforeAll` to do setup for a group of tests. Code written in Rescript is immutable by default. Take advantage of it.
 - Write a helper function if you find yourself repeating code. That's what functions are for, after all. You can even write a helper function to generate tests.
 - If you're still struggling, make an issue on GitHub or bring it up in Discord. We'll either figure out a good way to do it with what we already have, or realize that something actually is missing and add it.
 
 ## Documentation
 
-For the moment, please refer to [Jest.mli](https://github.com/glennsl/bs-jest/blob/master/src/jest.mli).
+For the moment, please refer to [Jest.resi](https://github.com/glennsl/bs-jest/blob/master/src/jest.resi).
 
 ## Extensions
 
@@ -134,6 +189,10 @@ Then build and run tests with `npm test`, start watchers for `bsb`and `jest` wit
 
 ## Changes
 
+### 0.8
+- [BREAKING] Converted all APIs to data-first semantics.  |> is deprecated in REscript 9.1.4
+- [BREAKING] As of Jest 27.0.0, Jest-Circus replaces Jest-Jasmine by default leading to change in behavior of async and Promise before and after hooks. 
+- [BREAKING] toBeCloseTo is now uncurried.
 ### 0.7
 
 - [BREAKING] Actually removed `toThrowException`, `toThrowMessage` and `toThrowMessageRe` as they relied on assumptions about BuckleScript internals that no longer hold.
