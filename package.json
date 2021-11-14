@@ -8,7 +8,6 @@
     "build": "rescript build",
     "clean": "rescript clean",
     "start": "rescript build -w",
-    "jest": "jest",
     "test": "yarn build && jest",
     "test-ci": "yarn build && jest --coverage --coverageDirectory='coverage'",
     "watch:bsb": "rescript build -with-deps -w",
@@ -41,6 +40,5 @@
   "dependencies": {
     "@ryyppy/rescript-promise": "^2.1.0",
     "jest": "^27.3.1"
-  },
-  "packageManager": "yarn@3.1.0"
+  }
 }
