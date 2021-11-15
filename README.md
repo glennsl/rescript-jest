@@ -16,7 +16,6 @@
 - bs-jest is rebranded as rescript-jest
 - rescript-jest depends on Rescript 9.1.4, Jest 27.3.1 and @ryyppy/rescript-promise 2.1.0
 - Babel modules have been added as dev dependencies to make generated bs-jest bindings available in ES6 module format
-- toBeCloseTo() and toBeSoCloseTO() bindings uncurried (see [rescript compiler maintainers](https://github.com/rescript-lang/rescript-compiler/issues/5326))
 - Deprecated BuckleScript `@bs.send.pipe` bindings were converted to rescript `@send` bindings.
 - rescript-jest API uses data-first semantics.
 - usefakeTimers() binding updated to address changes in the Jest fake timer API (useFakeTimer(~implementation=[#legacy|#modern], ()))
