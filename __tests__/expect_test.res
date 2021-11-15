@@ -7,8 +7,8 @@ let () = {
     open Expect
 
     test("toBe", () => expect(1 + 2) -> toBe(3))
-    test("toBeCloseTo", () => toBeCloseTo(. expect(1. +. 2.), 3.))
-    test("toBeSoCloseTo", () => toBeSoCloseTo(. expect(1. +. 2.123), 3.123, ~digits=3))
+    test("toBeCloseTo", () => expect(1. +. 2.) -> toBeCloseTo(3.))
+    test("toBeSoCloseTo", () => expect(1. +. 2.123) -> toBeSoCloseTo(3.123, ~digits=3))
     test("toBeGreaterThan", () => expect(4) -> toBeGreaterThan(3))
     test("toBeGreaterThanOrEqual", () => expect(4) -> toBeGreaterThanOrEqual(4))
     test("toBeLessThan", () => expect(4) -> toBeLessThan(5))
@@ -32,8 +32,8 @@ let () = {
     )
 
     test("not toBe", () => expect(1 + 2) -> not_ -> toBe(4))
-    test("not toBeCloseTo", () =>  toBeCloseTo(. (expect(1. +. 2.) -> not_), 3001.))
-    test("not toBeSoCloseTo", () => toBeSoCloseTo(. expect(1. +. 2.123) -> not_, 3.124, ~digits=3, ))
+    test("not toBeCloseTo", () =>  expect(1. +. 2.) -> not_ -> toBeCloseTo(3001.))
+    test("not toBeSoCloseTo", () => expect(1. +. 2.123) -> not_ -> toBeSoCloseTo(3.124, ~digits=3, ))
     test("not toBeGreaterThan", () => expect(4) -> not_ -> toBeGreaterThan(4))
     test("not toBeGreaterThanOrEqual", () => expect(4) -> not_ -> toBeGreaterThanOrEqual(5))
     test("not toBeLessThan", () => expect(4) -> not_ -> toBeLessThan(4))

@@ -19,7 +19,8 @@ type rec assertion =
   | ArraySuperset(modifier<(array<'a>, array<'a>)>): assertion
   | Be(modifier<('a, 'a)>): assertion
   | Equal(modifier<('a, 'a)>): assertion
-  | FloatCloseTo(modifier<(float, float, option<int>)>): assertion
+  | FloatCloseTo(modifier<(float, float)>): assertion
+  | FloatSoCloseTo(modifier<(float, float, int)>): assertion
   | GreaterThan(modifier<('a, 'a)>): assertion
   | GreaterThanOrEqual(modifier<('a, 'a)>): assertion
   | LessThan(modifier<('a, 'a)>): assertion
@@ -87,8 +88,10 @@ module LLExpect: {
     | Be(#Not(a, b)) => expect(a)["not"]["toBe"](b)
     | Equal(#Just(a, b)) => expect(a)["toEqual"](b)
     | Equal(#Not(a, b)) => expect(a)["not"]["toEqual"](b)
-    | FloatCloseTo(#Just(a, b, p)) => expect(a)["toBeCloseTo"](. b, Js.Undefined.fromOption(p))
-    | FloatCloseTo(#Not(a, b, p)) => expect(a)["not"]["toBeCloseTo"](. b, Js.Undefined.fromOption(p))
+    | FloatCloseTo(#Just(a, b)) => expect(a)["toBeCloseTo"](b)
+    | FloatCloseTo(#Not(a, b)) => expect(a)["not"]["toBeCloseTo"](b)
+    | FloatSoCloseTo(#Just(a, b, p)) => expect(a)["toBeCloseTo"](. b, p)
+    | FloatSoCloseTo(#Not(a, b, p)) => expect(a)["not"]["toBeCloseTo"](. b, p)
     | GreaterThan(#Just(a, b)) => expect(a)["toBeGreaterThan"](b)
     | GreaterThan(#Not(a, b)) => expect(a)["not"]["toBeGreaterThan"](b)
     | GreaterThanOrEqual(#Just(a, b)) => expect(a)["toBeGreaterThanOrEqual"](b)
@@ -353,8 +356,21 @@ module Expect = {
 
   let toBe = (b, p) => Be(mapMod(a => (a, p), b))
   /* toHaveBeenCalled* */
-  let toBeCloseTo = (. b, p) => FloatCloseTo(mapMod(a => (a, p, None), b))
-  let toBeSoCloseTo = (. b, ~digits, p) => FloatCloseTo(mapMod(a => (a, p, Some(digits)), b))
+  let _toBeCloseTo = (b, p) => FloatCloseTo(mapMod(a => (a, p), b))
+  let __toBeSoCloseTo = (b, ~digits, p) => FloatSoCloseTo(mapMod(a => (a, p, digits), b))
+  let toBeCloseTo = (b: [< partial<float>], ~digits: option<int>=?, p) => {
+    switch (digits) {
+      | None => _toBeCloseTo(b, p)
+      | Some(digits) => __toBeSoCloseTo(b, ~digits=digits, p)
+    }
+  }
+  let toBeSoCloseTo = (b: [< partial<float>], ~digits: option<int>=?, p) => {
+    switch (digits) {
+      | None => toBeCloseTo(b, p)
+      | Some(digits) => toBeCloseTo(b, ~digits=digits, p)
+    } 
+  }
+  
   let toBeGreaterThan = (b, p) => GreaterThan(mapMod(a => (a, p), b))
   let toBeGreaterThanOrEqual = (b, p) => GreaterThanOrEqual(mapMod(a => (a, p), b))
   let toBeLessThan = (b, p) => LessThan(mapMod(a => (a, p), b))
