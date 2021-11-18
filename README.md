@@ -14,13 +14,14 @@
 
 ### rescript-Jest
 - bs-jest is rebranded as rescript-jest
-- rescript-jest depends on Rescript 9.1.4, Jest 27.3.1 and @ryyppy/rescript-promise 2.1.0
-- Babel modules have been added as dev dependencies to make generated bs-jest bindings available in ES6 module format
-- Deprecated BuckleScript `@bs.send.pipe` bindings were converted to rescript `@send` bindings.
-- rescript-jest API uses data-first semantics.
+- rescript-jest depends on Rescript 9.1.4, Jest 27.3.1 and @ryyppy/rescript-promise 2.1.0.
+- Starting from Jest 27.0.0 jest-jasmine was replaced by jest-circus changing the semantics for before and after hooks.  `afterAllAsync` and `afterAllPromise` hooks now time-out consistent with the behavior of `beforeAllAsync` and `beforeAllPromise` in versiojn 0.7.0 of bs-jest.  `beforeAllAsync` and `beforeAllPromise` also now behave consistently with '`afterAllAsync` and `afterAllPromise` when included in sjipped test suites.
+- rescript-jest API now uses data-first semantics throughout and uses `rescript-promise` in place of `Js.Promise`.
 - usefakeTimers() binding updated to address changes in the Jest fake timer API (useFakeTimer(~implementation=[#legacy|#modern], ()))
-- Babel and Jest config files are included illustrating how to transform ES6 modules for Jest
-- Updated tests
+- Deprecated BuckleScript `@bs.send.pipe` bindings were converted to rescript `@send` bindings.
+- All tests have been updated to reflect semantic and behavioral changes.
+- Babel modules have been added as dev dependencies to make generated bs-jest bindings available in ES6 module format.
+- Babel and Jest config files are included illustrating how to transform ES6 modules for Jest.
 
 To generate ES6 bindings for your project, update bsconfig.json
 
@@ -190,7 +191,7 @@ Then build and run tests with `npm test`, start watchers for `bsb`and `jest` wit
 ### 0.8
 - [BREAKING] Converted all APIs to data-first semantics.  |> is deprecated in REscript 9.1.4
 - [BREAKING] As of Jest 27.0.0, Jest-Circus replaces Jest-Jasmine by default leading to change in behavior of async and Promise before and after hooks. 
-- [BREAKING] toBeCloseTo is now uncurried.
+- [BREAKING] As the `|>` operator is deprecated in Recript 9.x, all APIs now use data-first (`->`) semantics.
 ### 0.7
 
 - [BREAKING] Actually removed `toThrowException`, `toThrowMessage` and `toThrowMessageRe` as they relied on assumptions about BuckleScript internals that no longer hold.
