@@ -9,8 +9,8 @@ let () = {
   Only.testAsync("Only.testAsync", finish => finish(true))
   Only.testAsync("testAsync - timeout ok", ~timeout=1, finish => finish(true))
 
-  Only.testPromise("Only.testPromise", () => Js.Promise.resolve(true))
-  Only.testPromise("testPromise - timeout ok", ~timeout=1, () => Js.Promise.resolve(true))
+  Only.testPromise("Only.testPromise", () => Promise.resolve(true))
+  Only.testPromise("testPromise - timeout ok", ~timeout=1, () => Promise.resolve(true))
 
   Only.testAll("testAll", list{"foo", "bar", "baz"}, input => Js.String.length(input) === 3)
   Only.testAll("testAll - tuples", list{("foo", 3), ("barbaz", 6), ("bananas!", 8)}, ((

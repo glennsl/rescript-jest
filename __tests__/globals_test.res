@@ -19,16 +19,16 @@ let () = {
 
   Skip.testAsync("testAsync - timeout fail", ~timeout=1, _ => ())
 
-  testPromise("testPromise", () => Js.Promise.resolve(pass))
+  testPromise("testPromise", () => Promise.resolve(pass))
 
-  Skip.testPromise("testPromise - reject", () => Js.Promise.reject(Failure("")))
+  Skip.testPromise("testPromise - reject", () => Promise.reject(Failure("")))
 
-  Skip.testPromise("testPromise - expect fail", () => Js.Promise.resolve(fail("")))
+  Skip.testPromise("testPromise - expect fail", () => Promise.resolve(fail("")))
 
-  testPromise("testPromise - timeout ok", ~timeout=1, () => Js.Promise.resolve(pass))
+  testPromise("testPromise - timeout ok", ~timeout=1, () => Promise.resolve(pass))
 
   Skip.testPromise("testPromise - timeout fail", ~timeout=1, () =>
-    Js.Promise.make((~resolve as _, ~reject as _) => ())
+    Promise.make((_, _) => ())
   )
 
   testAll("testAll", list{"foo", "bar", "baz"}, input =>
@@ -118,12 +118,10 @@ let () = {
       )
     })
 
-    Skip.describe("timeout should fail suite", () =>
-      /* This apparently runs even if the suite is skipped */
-      /* beforeAllAsync ~timeout:1 (fun _ ->()); */
-
+    Skip.describe("timeout should fail suite", () => {
+      beforeAllAsync(~timeout=1, _ => ())
       test("", () => pass) /* runner will crash if there's no tests */
-    )
+    })
   })
 
   describe("beforeAllPromise", () => {
@@ -132,7 +130,7 @@ let () = {
 
       beforeAllPromise(() => {
         x := x.contents + 4
-        Js.Promise.resolve()
+        Promise.resolve()
       })
 
       test("x is 4", () =>
@@ -156,7 +154,7 @@ let () = {
 
       beforeAllPromise(~timeout=100, () => {
         x := x.contents + 4
-        Js.Promise.resolve()
+        Promise.resolve()
       })
 
       test("x is 4", () =>
@@ -175,12 +173,10 @@ let () = {
       )
     })
 
-    Skip.describe("timeout should fail suite", () =>
-      /* This apparently runs even if the suite is skipped */
-      /* beforeAllPromise ~timeout:1 (fun () -> Js.Promise.make (fun ~resolve:_ ~reject:_ -> ())); */
-
+    Skip.describe("timeout should fail suite", () => {
+      beforeAllPromise(~timeout=1, () => Promise.make((_, _) => ()))
       test("", () => pass) /* runner will crash if there's no tests */
-    )
+    })
   })
 
   describe("beforeEach", () => {
@@ -255,7 +251,6 @@ let () = {
 
     Skip.describe("timeout should fail suite", () => {
       beforeEachAsync(~timeout=1, _ => ())
-
       test("", () => pass) /* runner will crash if there's no tests */
     })
   })
@@ -266,7 +261,7 @@ let () = {
 
       beforeEachPromise(() => {
         x := x.contents + 4
-        Js.Promise.resolve(true)
+        Promise.resolve(true)
       })
 
       test("x is 4", () =>
@@ -290,7 +285,7 @@ let () = {
 
       beforeEachPromise(~timeout=100, () => {
         x := x.contents + 4
-        Js.Promise.resolve(true)
+        Promise.resolve(true)
       })
 
       test("x is 4", () =>
@@ -310,8 +305,7 @@ let () = {
     })
 
     Skip.describe("timeout should fail suite", () => {
-      beforeEachPromise(~timeout=1, () => Js.Promise.make((~resolve as _, ~reject as _) => ()))
-
+      beforeEachPromise(~timeout=1, () => Promise.make((_, _) => ()))
       test("", () => pass) /* runner will crash if there's no tests */
     })
   })
@@ -422,12 +416,8 @@ let () = {
       )
     })
 
-    describe("timeout should not fail suite", () => {
-      Jest.useFakeTimers()
-      afterAllAsync(~timeout=1, finish => {
-        finish()
-      })
-      Jest.runAllTimers()
+    Skip.describe("timeout should fail suite", () => {
+      afterAllAsync(~timeout=1, _ => ())
       test("", () => pass) /* runner will crash if there's no tests */
     })
   })
@@ -439,7 +429,7 @@ let () = {
       describe("phase 1", () => {
         afterAllPromise(() => {
           x := x.contents + 4
-          Js.Promise.resolve(true)
+          Promise.resolve(true)
         })
 
         test("x is 0", () =>
@@ -475,7 +465,7 @@ let () = {
       describe("phase 1", () => {
         afterAllPromise(~timeout=100, () => {
           x := x.contents + 4
-          Js.Promise.resolve(true)
+          Promise.resolve(true)
         })
 
         test("x is 0", () =>
@@ -505,12 +495,8 @@ let () = {
       )
     })
 
-    describe("timeout should not fail suite", () => {
-      Jest.useFakeTimers(())
-      afterAllPromise(~timeout=1, () => {
-        Js.Promise.resolve(true)
-      })
-      Jest.runAllTimers()
+    Skip.describe("timeout should fail suite", () => {
+      afterAllPromise(~timeout=1, () => Promise.make((_, _) => ()))
       test("", () => pass) /* runner will crash if there's no tests */
     })
   })
@@ -587,7 +573,6 @@ let () = {
 
     Skip.describe("timeout should fail suite", () => {
       afterEachAsync(~timeout=1, _ => ())
-
       test("", () => pass) /* runner will crash if there's no tests */
     })
   })
@@ -598,7 +583,7 @@ let () = {
 
       afterEachPromise(() => {
         x := x.contents + 4
-        Js.Promise.resolve(true)
+        Promise.resolve(true)
       })
 
       test("x is 0", () =>
@@ -622,7 +607,7 @@ let () = {
 
       afterEachPromise(~timeout=100, () => {
         x := x.contents + 4
-        Js.Promise.resolve(true)
+        Promise.resolve(true)
       })
 
       test("x is 0", () =>
@@ -642,8 +627,7 @@ let () = {
     })
 
     Skip.describe("timeout should fail suite", () => {
-      afterEachPromise(~timeout=1, () => Js.Promise.make((~resolve as _, ~reject as _) => ()))
-
+      afterEachPromise(~timeout=1, () => Promise.make((_, _) => ()))
       test("", () => pass) /* runner will crash if there's no tests */
     })
   })
@@ -659,9 +643,9 @@ let () = {
     Skip.testAsync("Skip.testAsync", finish => finish(pass))
     Skip.testAsync("Skip.testAsync - timeout", ~timeout=1, _ => ())
 
-    Skip.testPromise("Skip.testPromise", () => Js.Promise.resolve(pass))
+    Skip.testPromise("Skip.testPromise", () => Promise.resolve(pass))
     Skip.testPromise("testPromise - timeout", ~timeout=1, () =>
-      Js.Promise.make((~resolve as _, ~reject as _) => ())
+      Promise.make((_, _) => ())
     )
 
     Skip.testAll("testAll", list{"foo", "bar", "baz"}, input =>

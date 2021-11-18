@@ -6,8 +6,8 @@ let () = {
   Only.testAsync("Only.testAsync", finish => finish(pass))
   Only.testAsync("testAsync - timeout ok", ~timeout=1, finish => finish(pass))
 
-  Only.testPromise("Only.testPromise", () => Js.Promise.resolve(pass))
-  Only.testPromise("testPromise - timeout ok", ~timeout=1, () => Js.Promise.resolve(pass))
+  Only.testPromise("Only.testPromise", () => Promise.resolve(pass))
+  Only.testPromise("testPromise - timeout ok", ~timeout=1, () => Promise.resolve(pass))
 
   Only.testAll("testAll", list{"foo", "bar", "baz"}, input =>
     if Js.String.length(input) === 3 {
