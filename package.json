@@ -5,11 +5,11 @@
   "author": "glennsl",
   "license": "MIT",
   "scripts": {
-    "build": "rescript build",
+    "build": "rescript build -with-deps",
     "clean": "rescript clean",
     "start": "rescript build -w",
-    "test": "yarn build && jest",
-    "test-ci": "yarn build && jest --coverage --coverageDirectory='coverage'",
+    "test": "npm run build && jest",
+    "test-ci": "npm run build && jest --coverage --coverageDirectory='coverage'",
     "watch:bsb": "rescript build -with-deps -w",
     "watch:jest": "jest --coverage --watchAll",
     "watch:screen": "screen -c .screenrc"
