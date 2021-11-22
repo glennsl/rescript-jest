@@ -356,21 +356,8 @@ module Expect = {
 
   let toBe = (b, p) => Be(mapMod(a => (a, p), b))
   /* toHaveBeenCalled* */
-  let _toBeCloseTo = (b, p) => FloatCloseTo(mapMod(a => (a, p), b))
-  let __toBeSoCloseTo = (b, ~digits, p) => FloatSoCloseTo(mapMod(a => (a, p, digits), b))
-  let toBeCloseTo = (b: [< partial<float>], ~digits: option<int>=?, p) => {
-    switch (digits) {
-      | None => _toBeCloseTo(b, p)
-      | Some(digits) => __toBeSoCloseTo(b, ~digits=digits, p)
-    }
-  }
-  let toBeSoCloseTo = (b: [< partial<float>], ~digits: option<int>=?, p) => {
-    switch (digits) {
-      | None => toBeCloseTo(b, p)
-      | Some(digits) => toBeCloseTo(b, ~digits=digits, p)
-    } 
-  }
-  
+  let toBeCloseTo = (b, p) => FloatCloseTo(mapMod(a => (a, p), b))
+  let toBeSoCloseTo = (b, ~digits, p) => FloatSoCloseTo(mapMod(a => (a, p, digits), b))
   let toBeGreaterThan = (b, p) => GreaterThan(mapMod(a => (a, p), b))
   let toBeGreaterThanOrEqual = (b, p) => GreaterThanOrEqual(mapMod(a => (a, p), b))
   let toBeLessThan = (b, p) => LessThan(mapMod(a => (a, p), b))
