@@ -99,8 +99,8 @@ module Expect: {
   let expectFn: ('a => 'b, 'a) => plainPartial<unit => 'b> /* EXPERIMENTAL */
 
   let toBe: ([< partial<'a>], 'a) => assertion
-  let toBeCloseTo: ([< partial<float>], ~digits: int=?, float) => assertion
-  let toBeSoCloseTo: ([< partial<float>], ~digits: int=?, float) => assertion
+  let toBeCloseTo: ([< partial<float>], float) => assertion
+  let toBeSoCloseTo: ([< partial<float>], ~digits: int, float) => assertion
   let toBeGreaterThan: ([< partial<'a>], 'a) => assertion
   let toBeGreaterThanOrEqual: ([< partial<'a>], 'a) => assertion
   let toBeLessThan: ([< partial<'a>], 'a) => assertion
