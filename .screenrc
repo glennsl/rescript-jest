@@ -1,5 +1,5 @@
-sessionname "bs-jest test console"
-screen -t "bsb -- `C-a \` to quit" 0 npm run watch:bsb
+sessionname "rescript-jest test console"
+screen -t "bsb -- `C-a \` to quit" 0 npm run watch:rescript
 split
 focus down
 screen -t "jest -- `C-a \` to quit - `C-a Esc` to scroll" 1 npm run watch:jest

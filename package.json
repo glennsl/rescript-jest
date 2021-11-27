@@ -10,7 +10,7 @@
     "start": "rescript build -w",
     "test": "npm run build && jest",
     "test-ci": "npm run build && jest --coverage --coverageDirectory='coverage'",
-    "watch:bsb": "rescript build -with-deps -w",
+    "watch:rescript": "rescript build -with-deps -w",
     "watch:jest": "jest --coverage --watchAll",
     "watch:screen": "screen -c .screenrc"
   },

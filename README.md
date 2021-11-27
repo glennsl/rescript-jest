@@ -12,10 +12,10 @@
 
 ## Status
 
-### Rescript-hest
+### Rescript-jest
 - bs-jest is rebranded as rescript-jest
 - rescript-jest depends on Rescript 9.1.4, Jest 27.3.1 and @ryyppy/rescript-promise 2.1.0.
-- Starting from Jest 27.0.0 jest-jasmine was replaced by jest-circus changing the semantics for before and after hooks.  `afterAllAsync` and `afterAllPromise` hooks now time-out consistent with the behavior of `beforeAllAsync` and `beforeAllPromise` in versiojn 0.7.0 of bs-jest.  `beforeAllAsync` and `beforeAllPromise` also now behave consistently with '`afterAllAsync` and `afterAllPromise` when included in sjipped test suites.
+- Starting from Jest 27.0.0 jest-jasmine was replaced by jest-circus changing the semantics for before and after hooks.  `afterAllAsync` and `afterAllPromise` hooks now time-out consistent with the behavior of `beforeAllAsync` and `beforeAllPromise` in version 0.7.0 of bs-jest.  `beforeAllAsync` and `beforeAllPromise` also now behave consistently with '`afterAllAsync` and `afterAllPromise` when included in skipped test suites.
 - rescript-jest API now uses data-first semantics throughout and uses `rescript-promise` in place of `Js.Promise`.
 - usefakeTimers() binding updated to address changes in the Jest fake timer API (useFakeTimer(~implementation=[#legacy|#modern], ()))
 - Deprecated BuckleScript `@bs.send.pipe` bindings were converted to rescript `@send` bindings.
@@ -190,7 +190,7 @@ cd rescript-jest
 npm install
 ```
 
-Then build and run tests with `npm test`, start watchers for `bsb`and `jest` with `npm run watch:bsb` and `npm run watch:jest` respectively. Install `screen` to be able to use `npm run watch:screen` to run both watchers in a single terminal window.
+Then build and run tests with `npm test`, start watchers for `rescript`and `jest` with `npm run watch:rescript` and `npm run watch:jest` respectively. Install `screen` to be able to use `npm run watch:screen` to run both watchers in a single terminal window.
 
 ## Changes
 
