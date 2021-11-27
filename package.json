@@ -16,21 +16,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/glennsl/bs-jest.git"
+    "url": "git+https://github.com/glennsl/rescript-jest.git"
   },
-  "keywords": [
-    "Rescript",
-    "jest",
-    "test"
-  ],
+  "keywords": ["Rescript", "jest", "test"],
   "bugs": {
-    "url": "https://github.com/glennsl/bs-jest/issues"
+    "url": "https://github.com/glennsl/rescript-jest/issues"
   },
-  "homepage": "https://github.com/glennsl/bs-jest#readme",
-  "files": [
-    "src/",
-    "bsconfig.json"
-  ],
+  "homepage": "https://github.com/glennsl/rescript-jest#readme",
+  "files": ["src/", "bsconfig.json"],
   "devDependencies": {
     "@babel/core": "^7.15.8",
     "@babel/preset-env": "^7.15.8",

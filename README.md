@@ -2,17 +2,17 @@
 
 [Recript](https://github.com/rescript-lang) bindings for [Jest](https://github.com/facebook/jest)
 
-[![npm](https://img.shields.io/npm/v/@glennsl/bs-jest.svg)](https://npmjs.org/@glennsl/bs-jest)
-[![Travis](https://img.shields.io/travis/glennsl/bs-jest/master.svg)](https://travis-ci.org/glennsl/bs-jest)
-[![Coverage](https://img.shields.io/coveralls/glennsl/bs-jest/master.svg)](https://coveralls.io/github/glennsl/bs-jest?branch=master)
-[![Issues](https://img.shields.io/github/issues/glennsl/bs-jest.svg)](https://github.com/glennsl/bs-jest/issues)
-[![Last Commit](https://img.shields.io/github/last-commit/glennsl/bs-jest.svg)](https://github.com/glennsl/bs-jest/commits/master)
+[![npm](https://img.shields.io/npm/v/@glennsl/rescript-jest.svg)](https://npmjs.org/@glennsl/rescript-jest)
+[![Travis](https://img.shields.io/travis/glennsl/rescript-jest/master.svg)](https://travis-ci.org/glennsl/rescript-jest)
+[![Coverage](https://img.shields.io/coveralls/glennsl/rescript-jest/master.svg)](https://coveralls.io/github/glennsl/rescript-jest?branch=master)
+[![Issues](https://img.shields.io/github/issues/glennsl/rescript-jest.svg)](https://github.com/glennsl/rescript-jest/issues)
+[![Last Commit](https://img.shields.io/github/last-commit/glennsl/rescript-jest.svg)](https://github.com/glennsl/rescript-jest/commits/master)
 
 **NOTE:** The _NPM package has moved to `@glennsl/rescript-jest`. Remember to update both `package.json` AND `bsconfig.json`._
 
 ## Status
 
-### rescript-Jest
+### Rescript-hest
 - bs-jest is rebranded as rescript-jest
 - rescript-jest depends on Rescript 9.1.4, Jest 27.3.1 and @ryyppy/rescript-promise 2.1.0.
 - Starting from Jest 27.0.0 jest-jasmine was replaced by jest-circus changing the semantics for before and after hooks.  `afterAllAsync` and `afterAllPromise` hooks now time-out consistent with the behavior of `beforeAllAsync` and `beforeAllPromise` in versiojn 0.7.0 of bs-jest.  `beforeAllAsync` and `beforeAllPromise` also now behave consistently with '`afterAllAsync` and `afterAllPromise` when included in sjipped test suites.
@@ -98,18 +98,18 @@ describe("Expect.Operators", () => {
 
 ```
 
-See [the tests](https://github.com/glennsl/bs-jest/tree/master/__tests__) for more examples.
+See [the tests](https://github.com/glennsl/rescript-jest/tree/master/__tests__) for more examples.
 
 ## Installation
 
 ```sh
-npm install --save-dev @glennsl/bs-jest
+npm install --save-dev @glennsl/rescript-jest
 ```
 
 or 
 
 ```
-yarn install --save-dev @glennsl/bs-jest
+yarn install --save-dev @glennsl/rescript-jest
 ```
 
 Then add `@glennsl/rescript-jest` to `bs-dev-dependencies` in your `bsconfig.json`:
@@ -151,7 +151,7 @@ At first sight this may still seem very limiting, and if you write very imperati
 
 ## Documentation
 
-For the moment, please refer to [Jest.resi](https://github.com/glennsl/bs-jest/blob/master/src/jest.resi).
+For the moment, please refer to [Jest.resi](https://github.com/glennsl/rescript-jest/blob/master/src/jest.resi).
 
 ## Extensions
 
@@ -175,18 +175,18 @@ If you encounter the error `SyntaxError: Cannot use import statement outside a m
     "transform": {
       "^.+\\.jsx?$": "esbuild-jest"
     },
-    "transformIgnorePatterns": ["<rootDir>/node_modules/(?!(rescript|@glennsl/bs-jest)/)"]
+    "transformIgnorePatterns": ["<rootDir>/node_modules/(?!(rescript|@glennsl/rescript-jest)/)"]
   }
   ```
-  - The property `"transformIgnorePatterns"` is an array of strings. Either you do some regex or organize them in an array. **Please make sure all folders in `node_modules` involving compiled .res/.ml/.re files and the like such as `rescript` or `@glennsl/bs-jest` are mentioned in the aforementioned array.**
+  - The property `"transformIgnorePatterns"` is an array of strings. Either you do some regex or organize them in an array. **Please make sure all folders in `node_modules` involving compiled .res/.ml/.re files and the like such as `rescript` or `@glennsl/rescript-jest` are mentioned in the aforementioned array.**
 
-This problem is also addressed in [Issue #63](https://github.com/glennsl/bs-jest/issues/63).
+This problem is also addressed in [Issue #63](https://github.com/glennsl/rescript-jest/issues/63).
 
 ## Contribute
 
 ```sh
-git clone https://github.com/glennsl/bs-jest.git
-cd bs-jest
+git clone https://github.com/glennsl/rescript-jest.git
+cd rescript-jest
 npm install
 ```
 
@@ -195,9 +195,12 @@ Then build and run tests with `npm test`, start watchers for `bsb`and `jest` wit
 ## Changes
 
 ### 0.8
-- [BREAKING] Converted all APIs to data-first semantics.  |> is deprecated in REscript 9.1.4
+- Moved repository from `glennsl/rescript-jest` to `glennsl/rescript-jest`
+- Renamed published package to `@glennsl/rescript-jest`
+- [BREAKING] Converted source code to ReScript, hence will no longer work with versions of BuckleScript that lack ReScript support.
 - [BREAKING] As of Jest 27.0.0, Jest-Circus replaces Jest-Jasmine by default leading to change in behavior of async and Promise before and after hooks. 
 - [BREAKING] As the `|>` operator is deprecated in Recript 9.x, all APIs now use data-first (`->`) semantics.
+
 ### 0.7
 
 - [BREAKING] Actually removed `toThrowException`, `toThrowMessage` and `toThrowMessageRe` as they relied on assumptions about BuckleScript internals that no longer hold.
