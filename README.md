@@ -1,6 +1,6 @@
 # Rescript-jest
 
-[Recript](https://github.com/rescript-lang) bindings for [Jest](https://github.com/facebook/jest)
+[Rescript](https://github.com/rescript-lang) bindings for [Jest](https://github.com/facebook/jest)
 
 [![npm](https://img.shields.io/npm/v/@glennsl/rescript-jest.svg)](https://npmjs.org/@glennsl/rescript-jest)
 [![Travis](https://img.shields.io/travis/glennsl/rescript-jest/master.svg)](https://travis-ci.org/glennsl/rescript-jest)
