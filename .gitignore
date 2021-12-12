@@ -16,7 +16,5 @@ lib/*
 !lib/js
 lib/js/*
 !lib/js/src
-# !__snapshots__
-__snapshots__
 coverage
 .coveralls.yml
