@@ -17,6 +17,7 @@
 - rescript-jest depends on Rescript 9.1.4, Jest 27.3.1 and @ryyppy/rescript-promise 2.1.0.
 - Starting from Jest 27.0.0 jest-jasmine was replaced by jest-circus changing the semantics for before and after hooks.  `afterAllAsync` and `afterAllPromise` hooks now time-out consistent with the behavior of `beforeAllAsync` and `beforeAllPromise` in version 0.7.0 of bs-jest.  `beforeAllAsync` and `beforeAllPromise` also now behave consistently with '`afterAllAsync` and `afterAllPromise` when included in skipped test suites.
 - rescript-jest API now uses data-first semantics throughout and uses `rescript-promise` in place of `Js.Promise`.
+- rescript-jest is published in the namespace `GlennslRescriptJest`.
 - usefakeTimers() binding updated to address changes in the Jest fake timer API (useFakeTimer(~implementation=[#legacy|#modern], ()))
 - Deprecated BuckleScript `@bs.send.pipe` bindings were converted to rescript `@send` bindings.
 - All tests have been updated to reflect semantic and behavioral changes.
@@ -197,6 +198,12 @@ Then build and run tests with `npm test`, start watchers for `rescript`and `jest
 ### 0.8
 - Moved repository from `glennsl/rescript-jest` to `glennsl/rescript-jest`
 - Renamed published package to `@glennsl/rescript-jest`
+- [BREAKING] Introduced a rescript-jest namespace.  To use bs-jest module structure, open the rescript-jest namespace in test source code.
+
+``` res
+      open GlennslRescriptJest
+```
+
 - [BREAKING] Converted source code to ReScript, hence will no longer work with versions of BuckleScript that lack ReScript support.
 - [BREAKING] As of Jest 27.0.0, Jest-Circus replaces Jest-Jasmine by default leading to change in behavior of async and Promise before and after hooks. 
 - [BREAKING] As the `|>` operator is deprecated in Recript 9.x, all APIs now use data-first (`->`) semantics.
