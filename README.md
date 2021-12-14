@@ -194,6 +194,9 @@ Then build and run tests with `npm test`, start watchers for `rescript`and `jest
 
 ## Changes
 
+### 0.9
+- [BREAKING] Removed the unnecessarily verbose generated namespace.
+
 ### 0.8
 - Moved repository from `glennsl/rescript-jest` to `glennsl/rescript-jest`
 - Renamed published package to `@glennsl/rescript-jest`
