@@ -32,7 +32,7 @@ To generate ES6 bindings for your project, update bsconfig.json
     "in-source": true
   },
 ```
-Then add @babel/core, @babel/present-env and babel-jest packages to your project.  Also, add babel.config.js
+Then add `@babel/core`, `@babel/preset-env` and `babel-jest` packages to your project.  Also, add babel.config.js
 
 ```js
 module.exports = {
