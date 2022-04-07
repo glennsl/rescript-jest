@@ -471,6 +471,16 @@ module Jest = {
     }
   }
   @val external useRealTimers: unit => unit = "jest.useRealTimers"
+  @val external _setSystemTime: Js.Date.t => unit = "jest.setSystemTime"
+  @val external __setSystemTime: unit => unit = "jest.setSystemTime"
+  @val external _setSystemTime: Js.Date.t => unit = "jest.setSystemTime"
+  @val external __setSystemTime: unit => unit = "jest.setSystemTime"
+
+  let setSystemTime = (~now: option<Js.Date.t>) =>
+    switch now {
+    | Some(date) => _setSystemTime(date)
+    | None => __setSystemTime()
+    }
 }
 
 module JestJs = {
