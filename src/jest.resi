@@ -183,8 +183,9 @@ module Jest: {
   @val external _useFakeTimers: unit => unit = "jest.useFakeTimers"
   @val external __useFakeTimers: fakeTimerImplementation => unit = "jest.useFakeTimers"
   let useFakeTimers: (~implementation: fakeTimerImplementation=?, ()) => ()
-  @val external useRealTimers: unit => unit = "jest.useRealTimers"
-  let setSystemTime: (~now: option<Js.Date.t>) => ()
+  @val external useRealTimers: unit => unit = "jest.useRealTimers"  
+  type systemTime = Int(int) | Date(Js.Date.t)
+  let setSystemTime: (~now: option<systemTime>) => ()
 }
 
 module JestJs: {
