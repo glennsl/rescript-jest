@@ -141,11 +141,8 @@ module Runner = (A: Asserter) => {
     Js.Undefined.t<int>,
   ) => unit = "test"
   @val
-  external _testPromise: (
-    string,
-    @uncurry (unit => Promise.t<'a>),
-    Js.Undefined.t<int>,
-  ) => unit = "test"
+  external _testPromise: (string, @uncurry (unit => Promise.t<'a>), Js.Undefined.t<int>) => unit =
+    "test"
 
   let test = (name, callback) =>
     _test(name, () => {
@@ -169,12 +166,11 @@ module Runner = (A: Asserter) => {
   let testPromise = (name, ~timeout=?, callback) =>
     _testPromise(
       name,
-      () => Promise.then(callback(), a => a -> A.affirm -> Promise.resolve),
+      () => Promise.then(callback(), a => a->A.affirm->Promise.resolve),
       Js.Undefined.fromOption(timeout),
     )
 
-  let testAll = (name, inputs, callback) =>
-    List.iter(input => {
+  let testAll = (name, inputs, callback) => List.iter(input => {
       let name = j`$name - $input`
       _test(name, () => {
         affirm(callback(input))
@@ -220,8 +216,10 @@ module Runner = (A: Asserter) => {
     beforeEachPromise(() => Promise.resolve(callback()), Js.Undefined.fromOption(timeout))
 
   @val external afterAll: (@uncurry (unit => unit)) => unit = "afterAll"
-  @val external afterAllAsync: (((. unit) => unit) => Js.undefined<unit>, Js.Undefined.t<int>) => unit = "afterAll"
-    let afterAllAsync = (~timeout=?, callback) => afterAllAsync(finish => {
+  @val
+  external afterAllAsync: (((. unit) => unit) => Js.undefined<unit>, Js.Undefined.t<int>) => unit =
+    "afterAll"
+  let afterAllAsync = (~timeout=?, callback) => afterAllAsync(finish => {
       callback(() => finish(.))
       Js.undefined
     }, Js.Undefined.fromOption(timeout))
@@ -254,11 +252,8 @@ module Runner = (A: Asserter) => {
       Js.Undefined.t<int>,
     ) => unit = "it.only"
     @val
-    external _testPromise: (
-      string,
-      @uncurry (unit => Promise.t<'a>),
-      Js.Undefined.t<int>,
-    ) => unit = "it.only"
+    external _testPromise: (string, @uncurry (unit => Promise.t<'a>), Js.Undefined.t<int>) => unit =
+      "it.only"
 
     let test = (name, callback) =>
       _test(name, () => {
@@ -282,12 +277,11 @@ module Runner = (A: Asserter) => {
     let testPromise = (name, ~timeout=?, callback) =>
       _testPromise(
         name,
-        () => Promise.then(callback(), a => a -> affirm -> Promise.resolve),
+        () => Promise.then(callback(), a => a->affirm->Promise.resolve),
         Js.Undefined.fromOption(timeout),
       )
 
-    let testAll = (name, inputs, callback) =>
-      List.iter(input => {
+    let testAll = (name, inputs, callback) => List.iter(input => {
         let name = j`$name - $input`
         _test(name, () => {
           affirm(callback(input))
@@ -311,8 +305,7 @@ module Runner = (A: Asserter) => {
     @val
     external testPromise: (string, @uncurry (unit => Promise.t<A.t<'a>>)) => unit = "it.skip"
     let testPromise = (name, ~timeout as _=?, callback) => testPromise(name, callback)
-    let testAll = (name, inputs, callback) =>
-      List.iter(input => {
+    let testAll = (name, inputs, callback) => List.iter(input => {
         let name = j`$name - $input`
         test(name, () => callback(input))
       }, inputs)
@@ -389,8 +382,8 @@ module Expect = {
     let \"<" = (a, b) => toBeLessThan(a, b)
     let \"<=" = (a, b) => toBeLessThanOrEqual(a, b)
     let \"=" = (a, b) => toEqual(a, b)
-    let \"<>" = (a, b) => a -> not_ -> toEqual(b)
-    let \"!=" = (a, b) => a -> not_ -> toBe(b)
+    let \"<>" = (a, b) => a->not_->toEqual(b)
+    let \"!=" = (a, b) => a->not_->toBe(b)
   }
 }
 
@@ -436,7 +429,9 @@ module MockJs = {
     Array.map(
       %raw(`
     function (args) { return args.length === 1 ? args[0] : args }
-  `),calls(self)) /* there's no such thing as aa 1-ary tuple, so we need to unbox single-element arrays */
+  `),
+      calls(self),
+    ) /* there's no such thing as aa 1-ary tuple, so we need to unbox single-element arrays */
   @get @scope("mock")
   external instances: fn<_, _, 'ret> => array<'ret> =
     "instances" /* TODO: semms this only records "instances" created by `new` */
@@ -444,17 +439,22 @@ module MockJs = {
     Js.Array.copy(instances(self)) /* Awesome, the bloody things are mutated so we need to copy */
 
   @ocaml.doc(" Beware: this actually replaces `mock`, not just `mock.instances` and `mock.calls` ")
-  @send external mockClear:  fn<'fn, 'a, 'b> => unit = "mockClear"
+  @send
+  external mockClear: fn<'fn, 'a, 'b> => unit = "mockClear"
   @send external mockReset: fn<'fn, 'a, 'b> => unit = "mockReset"
   @send external mockImplementation: (fn<'fn, 'a, 'b> as 'self, 'fn) => 'self = "mockImplementation"
-  @send external mockImplementationOnce: (fn<'fn, _, _> as 'self, 'fn) => 'self = "mockImplementationOnce"
-  @send external mockReturnThis: fn<_, _, 'ret> => 'ret = "mockReturnThis" /* not type safe, we don't know what `this` actually is */
-  @send external mockReturnValue: (fn<_, _, 'ret> as 'self) => 'ret => 'self = "mockReturnValue"
-  @send external mockReturnValueOnce: (fn<_, _, 'ret> as 'self) => 'ret => 'self = "mockReturnValueOnce"
+  @send
+  external mockImplementationOnce: (fn<'fn, _, _> as 'self, 'fn) => 'self = "mockImplementationOnce"
+  @send
+  external mockReturnThis: fn<_, _, 'ret> => 'ret =
+    "mockReturnThis" /* not type safe, we don't know what `this` actually is */
+  @send external mockReturnValue: (fn<_, _, 'ret> as 'self, 'ret) => 'self = "mockReturnValue"
+  @send
+  external mockReturnValueOnce: (fn<_, _, 'ret> as 'self, 'ret) => 'self = "mockReturnValueOnce"
 }
 
 module Jest = {
-  type fakeTimerImplementation = [ #legacy | #modern ]
+  type fakeTimerImplementation = [#legacy | #modern]
   @val external clearAllTimers: unit => unit = "jest.clearAllTimers"
   @val external runAllTicks: unit => unit = "jest.runAllTicks"
   @val external runAllTimers: unit => unit = "jest.runAllTimers"
@@ -462,31 +462,26 @@ module Jest = {
   @val external runTimersToTime: int => unit = "jest.runTimersToTime"
   @val external advanceTimersByTime: int => unit = "jest.advanceTimersByTime"
   @val external runOnlyPendingTimers: unit => unit = "jest.runOnlyPendingTimers"
-  @val external _useFakeTimers: unit => unit = "jest.useFakeTimers"
-  @val external __useFakeTimers: fakeTimerImplementation => unit = "jest.useFakeTimers"
+  @val external useFakeTimers: unit => unit = "jest.useFakeTimers"
+  @val external useFakeTimersImplementation: fakeTimerImplementation => unit = "jest.useFakeTimers"
   let useFakeTimers = (~implementation: option<fakeTimerImplementation>=?, ()) => {
     switch implementation {
-    | None => _useFakeTimers()
-    | Some(implString) => __useFakeTimers(implString)
+    | None => useFakeTimers()
+    | Some(implString) => useFakeTimersImplementation(implString)
     }
   }
   @val external useRealTimers: unit => unit = "jest.useRealTimers"
-  @val external _setSystemTime: Js.Date.t => unit = "jest.setSystemTime"
-  @val external __setSystemTime: unit => unit = "jest.setSystemTime"
-  @val external _setSystemTime: Js.Date.t => unit = "jest.setSystemTime"
-  @val external __setSystemTime: int => unit = "jest.setSystemTime"
-  @val external ___setSystemTime: unit => unit = "jest.setSystemTime"
 
-  type systemTime = Int(int) | Date(Js.Date.t)
+  @val external setSystemTime: unit => unit = "jest.setSystemTime"
+  @val external setSystemTimeWithInt: int => unit = "jest.setSystemTime"
+  @val external setSystemTimeWithDate: Js.Date.t => unit = "jest.setSystemTime"
 
-  let setSystemTime = (~now: option<systemTime>) =>
-    switch now {
-    | Some(dateOrInt) =>
-      switch dateOrInt {
-      | Date(date) => _setSystemTime(date)
-      | Int(num) => __setSystemTime(num)
-      }
-    | None => ___setSystemTime()
+  type systemTime = [#unixEpoch | #int(int) | #date(Js.Date.t)]
+  let setSystemTime = systemTime =>
+    switch systemTime {
+    | #date(date) => setSystemTimeWithDate(date)
+    | #int(num) => setSystemTimeWithInt(num)
+    | #unixEpoch => setSystemTime()
     }
 }
 
@@ -497,7 +492,9 @@ module JestJs = {
   @val external enableAutomock: unit => unit = "jest.enableAutomock"
   /* genMockFromModule */
   @val external resetModules: unit => unit = "jest.resetModules"
-  @val external inferred_fn: unit => MockJs.fn<(. 'a) => Js.undefined<'b>, 'a, Js.undefined<'b>> = "jest.fn" /* not sure how useful this really is */
+  @val
+  external inferred_fn: unit => MockJs.fn<(. 'a) => Js.undefined<'b>, 'a, Js.undefined<'b>> =
+    "jest.fn" /* not sure how useful this really is */
   @val external fn: ('a => 'b) => MockJs.fn<'a => 'b, 'a, 'b> = "jest.fn"
   @val external fn2: ((. 'a, 'b) => 'c) => MockJs.fn<(. 'a, 'b) => 'c, ('a, 'b), 'c> = "jest.fn"
   /* TODO
