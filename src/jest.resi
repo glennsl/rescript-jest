@@ -162,17 +162,22 @@ module MockJs: {
   let instances: fn<_, _, 'ret> => array<'ret>
 
   @ocaml.doc(" Beware: this actually replaces `mock`, not just `mock.instances` and `mock.calls` ")
-  @send external mockClear: fn<'fn, 'a, 'b> => unit = "mockClear"
+  @send
+  external mockClear: fn<'fn, 'a, 'b> => unit = "mockClear"
   @send external mockReset: fn<'fn, 'a, 'b> => unit = "mockReset"
   @send external mockImplementation: (fn<'fn, 'a, 'b> as 'self, 'fn) => 'self = "mockImplementation"
-  @send external mockImplementationOnce: (fn<'fn, _, _> as 'self, 'fn) => 'self = "mockImplementationOnce"
-  @send external mockReturnThis: fn<_, _, 'ret> => 'ret = "mockReturnThis" /* not type safe, we don't know what `this` actually is */
-  @send external mockReturnValue: (fn<_, _, 'ret> as 'self) => 'ret => 'self = "mockReturnValue"
-  @send external mockReturnValueOnce: (fn<_, _, 'ret> as 'self) => 'ret => 'self = "mockReturnValueOnce"
+  @send
+  external mockImplementationOnce: (fn<'fn, _, _> as 'self, 'fn) => 'self = "mockImplementationOnce"
+  @send
+  external mockReturnThis: fn<_, _, 'ret> => 'ret =
+    "mockReturnThis" /* not type safe, we don't know what `this` actually is */
+  @send external mockReturnValue: (fn<_, _, 'ret> as 'self, 'ret) => 'self = "mockReturnValue"
+  @send
+  external mockReturnValueOnce: (fn<_, _, 'ret> as 'self, 'ret) => 'self = "mockReturnValueOnce"
 }
 
 module Jest: {
-  type fakeTimerImplementation = [ #legacy | #modern ]
+  type fakeTimerImplementation = [#legacy | #modern]
   @val external clearAllTimers: unit => unit = "jest.clearAllTimers"
   @val external runAllTicks: unit => unit = "jest.runAllTicks"
   @val external runAllTimers: unit => unit = "jest.runAllTimers"
@@ -180,10 +185,11 @@ module Jest: {
   @val external runTimersToTime: int => unit = "jest.runTimersToTime"
   @val external advanceTimersByTime: int => unit = "jest.advanceTimersByTime"
   @val external runOnlyPendingTimers: unit => unit = "jest.runOnlyPendingTimers"
-  @val external _useFakeTimers: unit => unit = "jest.useFakeTimers"
-  @val external __useFakeTimers: fakeTimerImplementation => unit = "jest.useFakeTimers"
-  let useFakeTimers: (~implementation: fakeTimerImplementation=?, ()) => ()
+  @val external useFakeTimersImplementation: fakeTimerImplementation => unit = "jest.useFakeTimers"
+  let useFakeTimers: (~implementation: fakeTimerImplementation=?, unit) => unit
   @val external useRealTimers: unit => unit = "jest.useRealTimers"
+  type systemTime = [#int(int) | #date(Js.Date.t)]
+  let setSystemTime: systemTime => unit
 }
 
 module JestJs: {
