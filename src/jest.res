@@ -472,16 +472,14 @@ module Jest = {
   }
   @val external useRealTimers: unit => unit = "jest.useRealTimers"
 
-  @val external setSystemTime: unit => unit = "jest.setSystemTime"
   @val external setSystemTimeWithInt: int => unit = "jest.setSystemTime"
   @val external setSystemTimeWithDate: Js.Date.t => unit = "jest.setSystemTime"
 
-  type systemTime = [#unixEpoch | #int(int) | #date(Js.Date.t)]
+  type systemTime = [#int(int) | #date(Js.Date.t)]
   let setSystemTime = systemTime =>
     switch systemTime {
     | #date(date) => setSystemTimeWithDate(date)
     | #int(num) => setSystemTimeWithInt(num)
-    | #unixEpoch => setSystemTime()
     }
 }
 

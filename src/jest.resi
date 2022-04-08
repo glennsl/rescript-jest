@@ -188,7 +188,7 @@ module Jest: {
   @val external useFakeTimersImplementation: fakeTimerImplementation => unit = "jest.useFakeTimers"
   let useFakeTimers: (~implementation: fakeTimerImplementation=?, unit) => unit
   @val external useRealTimers: unit => unit = "jest.useRealTimers"
-  type systemTime = [#unixEpoch | #int(int) | #date(Js.Date.t)]
+  type systemTime = [#int(int) | #date(Js.Date.t)]
   let setSystemTime: systemTime => unit
 }
 
