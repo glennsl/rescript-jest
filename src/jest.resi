@@ -11,6 +11,7 @@ module Runner: (A: Asserter) =>
   let testAsync: (string, ~timeout: int=?, (A.t<_> => unit) => unit) => unit
   let testPromise: (string, ~timeout: int=?, unit => Promise.t<A.t<_>>) => unit
   let testAll: (string, list<'a>, 'a => A.t<_>) => unit
+  let testAllPromise: (string, list<'a>, ~timeout: int=?, 'a => Promise.t<A.t<_>>) => unit
 
   let describe: (string, unit => unit) => unit
 
@@ -32,6 +33,7 @@ module Runner: (A: Asserter) =>
     let testAsync: (string, ~timeout: int=?, (A.t<_> => unit) => unit) => unit
     let testPromise: (string, ~timeout: int=?, unit => Promise.t<A.t<_>>) => unit
     let testAll: (string, list<'a>, 'a => A.t<_>) => unit
+    let testAllPromise: (string, list<'a>, ~timeout: int=?, 'a => Promise.t<A.t<_>>) => unit
     let describe: (string, unit => unit) => unit
   }
 
@@ -40,6 +42,7 @@ module Runner: (A: Asserter) =>
     let testAsync: (string, ~timeout: int=?, (A.t<_> => unit) => unit) => unit
     let testPromise: (string, ~timeout: int=?, unit => Promise.t<A.t<_>>) => unit
     let testAll: (string, list<'a>, 'a => A.t<_>) => unit
+    let testAllPromise: (string, list<'a>, ~timeout: int=?, 'a => Promise.t<A.t<_>>) => unit
     let describe: (string, unit => unit) => unit
   }
 }
@@ -48,6 +51,7 @@ let test: (string, unit => assertion) => unit
 let testAsync: (string, ~timeout: int=?, (assertion => unit) => unit) => unit
 let testPromise: (string, ~timeout: int=?, unit => Promise.t<assertion>) => unit
 let testAll: (string, list<'a>, 'a => assertion) => unit
+let testAllPromise: (string, list<'a>, ~timeout: int=?, 'a => Promise.t<assertion>) => unit
 
 let describe: (string, unit => unit) => unit
 
@@ -69,6 +73,7 @@ module Only: {
   let testAsync: (string, ~timeout: int=?, (assertion => unit) => unit) => unit
   let testPromise: (string, ~timeout: int=?, unit => Promise.t<assertion>) => unit
   let testAll: (string, list<'a>, 'a => assertion) => unit
+  let testAllPromise: (string, list<'a>, ~timeout: int=?, 'a => Promise.t<assertion>) => unit
   let describe: (string, unit => unit) => unit
 }
 
@@ -77,6 +82,7 @@ module Skip: {
   let testAsync: (string, ~timeout: int=?, (assertion => unit) => unit) => unit
   let testPromise: (string, ~timeout: int=?, unit => Promise.t<assertion>) => unit
   let testAll: (string, list<'a>, 'a => assertion) => unit
+  let testAllPromise: (string, list<'a>, ~timeout: int=?, 'a => Promise.t<assertion>) => unit
   let describe: (string, unit => unit) => unit
 }
 

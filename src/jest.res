@@ -177,6 +177,15 @@ module Runner = (A: Asserter) => {
         Js.undefined
       })
     }, inputs)
+  
+  let testAllPromise = (name: string, inputs, ~timeout=?, callback) => List.iter(input => {
+    let name = j`$name - $input`
+    _testPromise(
+      name, 
+      () => Promise.then(callback(input), a => a->A.affirm->Promise.resolve),
+      Js.Undefined.fromOption(timeout)
+    )
+  }, inputs)
 
   @val external describe: (string, @uncurry (unit => Js.undefined<unit>)) => unit = "describe"
   let describe = (label, f) =>
@@ -288,6 +297,15 @@ module Runner = (A: Asserter) => {
           Js.undefined
         })
       }, inputs)
+  
+    let testAllPromise = (name, inputs, ~timeout=?, callback) => List.iter(input => {
+      let name = j`$name - $input`
+      _testPromise(
+        name, 
+        () => Promise.then(callback(input), a => a->A.affirm->Promise.resolve),
+        Js.Undefined.fromOption(timeout)
+      )
+    }, inputs)
 
     @val
     external describe: (string, @uncurry (unit => Js.undefined<unit>)) => unit = "describe.only"
@@ -308,6 +326,10 @@ module Runner = (A: Asserter) => {
     let testAll = (name, inputs, callback) => List.iter(input => {
         let name = j`$name - $input`
         test(name, () => callback(input))
+      }, inputs)
+    let testAllPromise = (name, inputs, ~timeout as _=?, callback) => List.iter(input => {
+        let name = j`$name - $input`
+        testPromise(name, () => callback(input))
       }, inputs)
     @val
     external describe: (string, @uncurry (unit => Js.undefined<unit>)) => unit = "describe.skip"
