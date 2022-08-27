@@ -34,6 +34,11 @@ let () = {
   testAll("testAll - tuples", list{("foo", 3), ("barbaz", 6), ("bananas!", 8)}, ((input, output)) =>
     Js.String.length(input) === output
   )
+  
+  testAllPromise("testAllPromise", list{"foo", "bar", "baz"}, input => Promise.resolve(Js.String.length(input) === 3))
+  testAllPromise("testAllPromise - tuples", list{("foo", 3), ("barbaz", 6), ("bananas!", 8)}, ((input, output)) => Promise.resolve(
+    Js.String.length(input) === output
+  ))
 
   describe("describe", () => test("some aspect", () => true))
 

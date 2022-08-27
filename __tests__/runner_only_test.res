@@ -18,5 +18,10 @@ let () = {
     output,
   )) => Js.String.length(input) === output)
 
+  Only.testAllPromise("testAllPromise", list{"foo", "bar", "baz"}, input => Promise.resolve(Js.String.length(input) === 3))
+  Only.testAllPromise("testAllPromise - tuples", list{("foo", 3), ("barbaz", 6), ("bananas!", 8)}, ((input, output)) => Promise.resolve(
+    Js.String.length(input) === output
+  ))
+
   Only.describe("Only.describe", () => test("some aspect", () => 1 + 2 === 3))
 }

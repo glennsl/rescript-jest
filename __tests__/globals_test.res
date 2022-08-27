@@ -46,6 +46,21 @@ let () = {
     }
   )
 
+  testAllPromise("testAllPromise", list{"foo", "bar", "baz"}, input => Promise.resolve(
+    if Js.String.length(input) === 3 {
+      pass
+    } else {
+      fail("")
+    }
+  ))
+  testAllPromise("testAllPromise - tuples", list{("foo", 3), ("barbaz", 6), ("bananas!", 8)}, ((input, output)) => Promise.resolve(
+    if Js.String.length(input) === output {
+      pass
+    } else {
+      fail("")
+    }
+  ))
+
   describe("describe", () => test("some aspect", () => pass))
 
   describe("beforeAll", () => {
@@ -665,6 +680,20 @@ let () = {
         fail("")
       }
     )
+    Skip.testAllPromise("testAllPromise", list{"foo", "bar", "baz"}, input => Promise.resolve(
+      if Js.String.length(input) === 3 {
+        pass
+      } else {
+        fail("")
+      }
+    ))
+    Skip.testAllPromise("testAllPromise - tuples", list{("foo", 3), ("barbaz", 6), ("bananas!", 8)}, ((input, output)) => Promise.resolve(
+      if Js.String.length(input) === output {
+        pass
+      } else {
+        fail("")
+      }
+    ))
 
     Skip.describe("Skip.describe", () => test("some aspect", () => pass))
   })
