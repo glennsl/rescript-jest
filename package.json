@@ -38,7 +38,6 @@
     "rescript": "^9.1.4"
   },
   "dependencies": {
-    "@ryyppy/rescript-promise": "^2.1.0",
     "jest": "^27.3.1"
   }
 }
