@@ -48,20 +48,27 @@ let () = {
     }
   )
 
-  testAllPromise("testAllPromise", list{"foo", "bar", "baz"}, input => Promise.resolve(
-    if Js.String.length(input) === 3 {
-      pass
-    } else {
-      fail("")
-    }
-  ))
-  testAllPromise("testAllPromise - tuples", list{("foo", 3), ("barbaz", 6), ("bananas!", 8)}, ((input, output)) => Promise.resolve(
-    if Js.String.length(input) === output {
-      pass
-    } else {
-      fail("")
-    }
-  ))
+  testAllPromise("testAllPromise", list{"foo", "bar", "baz"}, input =>
+    Promise.resolve(
+      if Js.String.length(input) === 3 {
+        pass
+      } else {
+        fail("")
+      },
+    )
+  )
+  testAllPromise("testAllPromise - tuples", list{("foo", 3), ("barbaz", 6), ("bananas!", 8)}, ((
+    input,
+    output,
+  )) =>
+    Promise.resolve(
+      if Js.String.length(input) === output {
+        pass
+      } else {
+        fail("")
+      },
+    )
+  )
 
   describe("describe", () => test("some aspect", () => pass))
 
@@ -90,48 +97,61 @@ let () = {
     describe("without timeout", () => {
       let x = ref(0)
 
-      beforeAllAsync(finish => {
-        x := x.contents + 4
-        finish()
-      })
-
-      test("x is 4", () =>
-        if x.contents === 4 {
-          pass
-        } else {
-          fail("")
-        }
+      beforeAllAsync(
+        finish => {
+          x := x.contents + 4
+          finish()
+        },
       )
-      test("x is still 4", () =>
-        if x.contents === 4 {
-          pass
-        } else {
-          fail("")
-        }
+
+      test(
+        "x is 4",
+        () =>
+          if x.contents === 4 {
+            pass
+          } else {
+            fail("")
+          },
+      )
+      test(
+        "x is still 4",
+        () =>
+          if x.contents === 4 {
+            pass
+          } else {
+            fail("")
+          },
       )
     })
 
     describe("with 100ms timeout", () => {
       let x = ref(0)
 
-      beforeAllAsync(~timeout=100, finish => {
-        x := x.contents + 4
-        finish()
-      })
-
-      test("x is 4", () =>
-        if x.contents === 4 {
-          pass
-        } else {
-          fail("")
-        }
+      beforeAllAsync(
+        ~timeout=100,
+        finish => {
+          x := x.contents + 4
+          finish()
+        },
       )
-      test("x is still 4", () =>
-        if x.contents === 4 {
-          pass
-        } else {
-          fail("")
-        }
+
+      test(
+        "x is 4",
+        () =>
+          if x.contents === 4 {
+            pass
+          } else {
+            fail("")
+          },
+      )
+      test(
+        "x is still 4",
+        () =>
+          if x.contents === 4 {
+            pass
+          } else {
+            fail("")
+          },
       )
     })
 
@@ -145,48 +165,61 @@ let () = {
     describe("without timeout", () => {
       let x = ref(0)
 
-      beforeAllPromise(() => {
-        x := x.contents + 4
-        Promise.resolve()
-      })
-
-      test("x is 4", () =>
-        if x.contents === 4 {
-          pass
-        } else {
-          fail("")
-        }
+      beforeAllPromise(
+        () => {
+          x := x.contents + 4
+          Promise.resolve()
+        },
       )
-      test("x is still 4", () =>
-        if x.contents === 4 {
-          pass
-        } else {
-          fail("")
-        }
+
+      test(
+        "x is 4",
+        () =>
+          if x.contents === 4 {
+            pass
+          } else {
+            fail("")
+          },
+      )
+      test(
+        "x is still 4",
+        () =>
+          if x.contents === 4 {
+            pass
+          } else {
+            fail("")
+          },
       )
     })
 
     describe("with 100ms timeout", () => {
       let x = ref(0)
 
-      beforeAllPromise(~timeout=100, () => {
-        x := x.contents + 4
-        Promise.resolve()
-      })
-
-      test("x is 4", () =>
-        if x.contents === 4 {
-          pass
-        } else {
-          fail("")
-        }
+      beforeAllPromise(
+        ~timeout=100,
+        () => {
+          x := x.contents + 4
+          Promise.resolve()
+        },
       )
-      test("x is still 4", () =>
-        if x.contents === 4 {
-          pass
-        } else {
-          fail("")
-        }
+
+      test(
+        "x is 4",
+        () =>
+          if x.contents === 4 {
+            pass
+          } else {
+            fail("")
+          },
+      )
+      test(
+        "x is still 4",
+        () =>
+          if x.contents === 4 {
+            pass
+          } else {
+            fail("")
+          },
       )
     })
 
@@ -221,48 +254,61 @@ let () = {
     describe("without timeout", () => {
       let x = ref(0)
 
-      beforeEachAsync(finish => {
-        x := x.contents + 4
-        finish()
-      })
-
-      test("x is 4", () =>
-        if x.contents === 4 {
-          pass
-        } else {
-          fail("")
-        }
+      beforeEachAsync(
+        finish => {
+          x := x.contents + 4
+          finish()
+        },
       )
-      test("x is suddenly 8", () =>
-        if x.contents === 8 {
-          pass
-        } else {
-          fail("")
-        }
+
+      test(
+        "x is 4",
+        () =>
+          if x.contents === 4 {
+            pass
+          } else {
+            fail("")
+          },
+      )
+      test(
+        "x is suddenly 8",
+        () =>
+          if x.contents === 8 {
+            pass
+          } else {
+            fail("")
+          },
       )
     })
 
     describe("with 100ms timeout", () => {
       let x = ref(0)
 
-      beforeEachAsync(~timeout=100, finish => {
-        x := x.contents + 4
-        finish()
-      })
-
-      test("x is 4", () =>
-        if x.contents === 4 {
-          pass
-        } else {
-          fail("")
-        }
+      beforeEachAsync(
+        ~timeout=100,
+        finish => {
+          x := x.contents + 4
+          finish()
+        },
       )
-      test("x is suddenly 8", () =>
-        if x.contents === 8 {
-          pass
-        } else {
-          fail("")
-        }
+
+      test(
+        "x is 4",
+        () =>
+          if x.contents === 4 {
+            pass
+          } else {
+            fail("")
+          },
+      )
+      test(
+        "x is suddenly 8",
+        () =>
+          if x.contents === 8 {
+            pass
+          } else {
+            fail("")
+          },
       )
     })
 
@@ -276,48 +322,61 @@ let () = {
     describe("without timeout", () => {
       let x = ref(0)
 
-      beforeEachPromise(() => {
-        x := x.contents + 4
-        Promise.resolve(true)
-      })
-
-      test("x is 4", () =>
-        if x.contents === 4 {
-          pass
-        } else {
-          fail("")
-        }
+      beforeEachPromise(
+        () => {
+          x := x.contents + 4
+          Promise.resolve(true)
+        },
       )
-      test("x is suddenly 8", () =>
-        if x.contents === 8 {
-          pass
-        } else {
-          fail("")
-        }
+
+      test(
+        "x is 4",
+        () =>
+          if x.contents === 4 {
+            pass
+          } else {
+            fail("")
+          },
+      )
+      test(
+        "x is suddenly 8",
+        () =>
+          if x.contents === 8 {
+            pass
+          } else {
+            fail("")
+          },
       )
     })
 
     describe("with 100ms timeout", () => {
       let x = ref(0)
 
-      beforeEachPromise(~timeout=100, () => {
-        x := x.contents + 4
-        Promise.resolve(true)
-      })
-
-      test("x is 4", () =>
-        if x.contents === 4 {
-          pass
-        } else {
-          fail("")
-        }
+      beforeEachPromise(
+        ~timeout=100,
+        () => {
+          x := x.contents + 4
+          Promise.resolve(true)
+        },
       )
-      test("x is suddenly 8", () =>
-        if x.contents === 8 {
-          pass
-        } else {
-          fail("")
-        }
+
+      test(
+        "x is 4",
+        () =>
+          if x.contents === 4 {
+            pass
+          } else {
+            fail("")
+          },
+      )
+      test(
+        "x is suddenly 8",
+        () =>
+          if x.contents === 8 {
+            pass
+          } else {
+            fail("")
+          },
       )
     })
 
@@ -333,29 +392,35 @@ let () = {
     describe("phase 1", () => {
       afterAll(() => x := x.contents + 4)
 
-      test("x is 0", () =>
-        if x.contents === 0 {
-          pass
-        } else {
-          fail("")
-        }
+      test(
+        "x is 0",
+        () =>
+          if x.contents === 0 {
+            pass
+          } else {
+            fail("")
+          },
       )
-      test("x is still 0", () =>
-        if x.contents === 0 {
-          pass
-        } else {
-          fail("")
-        }
+      test(
+        "x is still 0",
+        () =>
+          if x.contents === 0 {
+            pass
+          } else {
+            fail("")
+          },
       )
     })
 
     describe("phase 2", () =>
-      test("x is suddenly 4", () =>
-        if x.contents === 4 {
-          pass
-        } else {
-          fail("")
-        }
+      test(
+        "x is suddenly 4",
+        () =>
+          if x.contents === 4 {
+            pass
+          } else {
+            fail("")
+          },
       )
     )
   })
@@ -364,72 +429,99 @@ let () = {
     describe("without timeout", () => {
       let x = ref(0)
 
-      describe("phase 1", () => {
-        afterAllAsync(finish => {
-          x := x.contents + 4
-          finish()
-        })
+      describe(
+        "phase 1",
+        () => {
+          afterAllAsync(
+            finish => {
+              x := x.contents + 4
+              finish()
+            },
+          )
 
-        test("x is 0", () =>
-          if x.contents === 0 {
-            pass
-          } else {
-            fail("")
-          }
-        )
-        test("x is still 0", () =>
-          if x.contents === 0 {
-            pass
-          } else {
-            fail("")
-          }
-        )
-      })
+          test(
+            "x is 0",
+            () =>
+              if x.contents === 0 {
+                pass
+              } else {
+                fail("")
+              },
+          )
+          test(
+            "x is still 0",
+            () =>
+              if x.contents === 0 {
+                pass
+              } else {
+                fail("")
+              },
+          )
+        },
+      )
 
-      describe("phase 2", () =>
-        test("x is suddenly 4", () =>
-          if x.contents === 4 {
-            pass
-          } else {
-            fail("")
-          }
-        )
+      describe(
+        "phase 2",
+        () =>
+          test(
+            "x is suddenly 4",
+            () =>
+              if x.contents === 4 {
+                pass
+              } else {
+                fail("")
+              },
+          ),
       )
     })
 
     describe("with 100ms timeout", () => {
       let x = ref(0)
 
-      describe("phase 1", () => {
-        afterAllAsync(~timeout=100, finish => {
-          x := x.contents + 4
-          finish()
-        })
+      describe(
+        "phase 1",
+        () => {
+          afterAllAsync(
+            ~timeout=100,
+            finish => {
+              x := x.contents + 4
+              finish()
+            },
+          )
 
-        test("x is 0", () =>
-          if x.contents === 0 {
-            pass
-          } else {
-            fail("")
-          }
-        )
-        test("x is still 0", () =>
-          if x.contents === 0 {
-            pass
-          } else {
-            fail("")
-          }
-        )
-      })
+          test(
+            "x is 0",
+            () =>
+              if x.contents === 0 {
+                pass
+              } else {
+                fail("")
+              },
+          )
+          test(
+            "x is still 0",
+            () =>
+              if x.contents === 0 {
+                pass
+              } else {
+                fail("")
+              },
+          )
+        },
+      )
 
-      describe("phase 2", () =>
-        test("x is suddenly 4", () =>
-          if x.contents === 4 {
-            pass
-          } else {
-            fail("")
-          }
-        )
+      describe(
+        "phase 2",
+        () =>
+          test(
+            "x is suddenly 4",
+            () =>
+              if x.contents === 4 {
+                pass
+              } else {
+                fail("")
+              },
+          ),
       )
     })
 
@@ -443,72 +535,99 @@ let () = {
     describe("without timeout", () => {
       let x = ref(0)
 
-      describe("phase 1", () => {
-        afterAllPromise(() => {
-          x := x.contents + 4
-          Promise.resolve(true)
-        })
+      describe(
+        "phase 1",
+        () => {
+          afterAllPromise(
+            () => {
+              x := x.contents + 4
+              Promise.resolve(true)
+            },
+          )
 
-        test("x is 0", () =>
-          if x.contents === 0 {
-            pass
-          } else {
-            fail("")
-          }
-        )
-        test("x is still 0", () =>
-          if x.contents === 0 {
-            pass
-          } else {
-            fail("")
-          }
-        )
-      })
+          test(
+            "x is 0",
+            () =>
+              if x.contents === 0 {
+                pass
+              } else {
+                fail("")
+              },
+          )
+          test(
+            "x is still 0",
+            () =>
+              if x.contents === 0 {
+                pass
+              } else {
+                fail("")
+              },
+          )
+        },
+      )
 
-      describe("phase 2", () =>
-        test("x is suddenly 4", () =>
-          if x.contents === 4 {
-            pass
-          } else {
-            fail("")
-          }
-        )
+      describe(
+        "phase 2",
+        () =>
+          test(
+            "x is suddenly 4",
+            () =>
+              if x.contents === 4 {
+                pass
+              } else {
+                fail("")
+              },
+          ),
       )
     })
 
     describe("with 100ms timeout", () => {
       let x = ref(0)
 
-      describe("phase 1", () => {
-        afterAllPromise(~timeout=100, () => {
-          x := x.contents + 4
-          Promise.resolve(true)
-        })
+      describe(
+        "phase 1",
+        () => {
+          afterAllPromise(
+            ~timeout=100,
+            () => {
+              x := x.contents + 4
+              Promise.resolve(true)
+            },
+          )
 
-        test("x is 0", () =>
-          if x.contents === 0 {
-            pass
-          } else {
-            fail("")
-          }
-        )
-        test("x is still 0", () =>
-          if x.contents === 0 {
-            pass
-          } else {
-            fail("")
-          }
-        )
-      })
+          test(
+            "x is 0",
+            () =>
+              if x.contents === 0 {
+                pass
+              } else {
+                fail("")
+              },
+          )
+          test(
+            "x is still 0",
+            () =>
+              if x.contents === 0 {
+                pass
+              } else {
+                fail("")
+              },
+          )
+        },
+      )
 
-      describe("phase 2", () =>
-        test("x is suddenly 4", () =>
-          if x.contents === 4 {
-            pass
-          } else {
-            fail("")
-          }
-        )
+      describe(
+        "phase 2",
+        () =>
+          test(
+            "x is suddenly 4",
+            () =>
+              if x.contents === 4 {
+                pass
+              } else {
+                fail("")
+              },
+          ),
       )
     })
 
@@ -543,48 +662,61 @@ let () = {
     describe("without timeout", () => {
       let x = ref(0)
 
-      afterEachAsync(finish => {
-        x := x.contents + 4
-        finish()
-      })
-
-      test("x is 0", () =>
-        if x.contents === 0 {
-          pass
-        } else {
-          fail("")
-        }
+      afterEachAsync(
+        finish => {
+          x := x.contents + 4
+          finish()
+        },
       )
-      test("x is suddenly 4", () =>
-        if x.contents === 4 {
-          pass
-        } else {
-          fail("")
-        }
+
+      test(
+        "x is 0",
+        () =>
+          if x.contents === 0 {
+            pass
+          } else {
+            fail("")
+          },
+      )
+      test(
+        "x is suddenly 4",
+        () =>
+          if x.contents === 4 {
+            pass
+          } else {
+            fail("")
+          },
       )
     })
 
     describe("with 100ms timeout", () => {
       let x = ref(0)
 
-      afterEachAsync(~timeout=100, finish => {
-        x := x.contents + 4
-        finish()
-      })
-
-      test("x is 0", () =>
-        if x.contents === 0 {
-          pass
-        } else {
-          fail("")
-        }
+      afterEachAsync(
+        ~timeout=100,
+        finish => {
+          x := x.contents + 4
+          finish()
+        },
       )
-      test("x is suddenly 4", () =>
-        if x.contents === 4 {
-          pass
-        } else {
-          fail("")
-        }
+
+      test(
+        "x is 0",
+        () =>
+          if x.contents === 0 {
+            pass
+          } else {
+            fail("")
+          },
+      )
+      test(
+        "x is suddenly 4",
+        () =>
+          if x.contents === 4 {
+            pass
+          } else {
+            fail("")
+          },
       )
     })
 
@@ -598,48 +730,61 @@ let () = {
     describe("without timeout", () => {
       let x = ref(0)
 
-      afterEachPromise(() => {
-        x := x.contents + 4
-        Promise.resolve(true)
-      })
-
-      test("x is 0", () =>
-        if x.contents === 0 {
-          pass
-        } else {
-          fail("")
-        }
+      afterEachPromise(
+        () => {
+          x := x.contents + 4
+          Promise.resolve(true)
+        },
       )
-      test("x is suddenly 4", () =>
-        if x.contents === 4 {
-          pass
-        } else {
-          fail("")
-        }
+
+      test(
+        "x is 0",
+        () =>
+          if x.contents === 0 {
+            pass
+          } else {
+            fail("")
+          },
+      )
+      test(
+        "x is suddenly 4",
+        () =>
+          if x.contents === 4 {
+            pass
+          } else {
+            fail("")
+          },
       )
     })
 
     describe("with 100ms timeout", () => {
       let x = ref(0)
 
-      afterEachPromise(~timeout=100, () => {
-        x := x.contents + 4
-        Promise.resolve(true)
-      })
-
-      test("x is 0", () =>
-        if x.contents === 0 {
-          pass
-        } else {
-          fail("")
-        }
+      afterEachPromise(
+        ~timeout=100,
+        () => {
+          x := x.contents + 4
+          Promise.resolve(true)
+        },
       )
-      test("x is suddenly 4", () =>
-        if x.contents === 4 {
-          pass
-        } else {
-          fail("")
-        }
+
+      test(
+        "x is 0",
+        () =>
+          if x.contents === 0 {
+            pass
+          } else {
+            fail("")
+          },
+      )
+      test(
+        "x is suddenly 4",
+        () =>
+          if x.contents === 4 {
+            pass
+          } else {
+            fail("")
+          },
       )
     })
 
@@ -682,20 +827,27 @@ let () = {
         fail("")
       }
     )
-    Skip.testAllPromise("testAllPromise", list{"foo", "bar", "baz"}, input => Promise.resolve(
-      if Js.String.length(input) === 3 {
-        pass
-      } else {
-        fail("")
-      }
-    ))
-    Skip.testAllPromise("testAllPromise - tuples", list{("foo", 3), ("barbaz", 6), ("bananas!", 8)}, ((input, output)) => Promise.resolve(
-      if Js.String.length(input) === output {
-        pass
-      } else {
-        fail("")
-      }
-    ))
+    Skip.testAllPromise("testAllPromise", list{"foo", "bar", "baz"}, input =>
+      Promise.resolve(
+        if Js.String.length(input) === 3 {
+          pass
+        } else {
+          fail("")
+        },
+      )
+    )
+    Skip.testAllPromise(
+      "testAllPromise - tuples",
+      list{("foo", 3), ("barbaz", 6), ("bananas!", 8)},
+      ((input, output)) =>
+        Promise.resolve(
+          if Js.String.length(input) === output {
+            pass
+          } else {
+            fail("")
+          },
+        ),
+    )
 
     Skip.describe("Skip.describe", () => test("some aspect", () => pass))
   })
