@@ -224,7 +224,7 @@ let () = {
     })
 
     Skip.describe("timeout should fail suite", () => {
-      beforeAllPromise(~timeout=1, () => Promise.make((_, _) => ()))
+      beforeAllPromise(~timeout=1, () => Promise.make((~resolve as _, ~reject as _) => ()))
       test("", () => pass) /* runner will crash if there's no tests */
     })
   })
@@ -381,7 +381,7 @@ let () = {
     })
 
     Skip.describe("timeout should fail suite", () => {
-      beforeEachPromise(~timeout=1, () => Promise.make((_, _) => ()))
+      beforeEachPromise(~timeout=1, () => Promise.make((~resolve as _, ~reject as _) => ()))
       test("", () => pass) /* runner will crash if there's no tests */
     })
   })
@@ -632,7 +632,7 @@ let () = {
     })
 
     Skip.describe("timeout should fail suite", () => {
-      afterAllPromise(~timeout=1, () => Promise.make((_, _) => ()))
+      afterAllPromise(~timeout=1, () => Promise.make((~resolve as _, ~reject as _) => ()))
       test("", () => pass) /* runner will crash if there's no tests */
     })
   })
@@ -789,7 +789,7 @@ let () = {
     })
 
     Skip.describe("timeout should fail suite", () => {
-      afterEachPromise(~timeout=1, () => Promise.make((_, _) => ()))
+      afterEachPromise(~timeout=1, () => Promise.make((~resolve as _, ~reject as _) => ()))
       test("", () => pass) /* runner will crash if there's no tests */
     })
   })
