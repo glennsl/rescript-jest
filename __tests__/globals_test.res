@@ -1,3 +1,5 @@
+module Promise = Js.Promise2
+
 open Jest
 
 let () = {
@@ -28,7 +30,7 @@ let () = {
   testPromise("testPromise - timeout ok", ~timeout=1, () => Promise.resolve(pass))
 
   Skip.testPromise("testPromise - timeout fail", ~timeout=1, () =>
-    Promise.make((_, _) => ())
+    Promise.make((~resolve as _, ~reject as _) => ())
   )
 
   testAll("testAll", list{"foo", "bar", "baz"}, input =>
@@ -660,7 +662,7 @@ let () = {
 
     Skip.testPromise("Skip.testPromise", () => Promise.resolve(pass))
     Skip.testPromise("testPromise - timeout", ~timeout=1, () =>
-      Promise.make((_, _) => ())
+      Promise.make((~resolve as _, ~reject as _) => ())
     )
 
     Skip.testAll("testAll", list{"foo", "bar", "baz"}, input =>

@@ -1,3 +1,5 @@
+module Promise = Js.Promise2
+
 type modifier<'a> = [
   | #Just('a)
   | #Not('a)

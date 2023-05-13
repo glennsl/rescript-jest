@@ -1,3 +1,5 @@
+module Promise = Js.Promise2
+
 open Jest
 
 let () = {
