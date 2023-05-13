@@ -2,7 +2,6 @@
   "name": "@glennsl/rescript-jest",
   "namespace": false,
   "bsc-flags": ["-bs-no-version-header", "-bs-super-errors"],
-  "bs-dependencies": ["@ryyppy/rescript-promise"],
   "suffix": ".bs.js",
   "package-specs": {
     "module": "commonjs",

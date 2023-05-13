@@ -9,80 +9,80 @@ module Runner: (A: Asserter) =>
 {
   let test: (string, unit => A.t<_>) => unit
   let testAsync: (string, ~timeout: int=?, (A.t<_> => unit) => unit) => unit
-  let testPromise: (string, ~timeout: int=?, unit => Promise.t<A.t<_>>) => unit
+  let testPromise: (string, ~timeout: int=?, unit => promise<A.t<_>>) => unit
   let testAll: (string, list<'a>, 'a => A.t<_>) => unit
-  let testAllPromise: (string, list<'a>, ~timeout: int=?, 'a => Promise.t<A.t<_>>) => unit
+  let testAllPromise: (string, list<'a>, ~timeout: int=?, 'a => promise<A.t<_>>) => unit
 
   let describe: (string, unit => unit) => unit
 
   @val external beforeAll: (@uncurry (unit => unit)) => unit = "beforeAll"
   let beforeAllAsync: (~timeout: int=?, (unit => unit) => unit) => unit
-  let beforeAllPromise: (~timeout: int=?, unit => Promise.t<'a>) => unit
+  let beforeAllPromise: (~timeout: int=?, unit => promise<'a>) => unit
   @val external beforeEach: (@uncurry (unit => unit)) => unit = "beforeEach"
   let beforeEachAsync: (~timeout: int=?, (unit => unit) => unit) => unit
-  let beforeEachPromise: (~timeout: int=?, unit => Promise.t<'a>) => unit
+  let beforeEachPromise: (~timeout: int=?, unit => promise<'a>) => unit
   @val external afterAll: (@uncurry (unit => unit)) => unit = "afterAll"
   let afterAllAsync: (~timeout: int=?, (unit => unit) => unit) => unit
-  let afterAllPromise: (~timeout: int=?, unit => Promise.t<'a>) => unit
+  let afterAllPromise: (~timeout: int=?, unit => promise<'a>) => unit
   @val external afterEach: (@uncurry (unit => unit)) => unit = "afterEach"
   let afterEachAsync: (~timeout: int=?, (unit => unit) => unit) => unit
-  let afterEachPromise: (~timeout: int=?, unit => Promise.t<'a>) => unit
+  let afterEachPromise: (~timeout: int=?, unit => promise<'a>) => unit
 
   module Only: {
     let test: (string, unit => A.t<_>) => unit
     let testAsync: (string, ~timeout: int=?, (A.t<_> => unit) => unit) => unit
-    let testPromise: (string, ~timeout: int=?, unit => Promise.t<A.t<_>>) => unit
+    let testPromise: (string, ~timeout: int=?, unit => promise<A.t<_>>) => unit
     let testAll: (string, list<'a>, 'a => A.t<_>) => unit
-    let testAllPromise: (string, list<'a>, ~timeout: int=?, 'a => Promise.t<A.t<_>>) => unit
+    let testAllPromise: (string, list<'a>, ~timeout: int=?, 'a => promise<A.t<_>>) => unit
     let describe: (string, unit => unit) => unit
   }
 
   module Skip: {
     let test: (string, unit => A.t<_>) => unit
     let testAsync: (string, ~timeout: int=?, (A.t<_> => unit) => unit) => unit
-    let testPromise: (string, ~timeout: int=?, unit => Promise.t<A.t<_>>) => unit
+    let testPromise: (string, ~timeout: int=?, unit => promise<A.t<_>>) => unit
     let testAll: (string, list<'a>, 'a => A.t<_>) => unit
-    let testAllPromise: (string, list<'a>, ~timeout: int=?, 'a => Promise.t<A.t<_>>) => unit
+    let testAllPromise: (string, list<'a>, ~timeout: int=?, 'a => promise<A.t<_>>) => unit
     let describe: (string, unit => unit) => unit
   }
 }
 
 let test: (string, unit => assertion) => unit
 let testAsync: (string, ~timeout: int=?, (assertion => unit) => unit) => unit
-let testPromise: (string, ~timeout: int=?, unit => Promise.t<assertion>) => unit
+let testPromise: (string, ~timeout: int=?, unit => promise<assertion>) => unit
 let testAll: (string, list<'a>, 'a => assertion) => unit
-let testAllPromise: (string, list<'a>, ~timeout: int=?, 'a => Promise.t<assertion>) => unit
+let testAllPromise: (string, list<'a>, ~timeout: int=?, 'a => promise<assertion>) => unit
 
 let describe: (string, unit => unit) => unit
 
 @val external beforeAll: (@uncurry (unit => unit)) => unit = "beforeAll"
 let beforeAllAsync: (~timeout: int=?, (unit => unit) => unit) => unit
-let beforeAllPromise: (~timeout: int=?, unit => Promise.t<'a>) => unit
+let beforeAllPromise: (~timeout: int=?, unit => promise<'a>) => unit
 @val external beforeEach: (@uncurry (unit => unit)) => unit = "beforeEach"
 let beforeEachAsync: (~timeout: int=?, (unit => unit) => unit) => unit
-let beforeEachPromise: (~timeout: int=?, unit => Promise.t<'a>) => unit
+let beforeEachPromise: (~timeout: int=?, unit => promise<'a>) => unit
 @val external afterAll: (@uncurry (unit => unit)) => unit = "afterAll"
 let afterAllAsync: (~timeout: int=?, (unit => unit) => unit) => unit
-let afterAllPromise: (~timeout: int=?, unit => Promise.t<'a>) => unit
+let afterAllPromise: (~timeout: int=?, unit => promise<'a>) => unit
 @val external afterEach: (@uncurry (unit => unit)) => unit = "afterEach"
 let afterEachAsync: (~timeout: int=?, (unit => unit) => unit) => unit
-let afterEachPromise: (~timeout: int=?, unit => Promise.t<'a>) => unit
+let afterEachPromise: (~timeout: int=?, unit => promise<'a>) => unit
 
 module Only: {
   let test: (string, unit => assertion) => unit
   let testAsync: (string, ~timeout: int=?, (assertion => unit) => unit) => unit
-  let testPromise: (string, ~timeout: int=?, unit => Promise.t<assertion>) => unit
+  let testPromise: (string, ~timeout: int=?, unit => promise<assertion>) => unit
   let testAll: (string, list<'a>, 'a => assertion) => unit
-  let testAllPromise: (string, list<'a>, ~timeout: int=?, 'a => Promise.t<assertion>) => unit
+  let testAllPromise: (string, list<'a>, ~timeout: int=?, 'a => promise<assertion>) => unit
   let describe: (string, unit => unit) => unit
 }
 
 module Skip: {
   let test: (string, unit => assertion) => unit
   let testAsync: (string, ~timeout: int=?, (assertion => unit) => unit) => unit
-  let testPromise: (string, ~timeout: int=?, unit => Promise.t<assertion>) => unit
+  let testPromise: (string, ~timeout: int=?, unit => promise<assertion>) => unit
   let testAll: (string, list<'a>, 'a => assertion) => unit
-  let testAllPromise: (string, list<'a>, ~timeout: int=?, 'a => Promise.t<assertion>) => unit
+  let testAllPromise: (string, list<'a>, ~timeout: int=?, 'a => promise<assertion>) => unit
   let describe: (string, unit => unit) => unit
 }
 

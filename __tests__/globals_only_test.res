@@ -1,3 +1,5 @@
+module Promise = Js.Promise2
+
 open Jest
 
 let () = {
@@ -26,20 +28,27 @@ let () = {
       fail("")
     }
   )
-  Only.testAllPromise("testAllPromise", list{"foo", "bar", "baz"}, input => Promise.resolve(
-    if Js.String.length(input) === 3 {
-      pass
-    } else {
-      fail("")
-    }
-  ))
-  Only.testAllPromise("testAllPromise - tuples", list{("foo", 3), ("barbaz", 6), ("bananas!", 8)}, ((input, output)) => Promise.resolve(
-    if Js.String.length(input) === output {
-      pass
-    } else {
-      fail("")
-    }
-  ))
+  Only.testAllPromise("testAllPromise", list{"foo", "bar", "baz"}, input =>
+    Promise.resolve(
+      if Js.String.length(input) === 3 {
+        pass
+      } else {
+        fail("")
+      },
+    )
+  )
+  Only.testAllPromise(
+    "testAllPromise - tuples",
+    list{("foo", 3), ("barbaz", 6), ("bananas!", 8)},
+    ((input, output)) =>
+      Promise.resolve(
+        if Js.String.length(input) === output {
+          pass
+        } else {
+          fail("")
+        },
+      ),
+  )
 
   Only.describe("Only.describe", () => test("some aspect", () => pass))
 }
