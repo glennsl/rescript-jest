@@ -1,8 +1,8 @@
 {
-  "name": "@glennsl/rescript-jest",
+  "name": "@awebyte/rescript-jest",
   "version": "0.10.0",
   "description": "Rescript bindings to the Jest testing framework",
-  "author": "glennsl",
+  "author": "Awebyte",
   "license": "MIT",
   "scripts": {
     "build": "rescript build -with-deps",
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/glennsl/rescript-jest.git"
+    "url": "git+https://github.com/LoganGrier/rescript-jest.git"
   },
   "keywords": [
     "Rescript",
@@ -24,9 +24,9 @@
     "test"
   ],
   "bugs": {
-    "url": "https://github.com/glennsl/rescript-jest/issues"
+    "url": "https://github.com/LoganGrier/rescript-jest/issues"
   },
-  "homepage": "https://github.com/glennsl/rescript-jest#readme",
+  "homepage": "https://github.com/LoganGrier/rescript-jest#readme",
   "files": [
     "src/",
     "bsconfig.json"

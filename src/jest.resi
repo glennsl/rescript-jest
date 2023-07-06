@@ -7,6 +7,7 @@ module type Asserter = {
 
 module Runner: (A: Asserter) =>
 {
+  let affirm: A.t<'a> => unit
   let test: (string, unit => A.t<_>) => unit
   let testAsync: (string, ~timeout: int=?, (A.t<_> => unit) => unit) => unit
   let testPromise: (string, ~timeout: int=?, unit => promise<A.t<_>>) => unit
@@ -47,6 +48,7 @@ module Runner: (A: Asserter) =>
   }
 }
 
+let affirm: assertion => unit
 let test: (string, unit => assertion) => unit
 let testAsync: (string, ~timeout: int=?, (assertion => unit) => unit) => unit
 let testPromise: (string, ~timeout: int=?, unit => promise<assertion>) => unit

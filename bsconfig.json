@@ -1,5 +1,5 @@
 {
-  "name": "@glennsl/rescript-jest",
+  "name": "@awebyte/rescript-jest",
   "namespace": false,
   "bsc-flags": ["-bs-no-version-header", "-bs-super-errors"],
   "suffix": ".bs.js",
