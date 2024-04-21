@@ -194,6 +194,10 @@ Then build and run tests with `npm test`, start watchers for `rescript`and `jest
 
 ## Changes
 
+### 0.11
+- [BREAKING] Bump required rescript to 11.1.x, uncurried mode requires MockJs.fn to be applied with explcicit currying.
+- Worked around bug in rescript 11 curried mode where `@uncurry` causes an extra param which changes Jest behaviour, by replacing `@uncurry` with `(. )`.
+
 ### 0.10
 - [BREAKING] Bump required rescript to 10.1.x
 - Remove unnecessary dependency on `@ryyppy/rescript-promise`
