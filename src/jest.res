@@ -196,7 +196,7 @@ module Runner = (A: Asserter) => {
       Js.undefined
     })
 
-  @val external beforeAll: (@uncurry (unit => unit)) => unit = "beforeAll"
+  @val external beforeAll: (. unit => unit) => unit = "beforeAll"
   @val
   external beforeAllAsync: (((. unit) => unit) => Js.undefined<unit>, Js.Undefined.t<int>) => unit =
     "beforeAll"
@@ -210,7 +210,7 @@ module Runner = (A: Asserter) => {
   let beforeAllPromise = (~timeout=?, callback) =>
     beforeAllPromise(() => Promise.resolve(callback()), Js.Undefined.fromOption(timeout))
 
-  @val external beforeEach: (@uncurry (unit => unit)) => unit = "beforeEach"
+  @val external beforeEach: (. unit => unit) => unit = "beforeEach"
   @val
   external beforeEachAsync: (
     ((. unit) => unit) => Js.undefined<unit>,
@@ -226,7 +226,7 @@ module Runner = (A: Asserter) => {
   let beforeEachPromise = (~timeout=?, callback) =>
     beforeEachPromise(() => Promise.resolve(callback()), Js.Undefined.fromOption(timeout))
 
-  @val external afterAll: (@uncurry (unit => unit)) => unit = "afterAll"
+  @val external afterAll: (. unit => unit) => unit = "afterAll"
   @val
   external afterAllAsync: (((. unit) => unit) => Js.undefined<unit>, Js.Undefined.t<int>) => unit =
     "afterAll"
@@ -240,7 +240,7 @@ module Runner = (A: Asserter) => {
   let afterAllPromise = (~timeout=?, callback) =>
     afterAllPromise(() => Promise.resolve(callback()), Js.Undefined.fromOption(timeout))
 
-  @val external afterEach: (@uncurry (unit => unit)) => unit = "afterEach"
+  @val external afterEach: (. unit => unit) => unit = "afterEach"
   @val
   external afterEachAsync: (((. unit) => unit) => Js.undefined<unit>, Js.Undefined.t<int>) => unit =
     "afterEach"

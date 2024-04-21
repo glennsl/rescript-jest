@@ -15,16 +15,16 @@ module Runner: (A: Asserter) =>
 
   let describe: (string, unit => unit) => unit
 
-  @val external beforeAll: (@uncurry (unit => unit)) => unit = "beforeAll"
+  @val external beforeAll: (. unit => unit) => unit = "beforeAll"
   let beforeAllAsync: (~timeout: int=?, (unit => unit) => unit) => unit
   let beforeAllPromise: (~timeout: int=?, unit => promise<'a>) => unit
-  @val external beforeEach: (@uncurry (unit => unit)) => unit = "beforeEach"
+  @val external beforeEach: (. unit => unit) => unit = "beforeEach"
   let beforeEachAsync: (~timeout: int=?, (unit => unit) => unit) => unit
   let beforeEachPromise: (~timeout: int=?, unit => promise<'a>) => unit
-  @val external afterAll: (@uncurry (unit => unit)) => unit = "afterAll"
+  @val external afterAll: (. unit => unit) => unit = "afterAll"
   let afterAllAsync: (~timeout: int=?, (unit => unit) => unit) => unit
   let afterAllPromise: (~timeout: int=?, unit => promise<'a>) => unit
-  @val external afterEach: (@uncurry (unit => unit)) => unit = "afterEach"
+  @val external afterEach: (. unit => unit) => unit = "afterEach"
   let afterEachAsync: (~timeout: int=?, (unit => unit) => unit) => unit
   let afterEachPromise: (~timeout: int=?, unit => promise<'a>) => unit
 
@@ -55,16 +55,16 @@ let testAllPromise: (string, list<'a>, ~timeout: int=?, 'a => promise<assertion>
 
 let describe: (string, unit => unit) => unit
 
-@val external beforeAll: (@uncurry (unit => unit)) => unit = "beforeAll"
+@val external beforeAll: (. unit => unit) => unit = "beforeAll"
 let beforeAllAsync: (~timeout: int=?, (unit => unit) => unit) => unit
 let beforeAllPromise: (~timeout: int=?, unit => promise<'a>) => unit
-@val external beforeEach: (@uncurry (unit => unit)) => unit = "beforeEach"
+@val external beforeEach: (. unit => unit) => unit = "beforeEach"
 let beforeEachAsync: (~timeout: int=?, (unit => unit) => unit) => unit
 let beforeEachPromise: (~timeout: int=?, unit => promise<'a>) => unit
-@val external afterAll: (@uncurry (unit => unit)) => unit = "afterAll"
+@val external afterAll: (. unit => unit) => unit = "afterAll"
 let afterAllAsync: (~timeout: int=?, (unit => unit) => unit) => unit
 let afterAllPromise: (~timeout: int=?, unit => promise<'a>) => unit
-@val external afterEach: (@uncurry (unit => unit)) => unit = "afterEach"
+@val external afterEach: (. unit => unit) => unit = "afterEach"
 let afterEachAsync: (~timeout: int=?, (unit => unit) => unit) => unit
 let afterEachPromise: (~timeout: int=?, unit => promise<'a>) => unit
 
