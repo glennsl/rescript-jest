@@ -38,8 +38,8 @@ module.exports = {
     "json",
     "html",
     "text",
-  //   "lcov",
-  //   "clover"
+    //   "lcov",
+    //   "clover"
   ],
 
   // An object that configures minimum threshold enforcement for coverage results
@@ -83,11 +83,11 @@ module.exports = {
   moduleFileExtensions: [
     "js",
     "mjs",
-  //  "jsx",
-  //  "ts",
-  //  "tsx",
-  //  "json",
-  //  "node"
+    //  "jsx",
+    //  "ts",
+    //  "tsx",
+    //  "json",
+    //  "node"
   ],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
@@ -164,6 +164,7 @@ module.exports = {
     //"**/__tests__/**/*.[jt]s?(x)",
     "**/__tests__/**/*_test.mjs",
     "**/__tests__/**/*_test.bs.js",
+    "**/__tests__/**/*_test.res.mjs",
     //"**/?(*.)+(spec|test).[tj]s?(x)"
   ],
 
@@ -190,15 +191,15 @@ module.exports = {
   // A map from regular expressions to paths to transformers
   transform: {
     "^.+\.m?js$": "babel-jest"
-  // "^.+\.js$": "babel-jest"
+    // "^.+\.js$": "babel-jest"
   },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
   transformIgnorePatterns: [
     "node_modules/(?!(rescript)/)"
-  //   "/node_modules/",
-  //   "\\.pnp\\.[^\\/]+$",
-  //   "/src/"
+    //   "/node_modules/",
+    //   "\\.pnp\\.[^\\/]+$",
+    //   "/src/"
   ],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
