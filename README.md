@@ -56,6 +56,7 @@ module.exports = {
 testMatch: [
     "**/__tests__/**/*_test.mjs",
     "**/__tests__/**/*_test.bs.js",
+    "**/__tests__/**/*_test.res.mjs",
   ],
     transform: {
     "^.+\.m?js$": "babel-jest"
