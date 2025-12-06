@@ -163,6 +163,7 @@ module.exports = {
   testMatch: [
     //"**/__tests__/**/*.[jt]s?(x)",
     "**/__tests__/**/*_test.mjs",
+    "**/__tests__/**/*_test.bs.js",
     "**/__tests__/**/*_test.res.mjs",
     //"**/?(*.)+(spec|test).[tj]s?(x)"
   ],
