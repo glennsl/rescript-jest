@@ -178,6 +178,10 @@ Then build and run tests with `npm test`, start watchers for `rescript`and `jest
 
 ## Changes
 
+### 0.13
+- [BREAKING] Update to rescript 12.
+- [BREAKING] Replaces the use of `undefined` with `option`, which is equivalent since it compiles to 'undefined' in the case of 'None'.
+
 ### 0.12
 - Add support for `res.mjs` file extension, introduced in rescript 11.
 
@@ -206,70 +210,56 @@ Then build and run tests with `npm test`, start watchers for `rescript`and `jest
 - [BREAKING] As the `|>` operator is deprecated in Recript 9.x, all APIs now use data-first (`->`) semantics.
 
 ### 0.7
-
 - [BREAKING] Actually removed `toThrowException`, `toThrowMessage` and `toThrowMessageRe` as they relied on assumptions about BuckleScript internals that no longer hold.
 
 ### 0.6
-
 - Added `Expect.toContainEqual`
 - Updated to Jest 26.5.2
 - Upgraded bs-platform to 8.3.1
 
 ### 0.5.1
-
 - Added `Expect.toMatchInlineSnapshot`
 
 ### 0.5.0
-
 - Updated to Jest 25.1.0
 
 ### 0.4.9
-
 - Added `Todo.test`
 
 ### 0.4.8
-
 - Updated jest to 24.3.1
 - Fixed jest warnings not to return anything from `describe` callbacks by explicitly returning `undefined` (otherwise BuckleScript will return something else like `()`, which is represented as `0`)
 - Fixed several newly uncovered uncurrying issues caused by surprise breaking changes in BuckleScript (Thanks again, Bob!)
 - Added `Jest.advanceTimersByTime`, which is basically just an alias of `Jest.runTimersToTime`
 
 ### 0.4.7
-
 - Added `Expect.not__` for transitional compatibility with Reason syntax change of "unkeywording" `not` by mangling it into `not_`, and `not_` into `not__` and so on.
 
 ### 0.4.6
-
 - Made uncurrying explicit for `afterAllPromise` too.
 
 ### 0.4.5
-
 - Made uncurrying explicit to fix a breaking change in implicit uncurrying from `bs-platform` 4.0.7 (Thanks Bob!)
 
 ### 0.4.3
-
 - Removed some optimizations on skipped tests that Jest 23 suddenly started objecting to (#30)
 
 ### 0.4.0
-
 - Added `MockJs.new0`, `new1` and `new2`
 - Added `timeout` argument to `testAsync` and `testPromise` functions
 - Added `beforeEachAsync`, `beforeEachPromise`, `afterEachAsync` and `afterEachPromise`
 - Added `beforeAllAsync`, `beforeAllPromise`, `afterAllAsync` and `afterAllPromise`
 
 ### 0.3.1
-
 - Moved repository from `reasonml-community/bs-jest` to `glennsl/bs-jest`
 - Renamed NPM package from `bs-jest` to `@glennsl/bs-jest`
 
 ### 0.3.0
-
 - Added `toThrowException`
 - Fixed an issue with custom Runner implementation shadowing the global `test` function from jest
 - Fixed a typo in the js boundary of `not_ |> toBeLessThanEqual`
 
 ### 0.2.0
-
 - Removed deprecations
 - Added `testAll`, `Only.testAll`, `Skip.testAll` that generates tests from a list of inputs
 - Fixed type signature of `fail`
