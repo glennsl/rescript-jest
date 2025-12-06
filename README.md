@@ -1,27 +1,10 @@
 # Rescript-jest
 
-[ReScript](https://github.com/rescript-lang) bindings for [Jest](https://github.com/facebook/jest)
+[ReScript](https://github.com/rescript-lang/rescript) bindings for [Jest](https://github.com/facebook/jest)
 
 [![npm](https://img.shields.io/npm/v/@glennsl/rescript-jest.svg)](https://npmjs.org/@glennsl/rescript-jest)
-[![Travis](https://img.shields.io/travis/glennsl/rescript-jest/master.svg)](https://travis-ci.org/glennsl/rescript-jest)
-[![Coverage](https://img.shields.io/coveralls/glennsl/rescript-jest/master.svg)](https://coveralls.io/github/glennsl/rescript-jest?branch=master)
 [![Issues](https://img.shields.io/github/issues/glennsl/rescript-jest.svg)](https://github.com/glennsl/rescript-jest/issues)
 [![Last Commit](https://img.shields.io/github/last-commit/glennsl/rescript-jest.svg)](https://github.com/glennsl/rescript-jest/commits/master)
-
-**NOTE:** The _NPM package has moved to `@glennsl/rescript-jest`. Remember to update both `package.json` AND `bsconfig.json`._
-
-## Status
-
-### Rescript-jest
-- bs-jest is rebranded as rescript-jest
-- rescript-jest depends on Rescript 9.1.4, Jest 27.3.1 and @ryyppy/rescript-promise 2.1.0.
-- Starting from Jest 27.0.0 jest-jasmine was replaced by jest-circus changing the semantics for before and after hooks.  `afterAllAsync` and `afterAllPromise` hooks now time-out consistent with the behavior of `beforeAllAsync` and `beforeAllPromise` in version 0.7.0 of bs-jest.  `beforeAllAsync` and `beforeAllPromise` also now behave consistently with '`afterAllAsync` and `afterAllPromise` when included in skipped test suites.
-- rescript-jest API now uses data-first semantics throughout and uses `rescript-promise` in place of `Js.Promise`.
-- usefakeTimers() binding updated to address changes in the Jest fake timer API (useFakeTimer(~implementation=[#legacy|#modern], ()))
-- Deprecated BuckleScript `@bs.send.pipe` bindings were converted to rescript `@send` bindings.
-- All tests have been updated to reflect semantic and behavioral changes.
-- Babel modules have been added as dev dependencies to make generated bs-jest bindings available in ES6 module format.
-- Babel and Jest config files are included illustrating how to transform ES6 modules for Jest.
 
 To generate ES6 bindings for your project, update bsconfig.json
 
