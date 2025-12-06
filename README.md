@@ -26,7 +26,7 @@
 To generate ES6 bindings for your project, update bsconfig.json
 
 ```js
-    "suffix": ".mjs",
+  "suffix": "res.mjs",
   "package-specs": {
     "module": "ES6",
     "in-source": true
@@ -113,16 +113,16 @@ or
 yarn install --save-dev @glennsl/rescript-jest
 ```
 
-Then add `@glennsl/rescript-jest` to `bs-dev-dependencies` in your `bsconfig.json`:
+Then add `@glennsl/rescript-jest` to `dev-dependencies` in your `rescript.json`:
 
 ```js
 {
   ...
-  "bs-dev-dependencies": ["@glennsl/rescript-jest"]
+  "dev-dependencies": ["@glennsl/rescript-jest"]
 }
 ```
 
-Then add `__tests__` to `sources` in your `bsconfig.json`:
+Then add `__tests__` to `sources` in your `rescript.json`:
 
 ```js
 "sources": [
@@ -138,7 +138,7 @@ Then add `__tests__` to `sources` in your `bsconfig.json`:
 
 ## Usage
 
-Put tests in a `__tests__` directory and use the suffix `*test.res`/ (Make sure to use valid module names. e.g. `<name>_test.res` is valid while `<name>.test.res` is not). When compiled they will be put in a `__tests__` directory under `lib`, with a `*test.bs.js` suffix, ready to be picked up when you run `jest`. If you're not already familiar with [Jest](https://github.com/facebook/jest), see [the Jest documentation](https://facebook.github.io/jest/).
+Put tests in a `__tests__` directory and use the suffix `*test.res`/ (Make sure to use valid module names. e.g. `<name>_test.res` is valid while `<name>.test.res` is not). When compiled they will be put in a `__tests__` directory under `lib`, with a `*test.res.mjs` suffix, ready to be picked up when you run `jest`. If you're not already familiar with [Jest](https://github.com/facebook/jest), see [the Jest documentation](https://facebook.github.io/jest/).
 
 One very important difference from Jest is that assertions are not imperative. That is, `expect(1 + 2) -> toBe(3)`, for example, will not "execute" the assertion then and there. It will instead return an `assertion` value which must be returned from the test function. Only after the test function has completed will the returned assertion be checked. Any other assertions will be ignored, but unless you explicitly ignore them, it will produce compiler warnings about unused values. **This means there can be at most one assertion per test**. But it also means there must be at least one assertion per test. You can't forget an assertion in a branch, and think the test passes when in fact it doesn't even test anything. It will also force you to write simple tests that are easy to understand and refactor, and will give you more information about what's wrong when something does go wrong.
 
