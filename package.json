@@ -1,43 +1,36 @@
 {
-  "name": "@glennsl/rescript-jest",
-  "version": "0.12.0",
-  "description": "Rescript bindings to the Jest testing framework",
-  "author": "glennsl",
-  "license": "MIT",
-  "scripts": {
-    "build": "rescript build -with-deps",
-    "clean": "rescript clean",
-    "start": "rescript build -w",
-    "test": "npm run build && jest",
-    "test-ci": "npm run build && jest --coverage --coverageDirectory='coverage'",
-    "watch:rescript": "rescript build -with-deps -w",
-    "watch:jest": "jest --coverage --watchAll",
-    "watch:screen": "screen -c .screenrc"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/glennsl/rescript-jest.git"
-  },
-  "keywords": [
-    "Rescript",
-    "jest",
-    "test"
-  ],
-  "bugs": {
-    "url": "https://github.com/glennsl/rescript-jest/issues"
-  },
-  "homepage": "https://github.com/glennsl/rescript-jest#readme",
-  "files": [
-    "src/",
-    "bsconfig.json"
-  ],
-  "devDependencies": {
-    "@babel/core": "^7.15.8",
-    "@babel/preset-env": "^7.15.8",
-    "babel-jest": "^27.3.1",
-    "rescript": "^11.1.0"
-  },
-  "dependencies": {
-    "jest": "^27.3.1"
-  }
+    "name": "@glennsl/rescript-jest",
+    "version": "0.12.0",
+    "description": "Rescript bindings to the Jest testing framework",
+    "author": "glennsl",
+    "license": "MIT",
+    "scripts": {
+        "build": "rescript build",
+        "clean": "rescript clean",
+        "start": "rescript watch",
+        "test": "npm run build && jest",
+        "test-ci": "npm run build && jest --coverage --coverageDirectory='coverage'",
+        "watch:rescript": "rescript watch",
+        "watch:jest": "jest --coverage --watchAll",
+        "watch:screen": "screen -c .screenrc"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/glennsl/rescript-jest.git"
+    },
+    "keywords": ["Rescript", "jest", "test"],
+    "bugs": {
+        "url": "https://github.com/glennsl/rescript-jest/issues"
+    },
+    "homepage": "https://github.com/glennsl/rescript-jest#readme",
+    "files": ["src/", "bsconfig.json"],
+    "devDependencies": {
+        "@babel/core": "^7.15.8",
+        "@babel/preset-env": "^7.15.8",
+        "babel-jest": "^27.3.1",
+        "rescript": "^12.0.0"
+    },
+    "dependencies": {
+        "jest": "^27.3.1"
+    }
 }
