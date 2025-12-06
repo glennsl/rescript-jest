@@ -22,14 +22,14 @@ let () = {
     test("toHaveLength", () => expect(["a", "b", "c"])->toHaveLength(3))
     test("toEqual", () => expect(1 + 2)->toEqual(3))
     test("toMatch", () => expect("banana")->toMatch("nana"))
-    test("toMatchRe", () => expect("banana")->toMatchRe(%re("/ana/")))
-    test("toThrow", () => expect(() => assert false)->toThrow)
+    test("toMatchRe", () => expect("banana")->toMatchRe(/ana/))
+    test("toThrow", () => expect(() => assert(false))->toThrow)
 
     test("toMatchInlineSnapshot", () => expect("foo")->toMatchInlineSnapshot("\"foo\""))
     test("toMatchSnapshot", () => expect("foo")->toMatchSnapshot)
     test("toMatchSnapshotWithName", () => expect("foo")->toMatchSnapshotWithName("bar"))
     test("toThrowErrorMatchingSnapshot", () =>
-      expect(() => Js.Exn.raiseError("foo error"))->toThrowErrorMatchingSnapshot
+      expect(() => JsError.throwWithMessage("foo error"))->toThrowErrorMatchingSnapshot
     )
 
     test("not toBe", () => expect(1 + 2)->not_->toBe(4))
@@ -48,44 +48,44 @@ let () = {
     test("not toHaveLength", () => expect(["a", "b", "c"])->not_->toHaveLength(2))
     test("not toEqual", () => expect(1 + 2)->not_->toEqual(4))
     test("not toMatch", () => expect("banana")->not_->toMatch("nanan"))
-    test("not toMatchRe", () => expect("banana")->not_->toMatchRe(%re("/anas/")))
+    test("not toMatchRe", () => expect("banana")->not_->toMatchRe(/anas/))
     test("not toThrow", () => expect(() => 2)->not_->toThrow)
 
-    test("expectFn", () => expectFn(raise, Invalid_argument("foo"))->toThrow)
+    test("expectFn", () => expectFn(throw, Invalid_argument("foo"))->toThrow)
   })
 
   describe("Expect.Operators", () => {
     open Expect
     open! Expect.Operators
 
-    test("==", () => expect(1 + 2) === 3)
+    test("==", () => expect(1 + 2) == 3)
+    test("===", () => expect(1 + 2) === 3)
+    test("!=", () => expect(1 + 2) != 4)
+    test("!==", () => expect(1 + 2) !== 4)
     test(">", () => expect(4) > 3)
     test(">=", () => expect(4) >= 4)
     test("<", () => expect(4) < 5)
     test("<=", () => expect(4) <= 4)
-    test("=", () => expect(1 + 2) == 3)
-    test("<>", () => expect(1 + 2) != 4)
-    test("!=", () => expect(1 + 2) !== 4)
   })
 
   describe("ExpectJs", () => {
     open ExpectJs
 
-    test("toBeDefined", () => expect(Js.Undefined.return(3))->toBeDefined)
-    test("toBeFalsy", () => expect(nan)->toBeFalsy)
-    test("toBeNull", () => expect(Js.null)->toBeNull)
+    test("toBeDefined", () => expect(Some(3))->toBeDefined)
+    test("toBeFalsy", () => expect(Float.Constants.nan)->toBeFalsy)
+    test("toBeNull", () => expect(Null.null)->toBeNull)
     test("toBeTruthy", () => expect([])->toBeTruthy)
-    test("toBeUndefined", () => expect(Js.Undefined.empty)->toBeUndefined)
+    test("toBeUndefined", () => expect(None)->toBeUndefined)
     test("toContainProperties", () =>
       expect({"foo": 0, "bar": true})->toContainProperties(["foo", "bar"])
     )
     test("toMatchObject", () => expect({"a": 1, "b": 2, "c": 3})->toMatchObject({"a": 1, "b": 2}))
 
-    test("not toBeDefined", () => expect(Js.undefined)->not_->toBeDefined)
+    test("not toBeDefined", () => expect(None)->not_->toBeDefined)
     test("not toBeFalsy", () => expect([])->not_->toBeFalsy)
-    test("not toBeNull", () => expect(Js.Null.return(4))->not_->toBeNull)
-    test("not toBeTruthy", () => expect(nan)->not_->toBeTruthy)
-    test("not toBeUndefined", () => expect(Js.Undefined.return(4))->not_->toBeUndefined)
+    test("not toBeNull", () => expect(Null.make(4))->not_->toBeNull)
+    test("not toBeTruthy", () => expect(Float.Constants.nan)->not_->toBeTruthy)
+    test("not toBeUndefined", () => expect(Some(4))->not_->toBeUndefined)
     test("not toContainProperties", () =>
       expect({"foo": 0, "bar": true})->not_->toContainProperties(["foo", "zoo"])
     )
