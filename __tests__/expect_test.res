@@ -22,8 +22,8 @@ let () = {
     test("toHaveLength", () => expect(["a", "b", "c"])->toHaveLength(3))
     test("toEqual", () => expect(1 + 2)->toEqual(3))
     test("toMatch", () => expect("banana")->toMatch("nana"))
-    test("toMatchRe", () => expect("banana")->toMatchRe(%re("/ana/")))
-    test("toThrow", () => expect(() => assert false)->toThrow)
+    test("toMatchRe", () => expect("banana")->toMatchRe(/ana/))
+    test("toThrow", () => expect(() => assert(false))->toThrow)
 
     test("toMatchInlineSnapshot", () => expect("foo")->toMatchInlineSnapshot("\"foo\""))
     test("toMatchSnapshot", () => expect("foo")->toMatchSnapshot)
@@ -48,7 +48,7 @@ let () = {
     test("not toHaveLength", () => expect(["a", "b", "c"])->not_->toHaveLength(2))
     test("not toEqual", () => expect(1 + 2)->not_->toEqual(4))
     test("not toMatch", () => expect("banana")->not_->toMatch("nanan"))
-    test("not toMatchRe", () => expect("banana")->not_->toMatchRe(%re("/anas/")))
+    test("not toMatchRe", () => expect("banana")->not_->toMatchRe(/anas/))
     test("not toThrow", () => expect(() => 2)->not_->toThrow)
 
     test("expectFn", () => expectFn(throw, Invalid_argument("foo"))->toThrow)

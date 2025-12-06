@@ -15,16 +15,16 @@ module Runner: (A: Asserter) =>
 
   let describe: (string, unit => unit) => unit
 
-  @val external beforeAll: (. unit => unit) => unit = "beforeAll"
+  @val external beforeAll: (unit => unit) => unit = "beforeAll"
   let beforeAllAsync: (~timeout: int=?, (unit => unit) => unit) => unit
   let beforeAllPromise: (~timeout: int=?, unit => promise<'a>) => unit
-  @val external beforeEach: (. unit => unit) => unit = "beforeEach"
+  @val external beforeEach: (unit => unit) => unit = "beforeEach"
   let beforeEachAsync: (~timeout: int=?, (unit => unit) => unit) => unit
   let beforeEachPromise: (~timeout: int=?, unit => promise<'a>) => unit
-  @val external afterAll: (. unit => unit) => unit = "afterAll"
+  @val external afterAll: (unit => unit) => unit = "afterAll"
   let afterAllAsync: (~timeout: int=?, (unit => unit) => unit) => unit
   let afterAllPromise: (~timeout: int=?, unit => promise<'a>) => unit
-  @val external afterEach: (. unit => unit) => unit = "afterEach"
+  @val external afterEach: (unit => unit) => unit = "afterEach"
   let afterEachAsync: (~timeout: int=?, (unit => unit) => unit) => unit
   let afterEachPromise: (~timeout: int=?, unit => promise<'a>) => unit
 
@@ -55,16 +55,16 @@ let testAllPromise: (string, list<'a>, ~timeout: int=?, 'a => promise<assertion>
 
 let describe: (string, unit => unit) => unit
 
-@val external beforeAll: (. unit => unit) => unit = "beforeAll"
+@val external beforeAll: (unit => unit) => unit = "beforeAll"
 let beforeAllAsync: (~timeout: int=?, (unit => unit) => unit) => unit
 let beforeAllPromise: (~timeout: int=?, unit => promise<'a>) => unit
-@val external beforeEach: (. unit => unit) => unit = "beforeEach"
+@val external beforeEach: (unit => unit) => unit = "beforeEach"
 let beforeEachAsync: (~timeout: int=?, (unit => unit) => unit) => unit
 let beforeEachPromise: (~timeout: int=?, unit => promise<'a>) => unit
-@val external afterAll: (. unit => unit) => unit = "afterAll"
+@val external afterAll: (unit => unit) => unit = "afterAll"
 let afterAllAsync: (~timeout: int=?, (unit => unit) => unit) => unit
 let afterAllPromise: (~timeout: int=?, unit => promise<'a>) => unit
-@val external afterEach: (. unit => unit) => unit = "afterEach"
+@val external afterEach: (unit => unit) => unit = "afterEach"
 let afterEachAsync: (~timeout: int=?, (unit => unit) => unit) => unit
 let afterEachPromise: (~timeout: int=?, unit => promise<'a>) => unit
 
@@ -161,7 +161,7 @@ module MockJs: {
 
   let new0: fn<unit => 'ret, unit, 'ret> => 'ret
   let new1: (fn<'a => 'ret, 'a, 'ret>, 'a) => 'ret
-  let new2: (fn<(. 'a, 'b) => 'ret, ('a, 'b), 'ret>, 'a, 'b) => 'ret
+  let new2: (fn<('a, 'b) => 'ret, ('a, 'b), 'ret>, 'a, 'b) => 'ret
 
   external fn: fn<'fn, _, _> => 'fn = "%identity"
   let calls: fn<_, 'args, _> => array<'args>
@@ -205,10 +205,9 @@ module JestJs: {
   @val external enableAutomock: unit => unit = "jest.enableAutomock"
   @val external resetModules: unit => unit = "jest.resetModules"
   @val
-  external inferred_fn: unit => MockJs.fn<(. 'a) => option<'b>, 'a, option<'b>> =
-    "jest.fn"
+  external inferred_fn: unit => MockJs.fn<'a => option<'b>, 'a, option<'b>> = "jest.fn"
   @val external fn: ('a => 'b) => MockJs.fn<'a => 'b, 'a, 'b> = "jest.fn"
-  @val external fn2: ((. 'a, 'b) => 'c) => MockJs.fn<(. 'a, 'b) => 'c, ('a, 'b), 'c> = "jest.fn"
+  @val external fn2: (('a, 'b) => 'c) => MockJs.fn<('a, 'b) => 'c, ('a, 'b), 'c> = "jest.fn"
   @val external mock: string => unit = "jest.mock"
   @val external mockWithFactory: (string, unit => 'a) => unit = "jest.mock"
   @val external mockVirtual: (string, unit => 'a, {..}) => unit = "jest.mock"

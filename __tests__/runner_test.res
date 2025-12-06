@@ -1,6 +1,6 @@
 include Jest.Runner({
   type t<_> = bool
-  let affirm = ok => assert ok
+  let affirm = ok => assert(ok)
 })
 
 let () = {
@@ -26,9 +26,7 @@ let () = {
 
   testPromise("testPromise - timeout ok", ~timeout=1, () => Promise.resolve(true))
 
-  Skip.testPromise("testPromise - timeout fail", ~timeout=1, () =>
-    Promise.make((_, _) => ())
-  )
+  Skip.testPromise("testPromise - timeout fail", ~timeout=1, () => Promise.make((_, _) => ()))
 
   testAll("testAll", list{"foo", "bar", "baz"}, input => String.length(input) === 3)
   testAll("testAll - tuples", list{("foo", 3), ("barbaz", 6), ("bananas!", 8)}, ((input, output)) =>

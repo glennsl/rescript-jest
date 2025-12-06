@@ -106,11 +106,7 @@ let _ = {
       let before = call(fn, 10)
       mockFn->MockJs.mockImplementation(a => Some(Int.toString(a)))->ignore
 
-      expect((before, call(fn, 18), call(fn, 24)))->toEqual((
-        None,
-        Some("18"),
-        Some("24"),
-      ))
+      expect((before, call(fn, 18), call(fn, 24)))->toEqual((None, Some("18"), Some("24")))
     })
 
     test("mockImplementationOnce - queues implementation for one subsequent invocation", _ => {
@@ -139,11 +135,7 @@ let _ = {
       let before = call(fn, ())
       mockFn->MockJs.mockReturnThis->ignore
 
-      expect((before, call(fn, ()), call(fn, ())))->toEqual((
-        None,
-        Some(this),
-        Some(this),
-      ))
+      expect((before, call(fn, ()), call(fn, ())))->toEqual((None, Some(this), Some(this)))
     })
 
     test("mockReturnValue - returns given value on subsequent invocations", _ => {
@@ -153,11 +145,7 @@ let _ = {
       let before = call(fn, 10)
       mockFn->MockJs.mockReturnValue(Some(146))->ignore
 
-      expect((before, call(fn, 18), call(fn, 24)))->toEqual((
-        None,
-        Some(146),
-        Some(146),
-      ))
+      expect((before, call(fn, 18), call(fn, 24)))->toEqual((None, Some(146), Some(146)))
     })
 
     test("mockReturnValueOnce - queues implementation for one subsequent invocation", _ => {

@@ -1,6 +1,6 @@
 include Jest.Runner({
   type t<_> = bool
-  let affirm = ok => assert ok
+  let affirm = ok => assert(ok)
 })
 
 let () = {

@@ -27,9 +27,7 @@ let () = {
 
   testPromise("testPromise - timeout ok", ~timeout=1, () => Promise.resolve(pass))
 
-  Skip.testPromise("testPromise - timeout fail", ~timeout=1, () =>
-    Promise.make((_, _) => ())
-  )
+  Skip.testPromise("testPromise - timeout fail", ~timeout=1, () => Promise.make((_, _) => ()))
 
   testAll("testAll", list{"foo", "bar", "baz"}, input =>
     if String.length(input) === 3 {
@@ -804,9 +802,7 @@ let () = {
     Skip.testAsync("Skip.testAsync - timeout", ~timeout=1, _ => ())
 
     Skip.testPromise("Skip.testPromise", () => Promise.resolve(pass))
-    Skip.testPromise("testPromise - timeout", ~timeout=1, () =>
-      Promise.make((_, _) => ())
-    )
+    Skip.testPromise("testPromise - timeout", ~timeout=1, () => Promise.make((_, _) => ()))
 
     Skip.testAll("testAll", list{"foo", "bar", "baz"}, input =>
       if String.length(input) === 3 {
