@@ -1,6 +1,6 @@
 {
     "name": "@glennsl/rescript-jest",
-    "version": "0.12.0",
+    "version": "0.13.0",
     "description": "Rescript bindings to the Jest testing framework",
     "author": "glennsl",
     "license": "MIT",
@@ -18,12 +18,19 @@
         "type": "git",
         "url": "git+https://github.com/glennsl/rescript-jest.git"
     },
-    "keywords": ["Rescript", "jest", "test"],
+    "keywords": [
+        "Rescript",
+        "jest",
+        "test"
+    ],
     "bugs": {
         "url": "https://github.com/glennsl/rescript-jest/issues"
     },
     "homepage": "https://github.com/glennsl/rescript-jest#readme",
-    "files": ["src/", "bsconfig.json"],
+    "files": [
+        "src/",
+        "bsconfig.json"
+    ],
     "devDependencies": {
         "@babel/core": "^7.15.8",
         "@babel/preset-env": "^7.15.8",
