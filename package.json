@@ -29,7 +29,7 @@
     "homepage": "https://github.com/glennsl/rescript-jest#readme",
     "files": [
         "src/",
-        "bsconfig.json"
+        "rescript.json"
     ],
     "devDependencies": {
         "@babel/core": "^7.15.8",
