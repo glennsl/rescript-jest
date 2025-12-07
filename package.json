@@ -1,6 +1,6 @@
 {
     "name": "@glennsl/rescript-jest",
-    "version": "0.13.0",
+    "version": "0.13.1",
     "description": "Rescript bindings to the Jest testing framework",
     "author": "glennsl",
     "license": "MIT",
