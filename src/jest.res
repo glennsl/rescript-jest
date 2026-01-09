@@ -129,10 +129,14 @@ module LLExpect: {
 
 module Runner = (A: Asserter) => {
   let affirm = A.affirm
-  @val external _test: (string, @uncurry (unit => option<unit>)) => unit = "test"
-  @val
+
+  @val @scope(("globalThis"))
+  external _test: (string, @uncurry (unit => option<unit>)) => unit = "test"
+
+  @val @scope(("globalThis"))
   external _testAsync: (string, (unit => unit) => option<unit>, option<int>) => unit = "test"
-  @val
+
+  @val @scope(("globalThis"))
   external _testPromise: (string, @uncurry (unit => promise<'a>), option<int>) => unit = "test"
 
   let test = (name, callback) =>
@@ -279,8 +283,8 @@ module Runner = (A: Asserter) => {
         )
       })
 
-    @val
-    external describe: (string, @uncurry (unit => option<unit>)) => unit = "describe.only"
+    @val @scope(("globalThis", "describe"))
+    external describe: (string, @uncurry (unit => option<unit>)) => unit = "only"
     let describe = (label, f) =>
       describe(label, () => {
         f()
@@ -305,8 +309,8 @@ module Runner = (A: Asserter) => {
         let name = `${name} - ${input->String.make}`
         testPromise(name, () => callback(input))
       })
-    @val
-    external describe: (string, @uncurry (unit => option<unit>)) => unit = "describe.skip"
+    @val @scope(("globalThis", "describe"))
+    external describe: (string, @uncurry (unit => option<unit>)) => unit = "skip"
     let describe = (label, f) =>
       describe(label, () => {
         f()
